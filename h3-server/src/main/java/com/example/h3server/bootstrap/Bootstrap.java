@@ -7,6 +7,7 @@ import com.example.h3server.repositories.PermissionRepository;
 import com.example.h3server.repositories.RoleRepository;
 import com.example.h3server.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -15,13 +16,15 @@ import java.util.Set;
 @Component
 public class Bootstrap implements CommandLineRunner {
 
+    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final UserRepository userRepository;
 
-    public Bootstrap(RoleRepository roleRepository,
+    public Bootstrap(PasswordEncoder passwordEncoder, RoleRepository roleRepository,
                      PermissionRepository permissionRepository,
                      UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.userRepository = userRepository;
@@ -44,7 +47,7 @@ public class Bootstrap implements CommandLineRunner {
 
         User root = User.builder()
                 .username("root")
-                .password("root")
+                .password(this.passwordEncoder.encode("root"))
                 .isActive(true)
                 .permissions(rootPermissions)
                 .roles(rootRoles)
@@ -57,7 +60,7 @@ public class Bootstrap implements CommandLineRunner {
 
         User user = User.builder()
                 .username("user")
-                .password("user")
+                .password(this.passwordEncoder.encode("user"))
                 .isActive(true)
                 .roles(userRoles)
                 .build();
