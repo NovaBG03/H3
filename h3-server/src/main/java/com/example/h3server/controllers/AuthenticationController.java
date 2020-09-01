@@ -2,7 +2,9 @@ package com.example.h3server.controllers;
 
 import com.example.h3server.dtos.authentication.AuthenticationRequest;
 import com.example.h3server.dtos.authentication.AuthenticationResponse;
+import com.example.h3server.dtos.authentication.RegisterUserDto;
 import com.example.h3server.services.MyUserDetailsService;
+import com.example.h3server.services.UserService;
 import com.example.h3server.utils.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,13 +19,15 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final MyUserDetailsService myUserDetailsService;
+    private final UserService userService;
     private final JwtUtil jwtUtil;
 
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     MyUserDetailsService myUserDetailsService,
-                                    JwtUtil jwtUtil) {
+                                    UserService userService, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.myUserDetailsService = myUserDetailsService;
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -42,6 +46,16 @@ public class AuthenticationController {
         }
 
         final UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
+
+        final String jwt = this.jwtUtil.generateToken(userDetails);
+
+        return new AuthenticationResponse(jwt);
+    }
+
+    @PostMapping("/register")
+    public AuthenticationResponse registerUser(@RequestBody RegisterUserDto registerUserDto) throws Exception {
+        // TODO add userDto validation
+        final UserDetails userDetails = this.userService.registerUser(registerUserDto);
 
         final String jwt = this.jwtUtil.generateToken(userDetails);
 

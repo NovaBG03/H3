@@ -23,7 +23,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -46,12 +46,19 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.isActive = isActive;
+        if (isActive != null) {
+            this.isActive = isActive;
+        }
         if (roles != null) {
             this.roles = roles;
         }
         if (permissions != null) {
             this.permissions = permissions;
         }
+    }
+
+    public void addRole(Role role) {
+        role.getUsers().add(this);
+        this.roles.add(role);
     }
 }
