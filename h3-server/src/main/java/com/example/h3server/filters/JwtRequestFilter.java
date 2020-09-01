@@ -2,6 +2,7 @@ package com.example.h3server.filters;
 
 import com.example.h3server.services.MyUserDetailsService;
 import com.example.h3server.utils.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,8 +42,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.extractUsername(jwt);
             }
-            catch (MalformedJwtException e) {
-                // token username is invalid
+            catch (JwtException e) {
+                // token is invalid
             }
         }
 

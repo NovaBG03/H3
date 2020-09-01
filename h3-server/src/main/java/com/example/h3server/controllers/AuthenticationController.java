@@ -1,7 +1,7 @@
 package com.example.h3server.controllers;
 
-import com.example.h3server.models.AuthenticationRequest;
-import com.example.h3server.models.AuthenticationResponse;
+import com.example.h3server.dtos.authentication.AuthenticationRequest;
+import com.example.h3server.dtos.authentication.AuthenticationResponse;
 import com.example.h3server.services.MyUserDetailsService;
 import com.example.h3server.utils.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;

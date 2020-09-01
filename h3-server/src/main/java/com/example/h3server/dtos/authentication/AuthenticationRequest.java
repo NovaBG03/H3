@@ -1,4 +1,4 @@
-package com.example.h3server.models;
+package com.example.h3server.dtos.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

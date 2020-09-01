@@ -1,0 +1,79 @@
+package com.example.h3server.bootstrap;
+
+import com.example.h3server.models.Permission;
+import com.example.h3server.models.Role;
+import com.example.h3server.models.User;
+import com.example.h3server.repositories.PermissionRepository;
+import com.example.h3server.repositories.RoleRepository;
+import com.example.h3server.repositories.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Component
+public class Bootstrap implements CommandLineRunner {
+
+    private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
+
+    public Bootstrap(RoleRepository roleRepository,
+                     PermissionRepository permissionRepository,
+                     UserRepository userRepository) {
+        this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        this.loadRoles();
+        this.loadPermissions();
+        this.loadUsers();
+    }
+
+    private void loadUsers() {
+        Set<Permission> rootPermissions = new HashSet<>();
+        rootPermissions.add(permissionRepository.findByName("useless"));
+
+        Set<Role> rootRoles = new HashSet<>();
+        rootRoles.add(roleRepository.findByName("USER"));
+        rootRoles.add(roleRepository.findByName("ADMIN"));
+
+        User root = User.builder()
+                .username("root")
+                .password("root")
+                .isActive(true)
+                .permissions(rootPermissions)
+                .roles(rootRoles)
+                .build();
+        this.userRepository.save(root);
+
+
+        Set<Role> userRoles = new HashSet<>();
+        userRoles.add(roleRepository.findByName("USER"));
+
+        User user = User.builder()
+                .username("user")
+                .password("user")
+                .isActive(true)
+                .roles(userRoles)
+                .build();
+        this.userRepository.save(user);
+    }
+
+    private void loadPermissions() {
+        Permission useless = Permission.builder().name("useless").build();
+        this.permissionRepository.save(useless);
+    }
+
+    private void loadRoles() {
+        Role user = Role.builder().name("USER").build();
+        this.roleRepository.save(user);
+
+        Role admin = Role.builder().name("ADMIN").build();
+        this.roleRepository.save(admin);
+    }
+}
