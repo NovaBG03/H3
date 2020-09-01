@@ -44,7 +44,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // /** matches all paths
 
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .authorizeRequests()
+                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

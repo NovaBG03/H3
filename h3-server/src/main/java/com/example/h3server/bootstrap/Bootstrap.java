@@ -42,8 +42,8 @@ public class Bootstrap implements CommandLineRunner {
         rootPermissions.add(permissionRepository.findByName("useless"));
 
         Set<Role> rootRoles = new HashSet<>();
-        rootRoles.add(roleRepository.findByName("USER"));
-        rootRoles.add(roleRepository.findByName("ADMIN"));
+        rootRoles.add(roleRepository.findByName("ROLE_USER"));
+        rootRoles.add(roleRepository.findByName("ROLE_ADMIN"));
 
         User root = User.builder()
                 .username("root")
@@ -56,7 +56,7 @@ public class Bootstrap implements CommandLineRunner {
 
 
         Set<Role> userRoles = new HashSet<>();
-        userRoles.add(roleRepository.findByName("USER"));
+        userRoles.add(roleRepository.findByName("ROLE_USER"));
 
         User user = User.builder()
                 .username("user")
@@ -68,15 +68,15 @@ public class Bootstrap implements CommandLineRunner {
     }
 
     private void loadPermissions() {
-        Permission useless = Permission.builder().name("useless").build();
+        Permission useless = Permission.builder().name("USELESS").build();
         this.permissionRepository.save(useless);
     }
 
     private void loadRoles() {
-        Role user = Role.builder().name("USER").build();
+        Role user = Role.builder().name("ROLE_USER").build();
         this.roleRepository.save(user);
 
-        Role admin = Role.builder().name("ADMIN").build();
+        Role admin = Role.builder().name("ROLE_ADMIN").build();
         this.roleRepository.save(admin);
     }
 }
