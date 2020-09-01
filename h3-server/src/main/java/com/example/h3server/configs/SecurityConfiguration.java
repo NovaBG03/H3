@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        // TODO change encoding
+        // sets default encoding, TODO change encoding
         return NoOpPasswordEncoder.getInstance();
     }
 }
