@@ -3,8 +3,10 @@ package com.example.h3server.models;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,49 +18,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Size(min = 3, max = 225, message = "Username must be from 3 to 225 symbols")
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Email(message = "Invalid email address.")
+    @Size(min = 3, max = 225, message = "Email must be from 3 to 225 symbols")
+    @Column(unique = false, nullable = false)
+    private String email;
+
+    @Size(min = 6, max = 225, message = "Password must be from 6 to 225 symbols")
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private Boolean isActive = true;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_permissions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "permissions_id"))
-    private Set<Permission> permissions = new HashSet<>();
-
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(value = EnumType.STRING)
+    private List<Role> roles = new ArrayList<>();
 
     @Builder
-    public User(Long id, String username, String password, Boolean isActive,
-                Set<Role> roles, Set<Permission> permissions) {
+    public User(Long id, String username, String email, String password, List<Role> roles) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.password = password;
-        if (isActive != null) {
-            this.isActive = isActive;
-        }
         if (roles != null) {
             this.roles = roles;
-        }
-        if (permissions != null) {
-            this.permissions = permissions;
         }
     }
 
     public void addRole(Role role) {
-        role.getUsers().add(this);
         this.roles.add(role);
     }
 }

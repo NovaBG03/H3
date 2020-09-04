@@ -1,52 +1,76 @@
 package com.example.h3server.services;
 
-import com.example.h3server.dtos.authentication.RegisterUserDto;
-import com.example.h3server.models.MyUserDetails;
+import com.example.h3server.exception.CustomException;
+import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
-import com.example.h3server.repositories.RoleRepository;
 import com.example.h3server.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.example.h3server.security.JwtTokenProvider;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @Service
 public class UserService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
-        this.passwordEncoder = passwordEncoder;
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtTokenProvider jwtTokenProvider,
+                       AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
     }
 
-    public UserDetails registerUser(RegisterUserDto registerUserDto) {
-        Optional<User> userOptional = this.getUser(registerUserDto.getUsername());
 
-        if (userOptional.isPresent()) {
-            // TODO handle this more elegant
-            throw new IllegalArgumentException(
-                    "User with username " + registerUserDto.getUsername() + " already exists");
+    public String signIn(String username, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+        } catch (AuthenticationException e) {
+            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
-        // map userDto to userEntity
-        User user = User.builder()
-                .username(registerUserDto.getUsername())
-                .password(this.passwordEncoder.encode(registerUserDto.getPassword()))
-                .build();
-
-        user.addRole(roleRepository.findByName("ROLE_USER"));
-
-        User savedUser = userRepository.save(user);
-
-        return new MyUserDetails(savedUser);
     }
 
-    public Optional<User> getUser(String username) {
-        return userRepository.findByUsername(username);
+    public String signUp(User user) {
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(Arrays.asList(Role.ROLE_USER));
+            userRepository.save(user);
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        } else {
+            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    public void delete(String username) {
+        userRepository.deleteByUsername(username);
+    }
+
+    public User search(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
+
+    public User whoAmI(HttpServletRequest req) {
+        return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    }
+
+    public String refresh(String username) {
+        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
     }
 }
