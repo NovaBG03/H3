@@ -35,3 +35,6 @@ UserController:
   delete: Deletes specific user by username
   search: Returns specific user by username
   me: Returns current user's data
+
+FamilyTreeController:
+  getTrees: Returns all public trees for the specific user and all private if the request is send by their owner

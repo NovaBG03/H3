@@ -25,6 +25,9 @@ public class FamilyTree {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Boolean isPrivate;
+
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

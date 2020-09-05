@@ -1,8 +1,10 @@
 package com.example.h3server.security;
 
 import com.example.h3server.exception.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -34,9 +36,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             // guarantees the user is not authenticated at all
             SecurityContextHolder.clearContext();
             httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());
-            return;
+            // return;
+        } catch (UsernameNotFoundException ex) {
+            SecurityContextHolder.clearContext();
+            httpServletResponse.sendError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         }
 
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        try {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        } catch (Exception e) {
+            // workaround for exception overriding
+        }
     }
 }

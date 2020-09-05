@@ -25,6 +25,7 @@ public class GlobalExceptionHandlerController {
             public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
                 Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
                 errorAttributes.remove("exception");
+                errorAttributes.remove("trace");
                 return errorAttributes;
             }
         };

@@ -7,6 +7,7 @@ import com.example.h3server.services.FamilyTreeService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class FamilyTreeController {
         this.familyTreeService = familyTreeService;
     }
 
-    @GetMapping()
+    @GetMapping("/{username}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyTreeController.getTrees}",
             response = FamilyTreeListDTO.class,
@@ -35,8 +36,8 @@ public class FamilyTreeController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyTreeListDTO getTrees(Principal principal) {
-        List<FamilyTreeDTO> familyTreeDTOs = this.familyTreeService.getFamilyTrees(principal.getName())
+    public FamilyTreeListDTO getTrees(@PathVariable String username, Principal principal) {
+        List<FamilyTreeDTO> familyTreeDTOs = this.familyTreeService.getFamilyTrees(username, principal.getName())
                 .stream()
                 .map(familyTree -> FamilyTreeMapper.INSTANCE.familyTreeToFamilyTreeDTO(familyTree))
                 .collect(Collectors.toList());

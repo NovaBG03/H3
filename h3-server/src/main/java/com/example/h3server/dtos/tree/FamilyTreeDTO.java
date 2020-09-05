@@ -21,5 +21,8 @@ public class FamilyTreeDTO {
     private String name;
 
     @ApiModelProperty(position = 2)
+    private boolean isPrivate;
+
+    @ApiModelProperty(position = 3)
     private LocalDateTime createdAt;
 }

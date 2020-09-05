@@ -59,12 +59,14 @@ public class Bootstrap implements CommandLineRunner {
     private void loadFamilyTrees() {
         this.familyTreeRepository.save(FamilyTree.builder()
                 .name("My First Family Tree")
+                .isPrivate(true)
                 .createdAt(LocalDateTime.now())
                 .user(userRepository.findByUsername("root"))
                 .build());
 
         FamilyTree queensFamilyTree = this.familyTreeRepository.save(FamilyTree.builder()
                 .name("Queen's Family Tree")
+                .isPrivate(false)
                 .createdAt(LocalDateTime.now())
                 .user(userRepository.findByUsername("root"))
                 .build());
