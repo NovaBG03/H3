@@ -30,7 +30,7 @@ security:
       expire-length: 3600000 # 1 hour duration by default: 1 hour * 60 minutes * 60 seconds * 1000 milliseconds
 
 UserController:
-  signIn: Authenticates user and returns its JWT token.
+  signIn: Authenticates user and returns its JWT token
   signUp: Creates user and returns its JWT token
   delete: Deletes specific user by username
   search: Returns specific user by username

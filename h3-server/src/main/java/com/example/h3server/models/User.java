@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,8 +37,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<FamilyTree> familyTrees = new HashSet<>();
+
     @Builder
-    public User(Long id, String username, String email, String password, List<Role> roles) {
+    public User(Long id, String username, String email, String password, List<Role> roles, Set<FamilyTree> familyTrees) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -44,9 +49,17 @@ public class User {
         if (roles != null) {
             this.roles = roles;
         }
+        if (familyTrees != null) {
+            this.familyTrees = familyTrees;
+        }
     }
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    public void addFamilyTree(FamilyTree familyTree) {
+        this.familyTrees.add(familyTree);
+        familyTree.setUser(this);
     }
 }
