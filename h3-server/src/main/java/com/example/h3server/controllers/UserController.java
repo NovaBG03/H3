@@ -2,6 +2,7 @@ package com.example.h3server.controllers;
 
 import com.example.h3server.dtos.UserDataDTO;
 import com.example.h3server.dtos.UserResponseDTO;
+import com.example.h3server.dtos.UserTokenDTO;
 import com.example.h3server.mappers.UserMapper;
 import com.example.h3server.services.UserService;
 import io.swagger.annotations.*;
@@ -26,7 +27,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-    public String login(@ApiParam("Username") @RequestParam String username,
+    public UserTokenDTO login(@ApiParam("Username") @RequestParam String username,
                         @ApiParam("Password") @RequestParam String password) {
         return userService.signIn(username, password);
     }
@@ -37,7 +38,7 @@ public class UserController {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 422, message = "Username is already in use")})
-    public String signUp(@ApiParam("SignUp User") @RequestBody UserDataDTO userDataDTO) {
+    public UserTokenDTO signUp(@ApiParam("SignUp User") @RequestBody UserDataDTO userDataDTO) {
         return userService.signUp(UserMapper.INSTANCE.userDataDTOToUser(userDataDTO));
     }
 
@@ -60,27 +61,28 @@ public class UserController {
             response = UserResponseDTO.class,
             authorizations = { @Authorization(value="apiKey") })
     @ApiResponses(value = {//
-            @ApiResponse(code = 400, message = "Something went wrong"), //
-            @ApiResponse(code = 403, message = "Access denied"), //
-            @ApiResponse(code = 404, message = "The user doesn't exist"), //
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
         return UserMapper.INSTANCE.userToUserResponseDTO(userService.search(username));
     }
 
     @GetMapping(value = "/me")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
     @ApiResponses(value = {//
-            @ApiResponse(code = 400, message = "Something went wrong"), //
-            @ApiResponse(code = 403, message = "Access denied"), //
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public UserResponseDTO whoAmI(HttpServletRequest req) {
         return UserMapper.INSTANCE.userToUserResponseDTO(userService.whoAmI(req));
     }
 
     @GetMapping("/refresh")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public String refresh(HttpServletRequest req) {
         return userService.refresh(req.getRemoteUser());
     }

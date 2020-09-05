@@ -1,5 +1,6 @@
 package com.example.h3server.services;
 
+import com.example.h3server.dtos.UserTokenDTO;
 import com.example.h3server.exception.CustomException;
 import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class UserService {
@@ -34,21 +36,40 @@ public class UserService {
     }
 
 
-    public String signIn(String username, String password) {
+    public UserTokenDTO signIn(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+            User user = userRepository.findByUsername(username);
+
+            final String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            return UserTokenDTO.builder()
+                    .token(token)
+                    .expiresIn(jwtTokenProvider.getExpirationDate(token))
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .roles(user.getRoles())
+                    .build();
         } catch (AuthenticationException e) {
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    public String signUp(User user) {
+    public UserTokenDTO signUp(User user) {
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoles(Arrays.asList(Role.ROLE_USER));
-            userRepository.save(user);
-            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            User savedUser = userRepository.save(user);
+
+            final String token = jwtTokenProvider.createToken(savedUser.getUsername(), savedUser.getRoles());
+            return UserTokenDTO.builder()
+                    .token(token)
+                    .expiresIn(jwtTokenProvider.getExpirationDate(token))
+                    .id(savedUser.getId())
+                    .username(savedUser.getUsername())
+                    .email(savedUser.getEmail())
+                    .roles(savedUser.getRoles())
+                    .build();
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
