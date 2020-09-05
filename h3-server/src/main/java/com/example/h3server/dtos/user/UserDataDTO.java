@@ -1,13 +1,10 @@
-package com.example.h3server.dtos;
+package com.example.h3server.dtos.user;
 
-import com.example.h3server.models.Role;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

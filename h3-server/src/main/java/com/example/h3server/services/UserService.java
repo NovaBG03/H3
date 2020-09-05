@@ -1,6 +1,6 @@
 package com.example.h3server.services;
 
-import com.example.h3server.dtos.UserTokenDTO;
+import com.example.h3server.dtos.user.UserTokenDTO;
 import com.example.h3server.exception.CustomException;
 import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Date;
 
 @Service
 public class UserService {

@@ -1,8 +1,8 @@
 package com.example.h3server.controllers;
 
-import com.example.h3server.dtos.UserDataDTO;
-import com.example.h3server.dtos.UserResponseDTO;
-import com.example.h3server.dtos.UserTokenDTO;
+import com.example.h3server.dtos.user.UserDataDTO;
+import com.example.h3server.dtos.user.UserResponseDTO;
+import com.example.h3server.dtos.user.UserTokenDTO;
 import com.example.h3server.mappers.UserMapper;
 import com.example.h3server.services.UserService;
 import io.swagger.annotations.*;
@@ -71,8 +71,10 @@ public class UserController {
 
     @GetMapping(value = "/me")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
-    @ApiResponses(value = {//
+    @ApiOperation(value = "${UserController.me}",
+            response = UserResponseDTO.class,
+            authorizations = { @Authorization(value="apiKey") })
+    @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The user doesn't exist"),
