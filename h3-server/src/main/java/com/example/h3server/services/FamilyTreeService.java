@@ -52,11 +52,7 @@ public class FamilyTreeService {
     }
 
     public FamilyTree updateFamilyTree(Long id, FamilyTree familyTree, String principalUsername) {
-        FamilyTree treeFromDb = this.familyTreeRepository.findByIdAndUserUsername(id, principalUsername);
-
-        if (treeFromDb == null) {
-            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
-        }
+        FamilyTree treeFromDb = getFamilyTreeOrThrowException(id, principalUsername);
 
         treeFromDb.setName(familyTree.getName());
         treeFromDb.setIsPrivate(familyTree.getIsPrivate());
@@ -64,5 +60,20 @@ public class FamilyTreeService {
         FamilyTree savedTree = this.familyTreeRepository.save(treeFromDb);
 
         return savedTree;
+    }
+
+    public void deleteFamilyTree(Long id, String principalUsername) {
+        FamilyTree treeFromDb = getFamilyTreeOrThrowException(id, principalUsername);
+        this.familyTreeRepository.delete(treeFromDb);
+    }
+
+    private FamilyTree getFamilyTreeOrThrowException(Long id, String principalUsername) {
+        FamilyTree treeFromDb = this.familyTreeRepository.findByIdAndUserUsername(id, principalUsername);
+
+        if (treeFromDb == null) {
+            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        return treeFromDb;
     }
 }
