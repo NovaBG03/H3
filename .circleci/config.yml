@@ -7,5 +7,5 @@ workflows:
   maven_test:
     jobs:
       - maven/test:
-          app_src_directory: ~/h3-server
+          app_src_directory: '~/h3-server'
       
