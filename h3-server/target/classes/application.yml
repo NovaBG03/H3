@@ -38,3 +38,4 @@ UserController:
 
 FamilyTreeController:
   getTrees: Returns all public trees for the specific user and all private if the request is send by their owner
+  createNewTree: Creates new Family Tree without members

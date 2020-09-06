@@ -13,9 +13,9 @@ public class FamilyTreeListDTO {
 
     @ApiModelProperty(position = 0)
     @JsonProperty("familyTrees")
-    private List<FamilyTreeDTO> familyTreeDTOs;
+    private List<FamilyTreeResponseDTO> familyTreeDTOs;
 
-    public FamilyTreeListDTO(List<FamilyTreeDTO> familyTreeDTOs) {
+    public FamilyTreeListDTO(List<FamilyTreeResponseDTO> familyTreeDTOs) {
         this.familyTreeDTOs = familyTreeDTOs;
     }
 }

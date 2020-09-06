@@ -8,6 +8,7 @@ import com.example.h3server.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,5 +37,17 @@ public class FamilyTreeService {
         }
 
         return familyTrees.stream().filter(familyTree -> !familyTree.getIsPrivate()).collect(Collectors.toList());
+    }
+
+    public FamilyTree createNewFamilyTree(FamilyTree familyTree, String principalUsername) {
+        familyTree.setId(null);
+
+        User user = this.userRepository.findByUsername(principalUsername);
+        familyTree.setUser(user);
+
+        familyTree.setCreatedAt(LocalDateTime.now());
+
+        FamilyTree savedFamilyTree = this.familyTreeRepository.save(familyTree);
+        return savedFamilyTree;
     }
 }
