@@ -47,19 +47,38 @@ public class FamilyTreeController {
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyTreeController.createNewTree}",
-            response = FamilyTreeListDTO.class,
+            response = FamilyTreeResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
-            @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyTreeResponseDTO createNewTree(@RequestBody FamilyTreeDataDTO familyTreeDataDTO, Principal principal) {
         FamilyTree familyTree = FamilyTreeMapper.INSTANCE.familyTreeDataDTOToFamilyTree(familyTreeDataDTO);
-        
+
         return FamilyTreeMapper.INSTANCE
                 .familyTreeToFamilyTreeResponseDTO(
                         this.familyTreeService.createNewFamilyTree(familyTree, principal.getName()));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyTreeController.updateTree}",
+            response = FamilyTreeResponseDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The family tree doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public FamilyTreeResponseDTO updateTree(@PathVariable Long id,
+                                            @RequestBody FamilyTreeDataDTO familyTreeDataDTO ,
+                                            Principal principal) {
+        FamilyTree familyTree = FamilyTreeMapper.INSTANCE.familyTreeDataDTOToFamilyTree(familyTreeDataDTO);
+
+        return FamilyTreeMapper.INSTANCE
+                .familyTreeToFamilyTreeResponseDTO(
+                        this.familyTreeService.updateFamilyTree(id, familyTree, principal.getName()));
     }
 
 }

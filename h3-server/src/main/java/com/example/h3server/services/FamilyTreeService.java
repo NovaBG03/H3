@@ -33,7 +33,7 @@ public class FamilyTreeService {
 
         final boolean isOwner = username.equals(principalUsername);
         if (isOwner) {
-          return familyTrees;
+            return familyTrees;
         }
 
         return familyTrees.stream().filter(familyTree -> !familyTree.getIsPrivate()).collect(Collectors.toList());
@@ -49,5 +49,20 @@ public class FamilyTreeService {
 
         FamilyTree savedFamilyTree = this.familyTreeRepository.save(familyTree);
         return savedFamilyTree;
+    }
+
+    public FamilyTree updateFamilyTree(Long id, FamilyTree familyTree, String principalUsername) {
+        FamilyTree treeFromDb = this.familyTreeRepository.findByIdAndUserUsername(id, principalUsername);
+
+        if (treeFromDb == null) {
+            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        treeFromDb.setName(familyTree.getName());
+        treeFromDb.setIsPrivate(familyTree.getIsPrivate());
+
+        FamilyTree savedTree = this.familyTreeRepository.save(treeFromDb);
+
+        return savedTree;
     }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface FamilyTreeRepository extends JpaRepository<FamilyTree, Long> {
 
     List<FamilyTree> findAllByUser(User user);
+
+    FamilyTree findByIdAndUserUsername(Long id, String username);
 }
