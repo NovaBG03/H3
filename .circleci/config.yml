@@ -41,4 +41,4 @@ jobs:
 
       - run:
           name: Send to CodeCov
-          command: bash <(curl -s https://codecov.io/bash)
+          command: bash <(curl -s https://codecov.io/bash) -t 117218be-0ec1-4241-a68e-7d4f49664502 # move to env variable
