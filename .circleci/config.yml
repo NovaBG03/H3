@@ -1,37 +1,9 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/h3-server
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+version: 2.1
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+orbs:
+  maven: circleci/maven@0.0.12
 
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
-
-    steps:
-      - checkout:
-          path: ~/h3-server
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - h3-server-{{ checksum "pom.xml" }}
-          # fallback to using the latest cache if no exact match is found
-          - h3-server-
-
-      - run: mvn dependency:go-offline
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: h3-server-{{ checksum "pom.xml" }}
-
-      # run tests!
-      - run: mvn integration-test
+workflows:
+  maven_test:
+    jobs:
+      - maven/test # checkout, build, test, and upload test results
