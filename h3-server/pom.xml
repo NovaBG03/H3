@@ -96,9 +96,9 @@
         </dependency>
         <dependency>
             <!-- Validator Implementation -->
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
+            <version>6.1.5.Final</version>
         </dependency>
 
         <dependency>
