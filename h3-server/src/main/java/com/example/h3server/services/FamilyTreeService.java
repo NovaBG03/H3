@@ -5,6 +5,7 @@ import com.example.h3server.models.FamilyTree;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
+import com.example.h3server.utils.ModelValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +44,11 @@ public class FamilyTreeService {
         familyTree.setId(null);
 
         User user = this.userRepository.findByUsername(principalUsername);
-        familyTree.setUser(user);
+        user.addFamilyTree(familyTree);
 
         familyTree.setCreatedAt(LocalDateTime.now());
 
+        ModelValidator.validate(familyTree);
         FamilyTree savedFamilyTree = this.familyTreeRepository.save(familyTree);
         return savedFamilyTree;
     }
@@ -57,6 +59,7 @@ public class FamilyTreeService {
         treeFromDb.setName(familyTree.getName());
         treeFromDb.setIsPrivate(familyTree.getIsPrivate());
 
+        ModelValidator.validate(treeFromDb);
         FamilyTree savedTree = this.familyTreeRepository.save(treeFromDb);
 
         return savedTree;

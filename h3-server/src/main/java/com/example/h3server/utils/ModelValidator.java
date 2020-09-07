@@ -24,7 +24,7 @@ public abstract class ModelValidator {
             errorMessages.sort(String::compareTo);
 
             errorMessages.forEach(errorMessage -> {
-                throw new CustomException(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
+                throw new CustomException(errorMessage, HttpStatus.BAD_REQUEST);
             });
         }
     }

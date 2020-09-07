@@ -51,7 +51,7 @@ public class FamilyTreeController {
             response = FamilyTreeResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 400, message = "Something went wrong / FamilyTree name must be from 3 to 225 symbols"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyTreeResponseDTO createNewTree(@RequestBody FamilyTreeDataDTO familyTreeDataDTO, Principal principal) {
@@ -68,7 +68,7 @@ public class FamilyTreeController {
             response = FamilyTreeResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 400, message = "Something went wrong / FamilyTree name must be from 3 to 225 symbols"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})

@@ -3,6 +3,8 @@ package com.example.h3server.models;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -18,13 +20,16 @@ public class FamilyTree {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "FamilyTree name must be from 3 to 225 symbols")
     @Size(min = 3, max = 225, message = "FamilyTree name must be from 3 to 225 symbols")
     @Column(nullable = false)
     private String name;
 
+    @NotNull(message = "Something went wrong")
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @NotNull(message = "Something went wrong")
     @Column(nullable = false)
     private Boolean isPrivate;
 
