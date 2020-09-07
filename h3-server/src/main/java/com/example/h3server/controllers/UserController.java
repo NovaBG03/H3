@@ -37,7 +37,10 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
-            @ApiResponse(code = 422, message = "Username is already in use")})
+            @ApiResponse(code = 422, message = "Username is already in use"),
+            @ApiResponse(code = 422, message = "Username must be from 3 to 225 symbols"),
+            @ApiResponse(code = 422, message = "Email must be valid and from 3 to 225 symbols"),
+            @ApiResponse(code = 422, message = "Password must be from 6 to 225 symbols")})
     public UserTokenDTO signUp(@ApiParam("SignUp User") @RequestBody UserDataDTO userDataDTO) {
         return userService.signUp(UserMapper.INSTANCE.userDataDTOToUser(userDataDTO));
     }

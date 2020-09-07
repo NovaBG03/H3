@@ -49,7 +49,7 @@ class UserServiceTest {
     UserService userService;
 
     Long id = 1L;
-    String email = "email";
+    String email = "email@abv.bg";
     String username = "username";
     String password = "password";
     String encodedPassword = "encoded";

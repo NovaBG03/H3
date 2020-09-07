@@ -1,9 +1,13 @@
 package com.example.h3server.models;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,15 +24,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Username must be from 3 to 225 symbols")
     @Size(min = 3, max = 225, message = "Username must be from 3 to 225 symbols")
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Email(message = "Invalid email address.")
-    @Size(min = 3, max = 225, message = "Email must be from 3 to 225 symbols")
+    @NotNull(message = "Email must be valid and from 3 to 225 symbols")
+    @Pattern(regexp = "^(.+)@(.+)$", message = "Email must be valid and from 3 to 225 symbols")
+    @Size(min = 3, max = 225, message = "Email must be valid and from 3 to 225 symbols")
     @Column(unique = false, nullable = false)
     private String email;
 
+    @NotNull(message = "Password must be from 6 to 225 symbols")
     @Size(min = 6, max = 225, message = "Password must be from 6 to 225 symbols")
     @Column(nullable = false)
     private String password;

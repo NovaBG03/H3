@@ -18,9 +18,9 @@
     <properties>
         <java.version>1.8</java.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
-		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
-		<io.springfox-swagger.version>2.9.2</io.springfox-swagger.version>
-		<io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+        <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+        <io.springfox-swagger.version>2.9.2</io.springfox-swagger.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
     </properties>
 
     <dependencies>
@@ -75,7 +75,7 @@
 
 
         <dependency>
-			<!-- Map Objects -->
+            <!-- Map Objects -->
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
@@ -90,9 +90,15 @@
         </dependency>
 
         <dependency>
-            <!-- Property Validation -->
+            <!-- Property Validation API -->
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Validator Implementation -->
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.4.Final</version>
         </dependency>
 
         <dependency>

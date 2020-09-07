@@ -6,6 +6,7 @@ import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.security.JwtTokenProvider;
+import com.example.h3server.utils.ModelValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,7 +35,6 @@ public class UserService {
         this.authenticationManager = authenticationManager;
     }
 
-
     public UserTokenDTO signIn(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -56,8 +56,10 @@ public class UserService {
 
     public UserTokenDTO signUp(User user) {
         if (!userRepository.existsByUsername(user.getUsername())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoles(Arrays.asList(Role.ROLE_USER));
+
+            ModelValidator.validate(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             User savedUser = userRepository.save(user);
 
             final String token = jwtTokenProvider.createToken(savedUser.getUsername(), savedUser.getRoles());
