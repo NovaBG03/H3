@@ -1,19 +1,21 @@
 package com.example.h3server.models;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class FamilyTree {
 
     @Id
@@ -37,5 +39,28 @@ public class FamilyTree {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Family members
+    @OneToMany(mappedBy = "familyTree", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<FamilyMember> familyMembers = new HashSet<>();
+
+    @Builder
+    public FamilyTree(Long id,
+                      String name,
+                      LocalDateTime createdAt,
+                      Boolean isPrivate,
+                      User user,
+                      Set<FamilyMember> familyMembers) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.isPrivate = isPrivate;
+        this.user = user;
+        if (familyMembers != null) {
+            this.familyMembers = familyMembers;
+        }
+    }
+
+    public void addFamilyMember(FamilyMember familyMember) {
+        familyMember.setFamilyTree(this);
+        this.familyMembers.add(familyMember);
+    }
 }

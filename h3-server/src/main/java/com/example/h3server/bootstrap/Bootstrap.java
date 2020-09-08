@@ -1,8 +1,10 @@
 package com.example.h3server.bootstrap;
 
+import com.example.h3server.models.FamilyMember;
 import com.example.h3server.models.FamilyTree;
 import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
+import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -19,19 +22,23 @@ public class Bootstrap implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final FamilyTreeRepository familyTreeRepository;
+    private final FamilyMemberRepository familyMemberRepository;
 
     public Bootstrap(PasswordEncoder passwordEncoder,
                      UserRepository userRepository,
-                     FamilyTreeRepository familyTreeRepository) {
+                     FamilyTreeRepository familyTreeRepository,
+                     FamilyMemberRepository familyMemberRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.familyTreeRepository = familyTreeRepository;
+        this.familyMemberRepository = familyMemberRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         this.loadUsers();
         this.loadFamilyTrees();
+        this.loadFamilyMembers();
     }
 
     private void loadUsers() {
@@ -77,4 +84,63 @@ public class Bootstrap implements CommandLineRunner {
         // this.familyTreeRepository.delete(queensFamilyTree);
     }
 
+    private void loadFamilyMembers() {
+        FamilyTree familyTree = this.familyTreeRepository.findById(1L).get();
+
+        FamilyMember ivanGogov = FamilyMember.builder()
+                .firstName("Ivan")
+                .lastName("Gogov")
+                .birthday(LocalDate.of(1955, 5, 5))
+                .build();
+        familyTree.addFamilyMember(ivanGogov);
+        familyMemberRepository.save(ivanGogov);
+
+        FamilyMember minkaGogova = FamilyMember.builder()
+                .firstName("Minka")
+                .lastName("Gogova")
+                .birthday(LocalDate.of(1960, 11, 9))
+                .build();
+        familyTree.addFamilyMember(minkaGogova);
+        familyMemberRepository.save(minkaGogova);
+
+        FamilyMember linaGogova = FamilyMember.builder()
+                .firstName("Lina")
+                .lastName("Gogova")
+                .birthday(LocalDate.of(1998, 11, 11))
+                .father(ivanGogov)
+                .mother(minkaGogova)
+                .build();
+        familyTree.addFamilyMember(linaGogova);
+        familyMemberRepository.save(linaGogova);
+
+        FamilyMember vasilGogov = FamilyMember.builder()
+                .firstName("Vasil")
+                .lastName("Gogov")
+                .birthday(LocalDate.of(2000, 3, 25))
+                .father(ivanGogov)
+                .mother(minkaGogova)
+                .build();
+        familyTree.addFamilyMember(vasilGogov);
+        familyMemberRepository.save(vasilGogov);
+
+        FamilyMember stankaGogova = FamilyMember.builder()
+                .firstName("Stanka")
+                .lastName("Gogova")
+                .birthday(LocalDate.of(2000, 5, 16))
+                .build();
+        familyTree.addFamilyMember(stankaGogova);
+        familyMemberRepository.save(stankaGogova);
+
+        FamilyMember georgiGogov = FamilyMember.builder()
+                .firstName("Georgi")
+                .lastName("Gogov")
+                .birthday(LocalDate.of(2020, 2, 15))
+                .father(vasilGogov)
+                .mother(stankaGogova)
+                .build();
+        familyTree.addFamilyMember(georgiGogov);
+        familyMemberRepository.save(georgiGogov);
+
+        log.info("Loaded Family Members: " + this.familyMemberRepository.count());
+    }
 }
