@@ -43,6 +43,7 @@ FamilyTreeController:
   deleteTree: Deletes your Family Tree
 
 FamilyMemberController:
-  getMembers: Retrurns all members of the specific Family Tree
-  addMember: Add new member to existing family tree
-  updateMember: Updates already existing member
+  getMembers: Retrurns all Members of the specific Family Tree
+  addMember: Add new Member to existing Family Tree
+  updateMember: Updates already existing Member in Family Tree
+  deleteMember: Deletes already existing Member from Family Tree

@@ -73,6 +73,32 @@ public class FamilyMemberService {
         return familyMemberRepository.save(memberFromDb);
     }
 
+    public void deleteMember(Long treeId, Long memberId, String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+        FamilyMember memberFromDb = familyTree.getFamilyMember(memberId);
+        if (memberFromDb == null) {
+            throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        familyTree.getFamilyMembers()
+                .stream()
+                .filter(member -> member.getFather() != null && member.getFather().getId().equals(memberId))
+                .forEach(member -> member.setFather(null));
+
+        familyTree.getFamilyMembers()
+                .stream()
+                .filter(member -> member.getMother() != null && member.getMother().getId().equals(memberId))
+                .forEach(member -> member.setMother(null));
+
+        familyTreeRepository.save(familyTree);
+        familyMemberRepository.delete(memberFromDb);
+    }
+
     private FamilyMember findParent(Long parentId, FamilyTree familyTree, Boolean isFather) {
         if (parentId == null) {
             return null;
