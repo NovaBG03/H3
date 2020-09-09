@@ -118,7 +118,6 @@ class FamilyMemberServiceTest {
                 .lastName(newMemberLastName)
                 .birthday(newMemberBirthday)
                 .father(FamilyMember.builder().id(fatherId).build())
-                .mother(FamilyMember.builder().build())
                 .build();
     }
 
@@ -253,6 +252,7 @@ class FamilyMemberServiceTest {
                 .build();
         familyTree.addFamilyMember(mother);
         newMember.setMother(mother);
+        newMember.setFather(null);
 
         ArgumentCaptor<FamilyMember> memberCaptor = ArgumentCaptor.forClass(FamilyMember.class);
         given(familyTreeRepository.findById(treeId)).willReturn(Optional.of(familyTree));
@@ -267,7 +267,7 @@ class FamilyMemberServiceTest {
         assertEquals(newMemberFirstName, capturedMember.getFirstName());
         assertEquals(newMemberLastName, capturedMember.getLastName());
         assertEquals(newMemberBirthday, capturedMember.getBirthday());
-        assertEquals(father, capturedMember.getFather());
+        assertNull(capturedMember.getFather());
         assertEquals(mother, capturedMember.getMother());
 
         assertEquals(newMember, updatedMember);
