@@ -41,8 +41,8 @@ public class FamilyMemberService {
 
         familyMember.setId(null);
 
-        familyMember.setFather(findParent(familyMember.getFather().getId(), familyTree, true));
-        familyMember.setMother(findParent(familyMember.getMother().getId(), familyTree, false));
+        familyMember.setFather(findParent(familyMember.getFather(), familyTree, true));
+        familyMember.setMother(findParent(familyMember.getMother(), familyTree, false));
 
         familyTree.addFamilyMember(familyMember);
         // TODO throw exception if familyMember is invalid
@@ -61,8 +61,8 @@ public class FamilyMemberService {
             throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
         }
 
-        memberFromDb.setFather(findParent(familyMember.getFather().getId(), familyTree, true));
-        memberFromDb.setMother(findParent(familyMember.getMother().getId(), familyTree, false));
+        memberFromDb.setFather(findParent(familyMember.getFather(), familyTree, true));
+        memberFromDb.setMother(findParent(familyMember.getMother(), familyTree, false));
 
         memberFromDb.setFirstName(familyMember.getFirstName());
         memberFromDb.setLastName(familyMember.getLastName());
@@ -99,20 +99,25 @@ public class FamilyMemberService {
         familyMemberRepository.delete(memberFromDb);
     }
 
-    private FamilyMember findParent(Long parentId, FamilyTree familyTree, Boolean isFather) {
+    private FamilyMember findParent(FamilyMember parent, FamilyTree familyTree, Boolean isFather) {
+        if (parent == null) {
+            return null;
+        }
+
+        Long parentId = parent.getId();
         if (parentId == null) {
             return null;
         }
 
         String errorMessage = "Invalid " + (isFather ? "father" : "mother") + " id";
 
-        FamilyMember parent = familyTree.getFamilyMember(parentId);
+        FamilyMember foundParent = familyTree.getFamilyMember(parentId);
 
-        if (parent == null) {
+        if (foundParent == null) {
             throw new CustomException(errorMessage, HttpStatus.NOT_FOUND);
         }
 
-        return parent;
+        return foundParent;
     }
 
     private FamilyTree getTreeOrThrowException(Long treeId) {
