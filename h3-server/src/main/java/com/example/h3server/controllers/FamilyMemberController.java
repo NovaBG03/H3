@@ -37,7 +37,7 @@ public class FamilyMemberController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyMemberListDTO getMembers(@PathVariable Long treeId, Principal principal) {
+    public FamilyMemberListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
         List<FamilyMemberResponseDTO> familyMemberResponseDTOs = familyMemberService
                 .getMembers(treeId, principal.getName())
                 .stream()
@@ -61,7 +61,7 @@ public class FamilyMemberController {
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyMemberResponseDTO addMember(@PathVariable Long treeId,
                                              @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
-                                             Principal principal) {
+                                             @ApiIgnore Principal principal) {
         FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
         FamilyMember newMember = familyMemberService.addMember(treeId, familyMember, principal.getName());
         return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
@@ -83,7 +83,7 @@ public class FamilyMemberController {
     public FamilyMemberResponseDTO updateMember(@PathVariable Long treeId,
                                                 @PathVariable Long memberId,
                                                 @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
-                                                Principal principal) {
+                                                @ApiIgnore Principal principal) {
         FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
         FamilyMember newMember = familyMemberService.updateMember(treeId, memberId, familyMember, principal.getName());
         return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);

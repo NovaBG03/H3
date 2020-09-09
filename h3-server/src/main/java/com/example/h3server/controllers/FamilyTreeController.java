@@ -10,6 +10,7 @@ import com.example.h3server.services.FamilyTreeService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.List;
@@ -36,7 +37,7 @@ public class FamilyTreeController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyTreeListDTO getTrees(@PathVariable String username, Principal principal) {
+    public FamilyTreeListDTO getTrees(@PathVariable String username, @ApiIgnore Principal principal) {
         List<FamilyTreeResponseDTO> familyTreeDTOs = this.familyTreeService.getFamilyTrees(username, principal.getName())
                 .stream()
                 .map(familyTree -> FamilyTreeMapper.INSTANCE.familyTreeToFamilyTreeResponseDTO(familyTree))
@@ -54,7 +55,8 @@ public class FamilyTreeController {
             @ApiResponse(code = 400, message = "Something went wrong / FamilyTree name must be from 3 to 225 symbols"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyTreeResponseDTO createNewTree(@RequestBody FamilyTreeDataDTO familyTreeDataDTO, Principal principal) {
+    public FamilyTreeResponseDTO createNewTree(@RequestBody FamilyTreeDataDTO familyTreeDataDTO,
+                                               @ApiIgnore Principal principal) {
         FamilyTree familyTree = FamilyTreeMapper.INSTANCE.familyTreeDataDTOToFamilyTree(familyTreeDataDTO);
 
         return FamilyTreeMapper.INSTANCE
@@ -62,7 +64,7 @@ public class FamilyTreeController {
                         this.familyTreeService.createNewFamilyTree(familyTree, principal.getName()));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{treeId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyTreeController.updateTree}",
             response = FamilyTreeResponseDTO.class,
@@ -72,17 +74,17 @@ public class FamilyTreeController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyTreeResponseDTO updateTree(@PathVariable Long id,
+    public FamilyTreeResponseDTO updateTree(@PathVariable Long treeId,
                                             @RequestBody FamilyTreeDataDTO familyTreeDataDTO ,
-                                            Principal principal) {
+                                            @ApiIgnore Principal principal) {
         FamilyTree familyTree = FamilyTreeMapper.INSTANCE.familyTreeDataDTOToFamilyTree(familyTreeDataDTO);
 
         return FamilyTreeMapper.INSTANCE
                 .familyTreeToFamilyTreeResponseDTO(
-                        this.familyTreeService.updateFamilyTree(id, familyTree, principal.getName()));
+                        this.familyTreeService.updateFamilyTree(treeId, familyTree, principal.getName()));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{treeId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyTreeController.deleteTree}",
             response = MessageDTO.class,
@@ -92,8 +94,8 @@ public class FamilyTreeController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public MessageDTO deleteTree(@PathVariable Long id, Principal principal) {
-        this.familyTreeService.deleteFamilyTree(id, principal.getName());
+    public MessageDTO deleteTree(@PathVariable Long treeId, @ApiIgnore Principal principal) {
+        this.familyTreeService.deleteFamilyTree(treeId, principal.getName());
         return new MessageDTO("Family Tree deleted successfully");
     }
 
