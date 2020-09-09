@@ -1,5 +1,6 @@
 package com.example.h3server.dtos.member;
 
+import com.example.h3server.models.FamilyMember;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,28 +11,25 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class FamilyMemberResponseDTO {
+@NoArgsConstructor
+public class FamilyMemberDataDTO {
 
     @ApiModelProperty(position = 0)
-    private Long id;
-
-    @ApiModelProperty(position = 1)
     private String firstName;
 
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 1)
     private String lastName;
 
-    @ApiModelProperty(position = 3)
+    @ApiModelProperty(position = 2)
     private LocalDate birthday;
 
-    @ApiModelProperty(position = 4)
+    @ApiModelProperty(position = 3)
     private LocalDate dateOfDeath;
 
-    @ApiModelProperty(position = 5)
+    @ApiModelProperty(position = 4)
     private Long fatherId;
 
-    @ApiModelProperty(position = 6)
+    @ApiModelProperty(position = 5)
     private Long motherId;
 }

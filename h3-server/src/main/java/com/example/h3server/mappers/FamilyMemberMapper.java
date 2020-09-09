@@ -1,5 +1,6 @@
 package com.example.h3server.mappers;
 
+import com.example.h3server.dtos.member.FamilyMemberDataDTO;
 import com.example.h3server.dtos.member.FamilyMemberResponseDTO;
 import com.example.h3server.models.FamilyMember;
 import org.mapstruct.Mapper;
@@ -16,4 +17,10 @@ public interface FamilyMemberMapper {
     @Mapping(target = "motherId",
             expression = "java(familyMember.getMother() != null ? familyMember.getMother().getId() : null)")
     FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember);
+
+    @Mapping(target = "father",
+            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getFatherId()).build())")
+    @Mapping(target = "mother",
+            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getMotherId()).build())")
+    FamilyMember FamilyMemberDataDTOToFamilyMember(FamilyMemberDataDTO familyMemberDataDTO);
 }

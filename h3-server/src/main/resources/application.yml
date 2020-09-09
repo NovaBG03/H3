@@ -41,3 +41,7 @@ FamilyTreeController:
   createNewTree: Creates new Family Tree without members
   updateTree: Updates your already created Family Tree
   deleteTree: Deletes your Family Tree
+
+FamilyMemberController:
+  getMembers: Retrurns all members of the specific Family Tree
+  addMember: Add new member to existing family tree
