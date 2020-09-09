@@ -118,6 +118,7 @@ class FamilyMemberServiceTest {
                 .lastName(newMemberLastName)
                 .birthday(newMemberBirthday)
                 .father(FamilyMember.builder().id(fatherId).build())
+                .mother(FamilyMember.builder().build())
                 .build();
     }
 
