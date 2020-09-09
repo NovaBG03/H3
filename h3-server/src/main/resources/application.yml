@@ -45,3 +45,4 @@ FamilyTreeController:
 FamilyMemberController:
   getMembers: Retrurns all members of the specific Family Tree
   addMember: Add new member to existing family tree
+  updateMember: Updates already existing member

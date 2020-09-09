@@ -63,4 +63,12 @@ public class FamilyTree {
         familyMember.setFamilyTree(this);
         this.familyMembers.add(familyMember);
     }
+
+    public FamilyMember getFamilyMember(Long id) {
+        return this.familyMembers
+                .stream()
+                .filter(member -> member.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 }
