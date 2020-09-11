@@ -5,6 +5,7 @@ import com.example.h3server.models.FamilyMember;
 import com.example.h3server.models.FamilyTree;
 import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
+import com.example.h3server.utils.ModelValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,8 @@ public class FamilyMemberService {
         familyMember.setMother(findParent(familyMember.getMother(), familyTree, false));
 
         familyTree.addFamilyMember(familyMember);
-        // TODO throw exception if familyMember is invalid
+
+        ModelValidator.validate(familyMember);
         return familyMemberRepository.save(familyMember);
     }
 
@@ -69,7 +71,7 @@ public class FamilyMemberService {
         memberFromDb.setBirthday(familyMember.getBirthday());
         memberFromDb.setDateOfDeath(familyMember.getDateOfDeath());
 
-        // TODO throw exception if memberFromDb is invalid
+        ModelValidator.validate(memberFromDb);
         return familyMemberRepository.save(memberFromDb);
     }
 

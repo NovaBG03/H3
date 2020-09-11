@@ -53,7 +53,9 @@ public class FamilyMemberController {
             response = FamilyMemberResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 400, message = "Something went wrong / " +
+                    "First name must be from 3 to 225 symbols / " +
+                    "Last name must be from 3 to 225 symbols"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist / " +
                     "Invalid father id / " +
@@ -73,7 +75,9 @@ public class FamilyMemberController {
             response = FamilyMemberResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 400, message = "Something went wrong / " +
+                    "First name must be from 3 to 225 symbols / " +
+                    "Last name must be from 3 to 225 symbols"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist / " +
                     "The family member doesn't exist / " +
