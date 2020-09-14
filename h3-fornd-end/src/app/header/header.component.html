@@ -9,14 +9,14 @@
     <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="nav-link" routerLink="/" (click)="closeMenu()">Home</a>
+          <a class="nav-link" routerLink="/home" (click)="closeMenu()">Home</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/test" (click)="closeMenu()">Test 1</a>
         </li>
       </ul>
 
-      <ul class="navbar-nav float-sm-right">
+      <ul class="navbar-nav float-sm-right" *ngIf="!user">
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/auth" [queryParams]="{type: 'login'}">Login</a>
         </li>
@@ -26,6 +26,13 @@
                   [queryParams]="{type: 'register'}">Sing up</button>
         </li>
       </ul>
+
+      <ul class="navbar-nav float-sm-right" *ngIf="user">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" (click)="onLogout()">Logout</a>
+        </li>
+      </ul>
+
     </div>
   </nav>
 </header>

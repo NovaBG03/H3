@@ -1,3 +1,16 @@
 a {
   cursor: pointer;
 }
+
+button:disabled {
+  background-color: transparent;
+  color: green;
+}
+
+input.ng-invalid.ng-touched {
+  border: 2px solid red;
+}
+
+div.ng-invalid.ng-touched > div > input#confirmPassword {
+  border: 2px solid red;
+}

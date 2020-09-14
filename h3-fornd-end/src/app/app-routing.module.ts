@@ -4,7 +4,8 @@ import {HomeComponent} from './home/home.component';
 import {AuthenticationComponent} from './authentication/authentication.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'home', component: HomeComponent, pathMatch: 'full'},
   {path: 'auth', component: AuthenticationComponent}
 ];
 
