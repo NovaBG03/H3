@@ -1,0 +1,32 @@
+<header class="container-fluid">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
+    <a class="navbar-brand" routerLink="/">H3</a>
+
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" routerLink="/" (click)="closeMenu()">Home</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/test" (click)="closeMenu()">Test 1</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav float-sm-right">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/auth" [queryParams]="{type: 'login'}">Login</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <button class="nav-link btn btn-dark border-light"
+                  routerLink="/auth"
+                  [queryParams]="{type: 'register'}">Sing up</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
