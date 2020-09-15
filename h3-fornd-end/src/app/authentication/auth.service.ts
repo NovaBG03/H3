@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   user = new BehaviorSubject<UserToken>(null);
+  private logOutTimeout: any = null;
 
   constructor(private http: HttpClient, private router: Router) {
   }
@@ -22,14 +23,35 @@ export class AuthService {
       tap(userToken => this.handleAuthentication(userToken)));
   }
 
-  logout(): void {
-    this.user.next(null);
-    this.router.navigate([]);
+  autoLogin(): void {
+    const userTokenDTO: UserTokenDTO = JSON.parse(localStorage.getItem('userToken'));
+
+    if (!userTokenDTO) {
+      return;
+    }
+
+    const userToken = this.mapUserTokenDTOToUserToken(userTokenDTO);
+    if (!userToken.isExpired) {
+      this.user.next(userToken);
+      this.autoLogout(userToken.timeTillExpiration);
+    }
   }
 
-  autoLogOut(timeDuration: number): void {
-    // TODO implement auto log out
-    // TODO implement local storage
+  logout(): void {
+    this.user.next(null);
+    localStorage.removeItem('userToken');
+    this.router.navigate([]);
+    if (this.logOutTimeout) {
+      clearTimeout(this.logOutTimeout);
+      this.logOutTimeout = null;
+    }
+  }
+
+  autoLogout(timeDuration: number): void {
+    console.log(timeDuration);
+    this.logOutTimeout = setTimeout(() => {
+      this.logout();
+    }, timeDuration);
   }
 
   register(userData: UserData): Observable<UserToken> {
@@ -52,16 +74,17 @@ export class AuthService {
 
   private handleAuthentication(userToken: UserToken): void {
     this.user.next(userToken);
+
+    this.autoLogout(userToken.timeTillExpiration);
+    localStorage.setItem('userToken', JSON.stringify(userToken));
   }
 
   private mapUserTokenDTOToUserToken(userTokenDTO: UserTokenDTO): UserToken {
-    const userToken = new UserToken(userTokenDTO.token,
+    return new UserToken(userTokenDTO.token,
       new Date(userTokenDTO.expiresIn),
       +userTokenDTO.id,
       userTokenDTO.username,
       userTokenDTO.email,
       userTokenDTO.roles);
-
-    return userToken;
   }
 }

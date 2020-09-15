@@ -11,6 +11,14 @@ export class UserToken {
               public email: string,
               public roles: string[]) {
   }
+
+  get isExpired(): boolean {
+    return this.expiresIn.getTime() < new Date().getTime();
+  }
+
+  get timeTillExpiration(): number {
+    return this.expiresIn.getTime() - new Date().getTime();
+  }
 }
 
 export class UserTokenDTO {
