@@ -49,3 +49,8 @@ export class FamilyTreeResponseDTO {
               public createdAt: string) {
   }
 }
+
+export class FamilyTreeListDTO {
+  constructor(public familyTrees: FamilyTreeResponseDTO[]) {
+  }
+}

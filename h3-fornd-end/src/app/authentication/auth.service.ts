@@ -19,7 +19,7 @@ export class AuthService {
         .append('username', username)
         .append('password', password)
     }).pipe(catchError(this.handleError),
-      map(userTokenDTO => this.mapUserTokenDTOToUserToken(userTokenDTO)),
+      map(userTokenDTO => this.userTokenDTOToUserToken(userTokenDTO)),
       tap(userToken => this.handleAuthentication(userToken)));
   }
 
@@ -30,7 +30,7 @@ export class AuthService {
       return;
     }
 
-    const userToken = this.mapUserTokenDTOToUserToken(userTokenDTO);
+    const userToken = this.userTokenDTOToUserToken(userTokenDTO);
     if (!userToken.isExpired) {
       this.user.next(userToken);
       this.autoLogout(userToken.timeTillExpiration);
@@ -57,7 +57,7 @@ export class AuthService {
   register(userData: UserData): Observable<UserToken> {
     return this.http.post<UserTokenDTO>('http://localhost:8080/users/signUp', userData)
       .pipe(catchError(this.handleError),
-        map(userTokenDTO => this.mapUserTokenDTOToUserToken(userTokenDTO)),
+        map(userTokenDTO => this.userTokenDTOToUserToken(userTokenDTO)),
         tap(userToken => this.handleAuthentication(userToken)));
   }
 
@@ -79,7 +79,7 @@ export class AuthService {
     localStorage.setItem('userToken', JSON.stringify(userToken));
   }
 
-  private mapUserTokenDTOToUserToken(userTokenDTO: UserTokenDTO): UserToken {
+  private userTokenDTOToUserToken(userTokenDTO: UserTokenDTO): UserToken {
     return new UserToken(userTokenDTO.token,
       new Date(userTokenDTO.expiresIn),
       +userTokenDTO.id,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FamilyTree} from '../../shared/dtos.model';
+import {TreeService} from '../tree.service';
 
 @Component({
   selector: 'app-tree-list',
@@ -7,15 +8,14 @@ import {FamilyTree} from '../../shared/dtos.model';
   styleUrls: ['./tree-list.component.css']
 })
 export class TreeListComponent implements OnInit {
-  trees: FamilyTree[] = [
-    new FamilyTree(1, 'Test Tree', true, new Date()),
-    new FamilyTree(2, 'Custom Tree', false, new Date()),
-    new FamilyTree(3, 'Another Tree', true, new Date()),
-  ];
+  trees: FamilyTree[];
 
-  constructor() { }
+  constructor(private treeService: TreeService) { }
 
   ngOnInit(): void {
+    this.treeService.getOwnTrees().subscribe(familyTrees => {
+      this.trees = familyTrees;
+    });
   }
 
 }
