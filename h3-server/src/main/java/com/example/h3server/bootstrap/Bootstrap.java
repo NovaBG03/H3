@@ -46,7 +46,7 @@ public class Bootstrap implements CommandLineRunner {
         User root = User.builder()
                 .username("root")
                 .email("root@root.com")
-                .password(this.passwordEncoder.encode("root"))
+                .password(this.passwordEncoder.encode("rootroot"))
                 .build();
         root.addRole(Role.ROLE_ADMIN);
         root.addRole(Role.ROLE_USER);
@@ -55,7 +55,7 @@ public class Bootstrap implements CommandLineRunner {
         User user = User.builder()
                 .username("user")
                 .email("user@user.com")
-                .password(this.passwordEncoder.encode("user"))
+                .password(this.passwordEncoder.encode("useruser"))
                 .build();
         user.addRole(Role.ROLE_USER);
         this.userRepository.save(user);
