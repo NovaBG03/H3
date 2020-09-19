@@ -30,6 +30,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Disable CSRF (cross site request forgery)
         http.csrf().disable();
 
+        // Enable CORS
+        http.cors();
+
         // Disable sessions (stateless sessions)
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
