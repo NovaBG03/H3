@@ -30,3 +30,22 @@ export class UserTokenDTO {
               public roles: string[]) {
   }
 }
+
+
+
+
+export class FamilyTree {
+  constructor(public id: number,
+              public name: string,
+              public isPrivate: boolean,
+              public createdAt: Date) {
+  }
+}
+
+export class FamilyTreeResponseDTO {
+  constructor(public id: number,
+              public name: string,
+              public isPrivate: boolean,
+              public createdAt: string) {
+  }
+}
