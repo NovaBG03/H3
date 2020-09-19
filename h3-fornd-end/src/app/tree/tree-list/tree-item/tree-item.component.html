@@ -5,6 +5,6 @@
     <p class="card-text">{{ tree.isPrivate ? 'Private' : 'Public' }}</p>
   </div>
   <div class="card-footer">
-    <small class="text-muted">Created on {{ tree.createdAt }}</small>
+    <small class="text-muted">Created on {{ tree.createdAt | date:'mediumDate' }}</small>
   </div>
 </div>

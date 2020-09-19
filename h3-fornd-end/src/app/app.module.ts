@@ -14,6 +14,7 @@ import {TreeListComponent} from './tree/tree-list/tree-list.component';
 import {TreeItemComponent} from './tree/tree-list/tree-item/tree-item.component';
 import {TreeComponent} from './tree/tree.component';
 import {AuthInterceptorService} from './authentication/auth-interceptor.service';
+import { TreeNewComponent } from './tree/tree-new/tree-new.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {AuthInterceptorService} from './authentication/auth-interceptor.service'
     AuthenticationComponent,
     TreeListComponent,
     TreeItemComponent,
-    TreeComponent
+    TreeComponent,
+    TreeNewComponent
   ],
   imports: [
     BrowserModule,
