@@ -11,7 +11,7 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           <a class="nav-link" routerLink="/home" (click)="closeMenu()">Home</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" *ngIf="user">
           <a class="nav-link" routerLink="/trees" (click)="closeMenu()">My Trees</a>
         </li>
       </ul>

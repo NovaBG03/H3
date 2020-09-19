@@ -40,7 +40,7 @@ export class AuthService {
   logout(): void {
     this.user.next(null);
     localStorage.removeItem('userToken');
-    this.router.navigate([]);
+    this.router.navigate(['/']);
     if (this.logOutTimeout) {
       clearTimeout(this.logOutTimeout);
       this.logOutTimeout = null;
