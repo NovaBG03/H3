@@ -2,7 +2,7 @@
   <div class="alert-box">
     <h4>Create new Family Tree</h4>
     <hr>
-    <form [formGroup]="treeForm" (ngSubmit)="createTree()">
+    <form [formGroup]="treeForm" (ngSubmit)="onCreateTree()">
       <div class="form-group row">
         <label for="name" class="col-form-label col-xl-1 col-md-2 text-md-right">Name</label>
         <div class="col col mr-2 ml-md-0 ml-2">
@@ -21,7 +21,7 @@
       </div>
 
       <div class="alert-box-actions">
-        <button type="submit" class="btn btn-success m-1">Create</button>
+        <button type="submit" class="btn btn-success m-1" [disabled]="treeForm.invalid">Create</button>
         <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
       </div>
     </form>

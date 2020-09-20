@@ -32,8 +32,6 @@ export class UserTokenDTO {
 }
 
 
-
-
 export class FamilyTree {
   constructor(public id: number,
               public name: string,
@@ -52,5 +50,10 @@ export class FamilyTreeResponseDTO {
 
 export class FamilyTreeListDTO {
   constructor(public familyTrees: FamilyTreeResponseDTO[]) {
+  }
+}
+
+export class FamilyTreeData {
+  constructor(public name: string, public isPrivate: boolean) {
   }
 }

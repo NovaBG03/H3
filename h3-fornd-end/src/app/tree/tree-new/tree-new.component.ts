@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {TreeService} from '../tree.service';
 
 @Component({
   selector: 'app-tree-new',
@@ -10,7 +11,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class TreeNewComponent implements OnInit {
   treeForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private treeService: TreeService) {
   }
 
   ngOnInit(): void {
@@ -21,8 +24,16 @@ export class TreeNewComponent implements OnInit {
     this.router.navigate(['..'], {relativeTo: this.route});
   }
 
-  createTree(): void {
-    console.log(this.treeForm.value);
+  onCreateTree(): void {
+    if (this.treeForm.invalid) {
+      return;
+    }
+
+    this.treeService.createTree(this.treeForm.value)
+      .subscribe(familyTree => {
+        console.log(familyTree);
+        this.router.navigate(['..'], {relativeTo: this.route});
+      });
   }
 
   private initForm(): void {
@@ -32,7 +43,7 @@ export class TreeNewComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(225)
       ]),
-      isPrivate: new FormControl()
+      isPrivate: new FormControl(true)
     });
   }
 }
