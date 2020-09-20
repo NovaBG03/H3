@@ -7,10 +7,48 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Mapper
 public interface FamilyMemberMapper {
 
     FamilyMemberMapper INSTANCE = Mappers.getMapper(FamilyMemberMapper.class);
+
+    static List<Long> getPartners(FamilyMember familyMember, List<FamilyMember> familyMembers) {
+        Set<Long> parentIds = new HashSet<>();
+
+        List<FamilyMember> childrenWithParents = familyMembers.stream()
+                .filter(member -> member.getFather() != null && member.getMother() != null)
+                .collect(Collectors.toList());
+
+        parentIds.addAll(childrenWithParents
+                .stream()
+                .filter(member -> member.getMother().getId().equals(familyMember.getId()))
+                .map(member -> member.getFather().getId())
+                .collect(Collectors.toSet()));
+
+        parentIds.addAll(childrenWithParents
+                .stream()
+                .filter(member -> member.getFather().getId().equals(familyMember.getId()))
+                .map(member -> member.getMother().getId())
+                .collect(Collectors.toSet()));
+
+        return new ArrayList<>(parentIds);
+    }
+
+    @Mapping(target = "fatherId",
+            expression = "java(familyMember.getFather() != null ? familyMember.getFather().getId() : null)")
+    @Mapping(target = "motherId",
+            expression = "java(familyMember.getMother() != null ? familyMember.getMother().getId() : null)")
+    @Mapping(target = "partners",
+            expression = "java(FamilyMemberMapper.getPartners(familyMember, familyMembers))")
+    FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember,
+                                                                  List<FamilyMember> familyMembers);
 
     @Mapping(target = "fatherId",
             expression = "java(familyMember.getFather() != null ? familyMember.getFather().getId() : null)")

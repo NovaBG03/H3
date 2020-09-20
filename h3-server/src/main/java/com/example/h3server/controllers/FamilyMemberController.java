@@ -38,10 +38,13 @@ public class FamilyMemberController {
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyMemberListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
-        List<FamilyMemberResponseDTO> familyMemberResponseDTOs = familyMemberService
-                .getMembers(treeId, principal.getName())
+        List<FamilyMember> familyMembers = familyMemberService
+                .getMembers(treeId, principal.getName());
+
+        List<FamilyMemberResponseDTO> familyMemberResponseDTOs = familyMembers
                 .stream()
-                .map(familyMember -> FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(familyMember))
+                .map(familyMember -> FamilyMemberMapper.INSTANCE
+                        .familyMemberToFamilyMemberResponseDTO(familyMember, familyMembers))
                 .collect(Collectors.toList());
 
         return new FamilyMemberListDTO(familyMemberResponseDTOs);

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,4 +40,7 @@ public class FamilyMemberResponseDTO {
 
     @ApiModelProperty(position = 7)
     private Long motherId;
+
+    @ApiModelProperty(position = 8)
+    private List<Long> partners = new ArrayList<>();
 }
