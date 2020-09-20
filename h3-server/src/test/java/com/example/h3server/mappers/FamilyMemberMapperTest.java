@@ -3,6 +3,7 @@ package com.example.h3server.mappers;
 import com.example.h3server.dtos.member.FamilyMemberDataDTO;
 import com.example.h3server.dtos.member.FamilyMemberResponseDTO;
 import com.example.h3server.models.FamilyMember;
+import com.example.h3server.models.Gender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -54,7 +55,7 @@ class FamilyMemberMapperTest {
     @Test
     void familyMemberDataDTOToFamilyMember() {
         FamilyMemberDataDTO familyMemberDataDTO =
-                new FamilyMemberDataDTO(firstName, lastName, birthday, dateOfDeath, null, motherId);
+                new FamilyMemberDataDTO(firstName, lastName, birthday, dateOfDeath, Gender.MALE, null, motherId);
 
         FamilyMember familyMember = FamilyMemberMapper.INSTANCE
                 .FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
@@ -64,6 +65,7 @@ class FamilyMemberMapperTest {
         assertEquals(familyMemberDataDTO.getLastName(), familyMember.getLastName());
         assertEquals(familyMemberDataDTO.getBirthday(), familyMember.getBirthday());
         assertEquals(familyMemberDataDTO.getDateOfDeath(), familyMember.getDateOfDeath());
+        assertEquals(familyMemberDataDTO.getGender(), familyMember.getGender());
         assertEquals(familyMemberDataDTO.getFatherId(), familyMember.getFather().getId());
         assertEquals(familyMemberDataDTO.getMotherId(), familyMember.getMother().getId());
         assertNull(familyMember.getFamilyTree());

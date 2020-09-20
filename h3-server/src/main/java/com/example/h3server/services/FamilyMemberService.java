@@ -70,6 +70,7 @@ public class FamilyMemberService {
         memberFromDb.setLastName(familyMember.getLastName());
         memberFromDb.setBirthday(familyMember.getBirthday());
         memberFromDb.setDateOfDeath(familyMember.getDateOfDeath());
+        memberFromDb.setGender(familyMember.getGender());
 
         ModelValidator.validate(memberFromDb);
         return familyMemberRepository.save(memberFromDb);

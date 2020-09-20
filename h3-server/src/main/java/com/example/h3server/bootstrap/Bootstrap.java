@@ -1,9 +1,6 @@
 package com.example.h3server.bootstrap;
 
-import com.example.h3server.models.FamilyMember;
-import com.example.h3server.models.FamilyTree;
-import com.example.h3server.models.Role;
-import com.example.h3server.models.User;
+import com.example.h3server.models.*;
 import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
@@ -91,6 +88,7 @@ public class Bootstrap implements CommandLineRunner {
                 .firstName("Ivan")
                 .lastName("Gogov")
                 .birthday(LocalDate.of(1955, 5, 5))
+                .gender(Gender.MALE)
                 .build();
         familyTree.addFamilyMember(ivanGogov);
         familyMemberRepository.save(ivanGogov);
@@ -98,6 +96,7 @@ public class Bootstrap implements CommandLineRunner {
         FamilyMember minkaGogova = FamilyMember.builder()
                 .firstName("Minka")
                 .lastName("Gogova")
+                .gender(Gender.FEMALE)
                 .birthday(LocalDate.of(1960, 11, 9))
                 .build();
         familyTree.addFamilyMember(minkaGogova);
@@ -109,6 +108,7 @@ public class Bootstrap implements CommandLineRunner {
                 .birthday(LocalDate.of(1998, 11, 11))
                 .father(ivanGogov)
                 .mother(minkaGogova)
+                .gender(Gender.FEMALE)
                 .build();
         familyTree.addFamilyMember(linaGogova);
         familyMemberRepository.save(linaGogova);
@@ -119,6 +119,7 @@ public class Bootstrap implements CommandLineRunner {
                 .birthday(LocalDate.of(2000, 3, 25))
                 .father(ivanGogov)
                 .mother(minkaGogova)
+                .gender(Gender.MALE)
                 .build();
         familyTree.addFamilyMember(vasilGogov);
         familyMemberRepository.save(vasilGogov);
@@ -127,6 +128,7 @@ public class Bootstrap implements CommandLineRunner {
                 .firstName("Stanka")
                 .lastName("Gogova")
                 .birthday(LocalDate.of(2000, 5, 16))
+                .gender(Gender.FEMALE)
                 .build();
         familyTree.addFamilyMember(stankaGogova);
         familyMemberRepository.save(stankaGogova);
@@ -137,6 +139,7 @@ public class Bootstrap implements CommandLineRunner {
                 .birthday(LocalDate.of(2020, 2, 15))
                 .father(vasilGogov)
                 .mother(stankaGogova)
+                .gender(Gender.MALE)
                 .build();
         familyTree.addFamilyMember(georgiGogov);
         familyMemberRepository.save(georgiGogov);

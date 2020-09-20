@@ -1,5 +1,6 @@
 package com.example.h3server.dtos.member;
 
+import com.example.h3server.models.Gender;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,8 +31,11 @@ public class FamilyMemberResponseDTO {
     private LocalDate dateOfDeath;
 
     @ApiModelProperty(position = 5)
-    private Long fatherId;
+    private Gender gender;
 
     @ApiModelProperty(position = 6)
+    private Long fatherId;
+
+    @ApiModelProperty(position = 7)
     private Long motherId;
 }

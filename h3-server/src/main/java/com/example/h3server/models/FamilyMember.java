@@ -10,9 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class FamilyMember {
 
     @Id
@@ -34,6 +32,10 @@ public class FamilyMember {
     // TODO check that dateOfDeath is after birthday before saving
     private LocalDate dateOfDeath;
 
+    @NotNull(message = "Something went wrong")
+    @Enumerated(EnumType.STRING)
+    private Gender gender = Gender.UNKNOWN;
+
     @OneToOne
     @JoinColumn(name = "father_id")
     private FamilyMember father;
@@ -44,4 +46,27 @@ public class FamilyMember {
 
     @ManyToOne
     private FamilyTree familyTree;
+
+    @Builder
+    public FamilyMember(Long id,
+                        String firstName,
+                        String lastName,
+                        LocalDate birthday,
+                        LocalDate dateOfDeath,
+                        FamilyMember father,
+                        FamilyMember mother,
+                        FamilyTree familyTree,
+                        Gender gender) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.dateOfDeath = dateOfDeath;
+        this.father = father;
+        this.mother = mother;
+        this.familyTree = familyTree;
+        if (gender != null) {
+            this.gender = gender;
+        }
+    }
 }
