@@ -6,6 +6,7 @@ import {TreeComponent} from './tree/tree.component';
 import {AuthGuard} from './authentication/auth.guard';
 import {TreeListComponent} from './tree/tree-list/tree-list.component';
 import {TreeNewComponent} from './tree/tree-new/tree-new.component';
+import {TreeViewComponent} from './tree/tree-view/tree-view.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -15,9 +16,10 @@ const routes: Routes = [
     path: 'trees', component: TreeComponent, canActivate: [AuthGuard], children: [
       {
         path: 'my', component: TreeListComponent, children: [
-          {path: 'new', component: TreeNewComponent}
+          {path: 'new', component: TreeNewComponent},
         ]
       },
+      {path: ':id/members', component: TreeViewComponent}
     ]
   },
   // { path: '**', redirectTo: 'home' }
