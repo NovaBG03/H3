@@ -1,0 +1,43 @@
+<div class="table-responsive">
+  <table class="table table-striped table-light">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Gender</th>
+      <th class="text-center">Birthday</th>
+      <th class="text-center">Date of Death</th>
+      <th class="text-center">Father</th>
+      <th class="text-center">Mother</th>
+      <th>Partners</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let member of members; let i = index" [ngClass]="{'table-info': member.id === selectedMemberId}">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ member.firstName }}</td>
+      <td>{{ member.lastName }}</td>
+      <td>{{ member.gender | lowercase }}</td>
+      <td class="text-center">{{ !member.birthday ? '-' : member.birthday | date }}</td>
+      <td class="text-center">{{ !member.dateOfDeath ? '-' : member.dateOfDeath | date }}</td>
+      <td class="text-center"
+          [ngStyle]="{cursor: getMemberFullName(member.motherId) === '-' ? '' : 'pointer'}"
+          (mouseenter)="onMemberSelected(member.fatherId)"
+          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.fatherId) }}</td>
+      <td class="text-center"
+          [ngStyle]="{cursor: getMemberFullName(member.motherId) === '-' ? '' : 'pointer'}"
+          (mouseenter)="onMemberSelected(member.motherId)"
+          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.motherId) }}</td>
+      <td>
+        <div *ngFor="let partnerId of member.partners"
+             style="cursor: pointer;"
+             (mouseenter)="onMemberSelected(partnerId)"
+             (mouseleave)="onMemberSelected(null)">
+          {{ getMemberFullName(partnerId) }}
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -14,9 +14,11 @@ import {TreeListComponent} from './tree/tree-list/tree-list.component';
 import {TreeItemComponent} from './tree/tree-list/tree-item/tree-item.component';
 import {TreeComponent} from './tree/tree.component';
 import {AuthInterceptorService} from './authentication/auth-interceptor.service';
-import { TreeNewComponent } from './tree/tree-new/tree-new.component';
-import { TreeViewComponent } from './tree/tree-view/tree-view.component';
-import { MembersComponent } from './members/members.component';
+import {TreeNewComponent} from './tree/tree-new/tree-new.component';
+import {TreeViewComponent} from './tree/tree-view/tree-view.component';
+import {ViewTreeComponent} from './member/view-tree/view-tree.component';
+import {ViewTableComponent} from './member/view-table/view-table.component';
+import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
 
 @NgModule({
   declarations: [
@@ -29,14 +31,16 @@ import { MembersComponent } from './members/members.component';
     TreeComponent,
     TreeNewComponent,
     TreeViewComponent,
-    MembersComponent
+    ViewTreeComponent,
+    ViewTableComponent,
+    TreeSettingsComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbCollapseModule
+    NgbCollapseModule,
+    AppRoutingModule
   ],
   providers: [
     {

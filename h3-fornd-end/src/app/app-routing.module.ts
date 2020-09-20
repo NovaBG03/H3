@@ -7,6 +7,9 @@ import {AuthGuard} from './authentication/auth.guard';
 import {TreeListComponent} from './tree/tree-list/tree-list.component';
 import {TreeNewComponent} from './tree/tree-new/tree-new.component';
 import {TreeViewComponent} from './tree/tree-view/tree-view.component';
+import {ViewTreeComponent} from './member/view-tree/view-tree.component';
+import {ViewTableComponent} from './member/view-table/view-table.component';
+import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -19,7 +22,13 @@ const routes: Routes = [
           {path: 'new', component: TreeNewComponent},
         ]
       },
-      {path: ':id/members', component: TreeViewComponent}
+      {
+        path: ':id', component: TreeViewComponent, children: [
+          {path: 'members', component: ViewTreeComponent},
+          {path: 'table', component: ViewTableComponent},
+          {path: 'settings', component: TreeSettingsComponent},
+        ]
+      }
     ]
   },
   // { path: '**', redirectTo: 'home' }
