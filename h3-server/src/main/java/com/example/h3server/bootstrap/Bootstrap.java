@@ -144,6 +144,26 @@ public class Bootstrap implements CommandLineRunner {
         familyTree.addFamilyMember(georgiGogov);
         familyMemberRepository.save(georgiGogov);
 
+        FamilyMember petkoPetkov = FamilyMember.builder()
+                .firstName("Petko")
+                .lastName("Petkov")
+                .birthday(LocalDate.of(1995, 12, 29))
+                .gender(Gender.MALE)
+                .build();
+        familyTree.addFamilyMember(petkoPetkov);
+        familyMemberRepository.save(petkoPetkov);
+
+        FamilyMember lilPetko = FamilyMember.builder()
+                .firstName("Lil")
+                .lastName("Petko")
+                .birthday(LocalDate.of(2020, 9, 22))
+                .primaryParent(linaGogova)
+                .secondaryParent(petkoPetkov)
+                .gender(Gender.MALE)
+                .build();
+        familyTree.addFamilyMember(lilPetko);
+        familyMemberRepository.save(lilPetko);
+
         log.info("Loaded Family Members: " + this.familyMemberRepository.count());
     }
 }
