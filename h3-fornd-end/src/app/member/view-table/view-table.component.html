@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let member of members; let i = index" [ngClass]="{'table-info': member.id === selectedMemberId}">
+    <tr *ngFor="let member of displayMembers; let i = index" [ngClass]="{'table-info': member.id === selectedMemberId}">
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ member.firstName }}</td>
       <td>{{ member.lastName }}</td>
@@ -22,13 +22,13 @@
       <td class="text-center">{{ !member.birthday ? '-' : member.birthday | date }}</td>
       <td class="text-center">{{ !member.dateOfDeath ? '-' : member.dateOfDeath | date }}</td>
       <td class="text-center"
-          [ngStyle]="{cursor: getMemberFullName(member.motherId) === '-' ? '' : 'pointer'}"
-          (mouseenter)="onMemberSelected(member.fatherId)"
-          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.fatherId) }}</td>
+          [ngStyle]="{cursor: getMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"
+          (mouseenter)="onMemberSelected(member.primaryParentId)"
+          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.primaryParentId) }}</td>
       <td class="text-center"
-          [ngStyle]="{cursor: getMemberFullName(member.motherId) === '-' ? '' : 'pointer'}"
-          (mouseenter)="onMemberSelected(member.motherId)"
-          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.motherId) }}</td>
+          [ngStyle]="{cursor: getMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"
+          (mouseenter)="onMemberSelected(member.secondaryParentId)"
+          (mouseleave)="onMemberSelected(null)">{{ getMemberFullName(member.secondaryParentId) }}</td>
       <td>
         <div *ngFor="let partnerId of member.partners"
              style="cursor: pointer;"

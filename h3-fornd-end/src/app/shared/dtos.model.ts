@@ -73,8 +73,8 @@ export class FamilyMember {
               public birthday: Date,
               public dateOfDeath: Date,
               public gender: string,
-              public fatherId: number,
-              public motherId: number,
+              public primaryParentId: number,
+              public secondaryParentId: number,
               public partners: number[]) {
   }
 }
@@ -86,8 +86,8 @@ export class FamilyMemberResponseDTO {
               public birthday: string,
               public dateOfDeath: string,
               public gender: string,
-              public fatherId: number,
-              public motherId: number,
+              public primaryParentId: number,
+              public secondaryParentId: number,
               public partners: number[]) {
   }
 }

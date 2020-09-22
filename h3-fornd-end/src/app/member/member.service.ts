@@ -31,8 +31,8 @@ export class MemberService {
       birthday,
       dateOfDeath,
       familyMemberResponseDTO.gender,
-      +familyMemberResponseDTO.fatherId,
-      +familyMemberResponseDTO.motherId,
+      +familyMemberResponseDTO.primaryParentId,
+      +familyMemberResponseDTO.secondaryParentId,
       partners);
   }
 }

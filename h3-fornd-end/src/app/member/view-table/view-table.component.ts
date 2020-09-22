@@ -9,7 +9,8 @@ import {FamilyMember} from '../../shared/dtos.model';
   styleUrls: ['./view-table.component.css']
 })
 export class ViewTableComponent implements OnInit {
-  members: FamilyMember[] = null;
+  displayMembers: FamilyMember[] = null;
+  // add array of members if you need correct list of members to do CRUD ops
   selectedMemberId: number = null;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute) {
@@ -19,13 +20,13 @@ export class ViewTableComponent implements OnInit {
     this.route.parent.url.subscribe(parentUrlSegment => {
       const treeId = +parentUrlSegment[0];
       this.memberService.getMembers(treeId).subscribe(familyMembers => {
-        this.members = familyMembers;
+        this.displayMembers = familyMembers.map(member => this.swapParentsIfNeeded(member, familyMembers));
       });
     });
   }
 
   getMember(id: number): FamilyMember {
-    return this.members.find(member => member.id === id);
+    return this.displayMembers.find(member => member.id === id);
   }
 
   getMemberFullName(id: number): string {
@@ -40,5 +41,25 @@ export class ViewTableComponent implements OnInit {
 
   onMemberSelected(id: number): void {
     this.selectedMemberId = id;
+  }
+
+  private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {
+    const primary = familyMembers.find(fm => fm.id === member.primaryParentId);
+    if (!primary) {
+      return member;
+    }
+
+    const secondary = familyMembers.find(fm => fm.id === member.secondaryParentId);
+    if (!secondary) {
+      return member;
+    }
+
+    if (primary.gender === 'FEMALE' && secondary.gender === 'MALE') {
+      member.primaryParentId = secondary.id;
+      member.secondaryParentId = primary.id;
+      return member;
+    }
+
+    return member;
   }
 }
