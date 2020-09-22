@@ -42,8 +42,11 @@ public class FamilyMemberService {
 
         familyMember.setId(null);
 
-        familyMember.setFather(findParent(familyMember.getFather(), familyTree, true));
-        familyMember.setMother(findParent(familyMember.getMother(), familyTree, false));
+        familyMember.setPrimaryParent(
+                findParent(familyMember.getPrimaryParent(), familyTree, true));
+
+        familyMember.setSecondaryParent(
+                findParent(familyMember.getSecondaryParent(), familyTree, false));
 
         familyTree.addFamilyMember(familyMember);
 
@@ -63,8 +66,11 @@ public class FamilyMemberService {
             throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
         }
 
-        memberFromDb.setFather(findParent(familyMember.getFather(), familyTree, true));
-        memberFromDb.setMother(findParent(familyMember.getMother(), familyTree, false));
+        memberFromDb.setPrimaryParent
+                (findParent(familyMember.getPrimaryParent(), familyTree, true));
+
+        memberFromDb.setSecondaryParent(
+                findParent(familyMember.getSecondaryParent(), familyTree, false));
 
         memberFromDb.setFirstName(familyMember.getFirstName());
         memberFromDb.setLastName(familyMember.getLastName());
@@ -90,13 +96,15 @@ public class FamilyMemberService {
 
         familyTree.getFamilyMembers()
                 .stream()
-                .filter(member -> member.getFather() != null && member.getFather().getId().equals(memberId))
-                .forEach(member -> member.setFather(null));
+                .filter(member -> member.getPrimaryParent() != null
+                        && member.getPrimaryParent().getId().equals(memberId))
+                .forEach(member -> member.setPrimaryParent(null));
 
         familyTree.getFamilyMembers()
                 .stream()
-                .filter(member -> member.getMother() != null && member.getMother().getId().equals(memberId))
-                .forEach(member -> member.setMother(null));
+                .filter(member -> member.getSecondaryParent() != null
+                        && member.getSecondaryParent().getId().equals(memberId))
+                .forEach(member -> member.setSecondaryParent(null));
 
         familyTreeRepository.save(familyTree);
         familyMemberRepository.delete(memberFromDb);

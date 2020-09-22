@@ -37,12 +37,12 @@ public class FamilyMember {
     private Gender gender = Gender.UNKNOWN;
 
     @OneToOne
-    @JoinColumn(name = "father_id")
-    private FamilyMember father;
+    @JoinColumn(name = "primary_parent_id")
+    private FamilyMember primaryParent;
 
     @OneToOne
-    @JoinColumn(name = "mother_id")
-    private FamilyMember mother;
+    @JoinColumn(name = "secondary_parent_id")
+    private FamilyMember secondaryParent;
 
     @ManyToOne
     private FamilyTree familyTree;
@@ -53,8 +53,8 @@ public class FamilyMember {
                         String lastName,
                         LocalDate birthday,
                         LocalDate dateOfDeath,
-                        FamilyMember father,
-                        FamilyMember mother,
+                        FamilyMember primaryParent,
+                        FamilyMember secondaryParent,
                         FamilyTree familyTree,
                         Gender gender) {
         this.id = id;
@@ -62,8 +62,8 @@ public class FamilyMember {
         this.lastName = lastName;
         this.birthday = birthday;
         this.dateOfDeath = dateOfDeath;
-        this.father = father;
-        this.mother = mother;
+        this.primaryParent = primaryParent;
+        this.secondaryParent = secondaryParent;
         this.familyTree = familyTree;
         if (gender != null) {
             this.gender = gender;

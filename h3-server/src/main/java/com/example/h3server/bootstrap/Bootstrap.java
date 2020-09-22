@@ -106,8 +106,8 @@ public class Bootstrap implements CommandLineRunner {
                 .firstName("Lina")
                 .lastName("Gogova")
                 .birthday(LocalDate.of(1998, 11, 11))
-                .father(ivanGogov)
-                .mother(minkaGogova)
+                .primaryParent(ivanGogov)
+                .secondaryParent(minkaGogova)
                 .gender(Gender.FEMALE)
                 .build();
         familyTree.addFamilyMember(linaGogova);
@@ -117,8 +117,8 @@ public class Bootstrap implements CommandLineRunner {
                 .firstName("Vasil")
                 .lastName("Gogov")
                 .birthday(LocalDate.of(2000, 3, 25))
-                .father(ivanGogov)
-                .mother(minkaGogova)
+                .primaryParent(ivanGogov)
+                .secondaryParent(minkaGogova)
                 .gender(Gender.MALE)
                 .build();
         familyTree.addFamilyMember(vasilGogov);
@@ -137,8 +137,8 @@ public class Bootstrap implements CommandLineRunner {
                 .firstName("Georgi")
                 .lastName("Gogov")
                 .birthday(LocalDate.of(2020, 2, 15))
-                .father(vasilGogov)
-                .mother(stankaGogova)
+                .primaryParent(vasilGogov)
+                .secondaryParent(stankaGogova)
                 .gender(Gender.MALE)
                 .build();
         familyTree.addFamilyMember(georgiGogov);

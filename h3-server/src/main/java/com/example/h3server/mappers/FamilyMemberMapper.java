@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Mapper
 public interface FamilyMemberMapper {
@@ -23,42 +22,42 @@ public interface FamilyMemberMapper {
         Set<Long> parentIds = new HashSet<>();
 
         List<FamilyMember> childrenWithParents = familyMembers.stream()
-                .filter(member -> member.getFather() != null && member.getMother() != null)
+                .filter(member -> member.getPrimaryParent() != null && member.getSecondaryParent() != null)
                 .collect(Collectors.toList());
 
         parentIds.addAll(childrenWithParents
                 .stream()
-                .filter(member -> member.getMother().getId().equals(familyMember.getId()))
-                .map(member -> member.getFather().getId())
+                .filter(member -> member.getSecondaryParent().getId().equals(familyMember.getId()))
+                .map(member -> member.getPrimaryParent().getId())
                 .collect(Collectors.toSet()));
 
         parentIds.addAll(childrenWithParents
                 .stream()
-                .filter(member -> member.getFather().getId().equals(familyMember.getId()))
-                .map(member -> member.getMother().getId())
+                .filter(member -> member.getPrimaryParent().getId().equals(familyMember.getId()))
+                .map(member -> member.getSecondaryParent().getId())
                 .collect(Collectors.toSet()));
 
         return new ArrayList<>(parentIds);
     }
 
-    @Mapping(target = "fatherId",
-            expression = "java(familyMember.getFather() != null ? familyMember.getFather().getId() : null)")
-    @Mapping(target = "motherId",
-            expression = "java(familyMember.getMother() != null ? familyMember.getMother().getId() : null)")
+    @Mapping(target = "primaryParentId",
+            expression = "java(familyMember.getPrimaryParent() != null ? familyMember.getPrimaryParent().getId() : null)")
+    @Mapping(target = "secondaryParentId",
+            expression = "java(familyMember.getSecondaryParent() != null ? familyMember.getSecondaryParent().getId() : null)")
     @Mapping(target = "partners",
             expression = "java(FamilyMemberMapper.getPartners(familyMember, familyMembers))")
     FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember,
                                                                   List<FamilyMember> familyMembers);
 
-    @Mapping(target = "fatherId",
-            expression = "java(familyMember.getFather() != null ? familyMember.getFather().getId() : null)")
-    @Mapping(target = "motherId",
-            expression = "java(familyMember.getMother() != null ? familyMember.getMother().getId() : null)")
+    @Mapping(target = "primaryParentId",
+            expression = "java(familyMember.getPrimaryParent() != null ? familyMember.getPrimaryParent().getId() : null)")
+    @Mapping(target = "secondaryParentId",
+            expression = "java(familyMember.getSecondaryParent() != null ? familyMember.getSecondaryParent().getId() : null)")
     FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember);
 
-    @Mapping(target = "father",
-            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getFatherId()).build())")
-    @Mapping(target = "mother",
-            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getMotherId()).build())")
+    @Mapping(target = "primaryParent",
+            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getPrimaryParentId()).build())")
+    @Mapping(target = "secondaryParent",
+            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getSecondaryParentId()).build())")
     FamilyMember FamilyMemberDataDTOToFamilyMember(FamilyMemberDataDTO familyMemberDataDTO);
 }

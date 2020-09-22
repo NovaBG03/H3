@@ -32,8 +32,8 @@ public class FamilyMemberDataDTO {
     private Gender gender;
 
     @ApiModelProperty(position = 5)
-    private Long fatherId;
+    private Long primaryParentId;
 
     @ApiModelProperty(position = 6)
-    private Long motherId;
+    private Long secondaryParentId;
 }

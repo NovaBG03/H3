@@ -38,8 +38,8 @@ class FamilyMemberMapperTest {
                 .lastName(lastName)
                 .birthday(birthday)
                 .dateOfDeath(dateOfDeath)
-                .father(father)
-                .mother(mother)
+                .primaryParent(father)
+                .secondaryParent(mother)
                 .build();
 
         FamilyMemberResponseDTO familyMemberResponseDTO = FamilyMemberMapper.INSTANCE
@@ -50,8 +50,8 @@ class FamilyMemberMapperTest {
         assertEquals(familyMember.getLastName(), familyMemberResponseDTO.getLastName());
         assertEquals(familyMember.getBirthday(), familyMemberResponseDTO.getBirthday());
         assertEquals(familyMember.getDateOfDeath(), familyMemberResponseDTO.getDateOfDeath());
-        assertEquals(familyMember.getMother().getId(), familyMemberResponseDTO.getMotherId());
-        assertNull(familyMemberResponseDTO.getFatherId());
+        assertEquals(familyMember.getSecondaryParent().getId(), familyMemberResponseDTO.getSecondaryParentId());
+        assertNull(familyMemberResponseDTO.getPrimaryParentId());
     }
 
     @Test
@@ -62,8 +62,8 @@ class FamilyMemberMapperTest {
                 .lastName(lastName)
                 .birthday(birthday)
                 .dateOfDeath(dateOfDeath)
-                .father(father)
-                .mother(mother)
+                .primaryParent(father)
+                .secondaryParent(mother)
                 .build();
 
         Long partnerMotherId = 11L;
@@ -72,12 +72,12 @@ class FamilyMemberMapperTest {
 
         List<FamilyMember> members = Arrays.asList(
                 FamilyMember.builder()
-                        .father(familyMember)
-                        .mother(FamilyMember.builder().id(partnerMotherId).build())
+                        .primaryParent(familyMember)
+                        .secondaryParent(FamilyMember.builder().id(partnerMotherId).build())
                         .build(),
                 FamilyMember.builder()
-                        .father(FamilyMember.builder().id(partnerFatherId).build())
-                        .mother(familyMember)
+                        .primaryParent(FamilyMember.builder().id(partnerFatherId).build())
+                        .secondaryParent(familyMember)
                         .build()
         );
 
@@ -89,9 +89,9 @@ class FamilyMemberMapperTest {
         assertEquals(familyMember.getLastName(), familyMemberResponseDTO.getLastName());
         assertEquals(familyMember.getBirthday(), familyMemberResponseDTO.getBirthday());
         assertEquals(familyMember.getDateOfDeath(), familyMemberResponseDTO.getDateOfDeath());
-        assertEquals(familyMember.getMother().getId(), familyMemberResponseDTO.getMotherId());
+        assertEquals(familyMember.getSecondaryParent().getId(), familyMemberResponseDTO.getSecondaryParentId());
         assertEquals(partnerIds, familyMemberResponseDTO.getPartners());
-        assertNull(familyMemberResponseDTO.getFatherId());
+        assertNull(familyMemberResponseDTO.getPrimaryParentId());
     }
 
     @Test
@@ -108,8 +108,8 @@ class FamilyMemberMapperTest {
         assertEquals(familyMemberDataDTO.getBirthday(), familyMember.getBirthday());
         assertEquals(familyMemberDataDTO.getDateOfDeath(), familyMember.getDateOfDeath());
         assertEquals(familyMemberDataDTO.getGender(), familyMember.getGender());
-        assertEquals(familyMemberDataDTO.getFatherId(), familyMember.getFather().getId());
-        assertEquals(familyMemberDataDTO.getMotherId(), familyMember.getMother().getId());
+        assertEquals(familyMemberDataDTO.getPrimaryParentId(), familyMember.getPrimaryParent().getId());
+        assertEquals(familyMemberDataDTO.getSecondaryParentId(), familyMember.getSecondaryParent().getId());
         assertNull(familyMember.getFamilyTree());
     }
 }

@@ -36,10 +36,10 @@ public class FamilyMemberResponseDTO {
     private Gender gender;
 
     @ApiModelProperty(position = 6)
-    private Long fatherId;
+    private Long primaryParentId;
 
     @ApiModelProperty(position = 7)
-    private Long motherId;
+    private Long secondaryParentId;
 
     @ApiModelProperty(position = 8)
     private List<Long> partners = new ArrayList<>();
