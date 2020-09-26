@@ -19,6 +19,7 @@ import {TreeViewComponent} from './tree/tree-view/tree-view.component';
 import {ViewTreeComponent} from './member/view-tree/view-tree.component';
 import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
+import { MemberItemComponent } from './member/member-item/member-item.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.componen
     TreeViewComponent,
     ViewTreeComponent,
     ViewTableComponent,
-    TreeSettingsComponent
+    TreeSettingsComponent,
+    MemberItemComponent
   ],
   imports: [
     BrowserModule,

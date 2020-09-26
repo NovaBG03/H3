@@ -1,0 +1,44 @@
+<div class="backdrop">
+  <div class="alert-box">
+    <h4>Member</h4>
+    <hr>
+    <h3>{{ member.fullName }}</h3>
+    <p>{{ member.gender | lowercase }}</p>
+    <p>{{ !member.birthday ? 'NO INFO' : member.birthday | date }}
+      {{ !member.dateOfDeath ? '' : ' - ' + member.dateOfDeath | date }}</p>
+
+    <hr>
+
+    <div *ngIf="member.isDirectHeir">
+      <h4>Parents</h4>
+      <p>{{ members.getMember(member.primaryParentId).fullName }}</p>
+      <p>{{ members.getMember(member.secondaryParentId).fullName }}</p>
+    </div>
+
+    <hr>
+
+    <div>
+      <div *ngIf="member.partners && member.partners.length > 0">
+        <h3>Partner{{ member.partners.length > 1 ? 's' : '' }}</h3>
+        <div *ngFor="let partnerId of member.partners">
+          {{ members.getMember(partnerId).fullName }}
+        </div>
+      </div>
+      <div *ngIf="member.isDirectHeir">
+        <button>Add Partner</button>
+      </div>
+    </div>
+
+    <div *ngIf="children && children.length > 0">
+      <h3>Child{{ children.length > 1 ? 'ren' : '' }}</h3>
+      <div *ngFor="let child of children">
+        {{ child.fullName }}
+      </div>
+    </div>
+
+    <div class="alert-box-actions">
+      <button type="submit" class="btn btn-success m-1" [disabled]="!hasMadeChange">Save all</button>
+      <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>

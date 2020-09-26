@@ -11,6 +11,7 @@ import {FamilyMember} from '../../shared/dtos.model';
 })
 export class ViewTreeComponent implements OnInit {
   members: FamilyMember[];
+  mainMember: FamilyMember;
   private chart: OrgChart;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute) {
@@ -23,8 +24,9 @@ export class ViewTreeComponent implements OnInit {
     this.route.parent.url.subscribe(parentUrlSegment => {
       const treeId = +parentUrlSegment[0];
       this.memberService.getMembers(treeId).subscribe(familyMembers => {
-        this.members = familyMembers;
-        this.loadMembers(familyMembers);
+        this.members = familyMembers.members;
+        this.mainMember = familyMembers.mainMember;
+        this.loadMembers();
       });
     });
   }
@@ -85,16 +87,16 @@ export class ViewTreeComponent implements OnInit {
 
   // pid - partner id; tags: ['partner']
   // pid - directHeir; ppid - directHeirSpouse
-  private loadMembers(members: FamilyMember[]): void {
-    console.log(members);
-    const mapped = members.map((member) => {
+  private loadMembers(): void {
+    const mapped = this.members.map((member) => {
       const tags: string[] = [];
       let pid: number = null;
       let ppid: number = null;
 
-      const isDirectHeir = member.secondaryParentId && member.primaryParentId;
+      const isDirectHeir = member.isDirectHeir;
+      const firstId = this.mainMember.id;
 
-      if (!isDirectHeir && member.partners.length > 0 && member.id !== 1) {
+      if (!isDirectHeir && member.partners.length > 0 && member.id !== firstId) {
         const partnerId = member.partners[0];
         pid = partnerId;
         tags.push('partner');
@@ -114,7 +116,6 @@ export class ViewTreeComponent implements OnInit {
       };
     });
 
-    console.log(mapped);
     this.chart.load(mapped);
 
     // this.chart.load([

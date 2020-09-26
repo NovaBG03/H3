@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
-import {FamilyMember} from '../../shared/dtos.model';
+import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
 
 @Component({
   selector: 'app-view-table',
@@ -9,9 +9,11 @@ import {FamilyMember} from '../../shared/dtos.model';
   styleUrls: ['./view-table.component.css']
 })
 export class ViewTableComponent implements OnInit {
+  familyMembers: FamilyMembers = null;
   displayMembers: FamilyMember[] = null;
   // add array of members if you need correct list of members to do CRUD ops
-  selectedMemberId: number = null;
+  highlightedMemberId: number = null;
+  editingMember: FamilyMember = null;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute) {
   }
@@ -20,17 +22,19 @@ export class ViewTableComponent implements OnInit {
     this.route.parent.url.subscribe(parentUrlSegment => {
       const treeId = +parentUrlSegment[0];
       this.memberService.getMembers(treeId).subscribe(familyMembers => {
-        this.displayMembers = familyMembers.map(member => this.swapParentsIfNeeded(member, familyMembers));
+        this.familyMembers = familyMembers;
+        const members = familyMembers.members;
+        this.displayMembers = members.map(member => this.swapParentsIfNeeded(member, members));
       });
     });
   }
 
-  getMember(id: number): FamilyMember {
+  getDisplayMember(id: number): FamilyMember {
     return this.displayMembers.find(member => member.id === id);
   }
 
-  getMemberFullName(id: number): string {
-    const member = this.getMember(id);
+  getDisplayMemberFullName(id: number): string {
+    const member = this.getDisplayMember(id);
 
     if (!member) {
       return '-';
@@ -39,8 +43,8 @@ export class ViewTableComponent implements OnInit {
     return member.firstName + ' ' + member.lastName;
   }
 
-  onMemberSelected(id: number): void {
-    this.selectedMemberId = id;
+  onMemberHighlighted(id: number): void {
+    this.highlightedMemberId = id;
   }
 
   private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {

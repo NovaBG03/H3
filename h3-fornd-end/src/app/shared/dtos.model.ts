@@ -59,12 +59,48 @@ export class FamilyTreeData {
 }
 
 
+export class FamilyMembers {
+  constructor(members: FamilyMember[]) {
+    this.members = members;
+  }
 
+  // tslint:disable-next-line:variable-name
+  private _mainMember: FamilyMember = null;
 
+  public get mainMember(): FamilyMember {
+    return this._mainMember;
+  }
 
+  // tslint:disable-next-line:variable-name
+  private _members: FamilyMember[] = [];
 
+  public get members(): FamilyMember[] {
+    return this._members.slice();
+  }
 
+  public set members(members: FamilyMember[]) {
+    if (members) {
+      this._members = members.slice();
+      this._mainMember = members.sort((a, b) => a.id - b.id)[0];
+    } else {
+      this._members = null;
+      this._mainMember = null;
+    }
+  }
 
+  public getMember(id: number): FamilyMember {
+    return this._members.find(member => member.id === id);
+  }
+
+  public getChildren(id: number): FamilyMember[] {
+    const children: FamilyMember[] = [];
+
+    children.push(...this._members.filter(member => member.primaryParentId === id));
+    children.push(...this._members.filter(member => member.secondaryParentId === id));
+
+    return children;
+  }
+}
 
 export class FamilyMember {
   constructor(public id: number,
@@ -76,6 +112,14 @@ export class FamilyMember {
               public primaryParentId: number,
               public secondaryParentId: number,
               public partners: number[]) {
+  }
+
+  get fullName(): string {
+    return this.firstName + ' ' + this.lastName;
+  }
+
+  get isDirectHeir(): boolean {
+    return !!this.primaryParentId;
   }
 }
 
