@@ -27,6 +27,7 @@ export class MemberItemComponent implements OnInit {
   ngOnInit(): void {
     this.memberChildren = this.members.getChildren(this.member.id);
     this.initForm();
+    console.log(this.member);
   }
 
   onCancel(): void {
@@ -40,13 +41,13 @@ export class MemberItemComponent implements OnInit {
     const ngbBirthday: NgbDate = value.birthday;
     let birthday = null;
     if (ngbBirthday) {
-      birthday = new Date(ngbBirthday.year, ngbBirthday.month, ngbBirthday.day);
+      birthday = new Date(ngbBirthday.year, ngbBirthday.month - 1, ngbBirthday.day + 1);
     }
 
     const ngbDateOfDeath: NgbDate = value.dateOfDeath;
     let dateOfDeath = null;
     if (ngbDateOfDeath) {
-      dateOfDeath = new Date(ngbDateOfDeath.year, ngbDateOfDeath.month, ngbDateOfDeath.day);
+      dateOfDeath = new Date(ngbDateOfDeath.year, ngbDateOfDeath.month - 1, ngbDateOfDeath.day + 1);
     }
 
     const familyMemberDataDTO = new FamilyMemberDataDTO(
@@ -67,13 +68,13 @@ export class MemberItemComponent implements OnInit {
     const birthday = this.member.birthday;
     let ngbBirthday = null;
     if (birthday) {
-      ngbBirthday = new NgbDate(birthday.getFullYear(), birthday.getMonth(), birthday.getDate());
+      ngbBirthday = new NgbDate(birthday.getUTCFullYear(), birthday.getUTCMonth() + 1, birthday.getUTCDate());
     }
 
     const dateOfDeath = this.member.dateOfDeath;
     let ngbDateOfDeath = null;
     if (dateOfDeath) {
-      ngbDateOfDeath = new NgbDate(dateOfDeath.getFullYear(), dateOfDeath.getMonth(), dateOfDeath.getDate());
+      ngbDateOfDeath = new NgbDate(dateOfDeath.getUTCFullYear(), dateOfDeath.getUTCMonth() + 1, dateOfDeath.getUTCDate());
     }
 
     this.memberForm = new FormGroup({

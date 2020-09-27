@@ -18,7 +18,7 @@
         [ngClass]="{'table-info': member.id === highlightedMemberId}">
       <th scope="row">{{ i + 1 }}</th>
       <td class="text-center">
-        <span (click)="editingMember = member" style="cursor: pointer;">&#x270F;</span>
+        <span (click)="onStartEditing(member.id)" style="cursor: pointer;">&#x270F;</span>
       </td>
       <td>{{ member.fullName }}</td>
       <td>{{ member.gender | lowercase }}</td>

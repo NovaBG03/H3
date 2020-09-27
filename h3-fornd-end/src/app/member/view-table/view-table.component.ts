@@ -43,11 +43,38 @@ export class ViewTableComponent implements OnInit {
     this.highlightedMemberId = id;
   }
 
+  onStartEditing(memberId: number): void {
+    this.editingMember = this.familyMembers.getMember(memberId);
+  }
+
   onFinishEditing(isChanged: boolean): void {
     this.editingMember = null;
     if (isChanged) {
       this.loadMembers();
     }
+  }
+
+  private loadMembers(): void {
+    this.memberService.getMembers(this.treeId)
+      .subscribe(familyMembers => {
+        this.familyMembers = familyMembers;
+
+        const membersClone: FamilyMember[] = [];
+        familyMembers.members.forEach(member => {
+          membersClone.push(new FamilyMember(
+            member.id,
+            member.firstName,
+            member.lastName,
+            member.birthday ? new Date(member.birthday) : null,
+            member.dateOfDeath ? new Date(member.dateOfDeath) : null,
+            member.gender,
+            member.primaryParentId,
+            member.secondaryParentId,
+            member.partners.slice()));
+        });
+
+        this.displayMembers = membersClone.map(member => this.swapParentsIfNeeded(member, membersClone));
+      });
   }
 
   private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {
@@ -68,14 +95,5 @@ export class ViewTableComponent implements OnInit {
     }
 
     return member;
-  }
-
-  private loadMembers(): void {
-    this.memberService.getMembers(this.treeId)
-      .subscribe(familyMembers => {
-        this.familyMembers = familyMembers;
-        const members = familyMembers.members;
-        this.displayMembers = members.map(member => this.swapParentsIfNeeded(member, members));
-      });
   }
 }
