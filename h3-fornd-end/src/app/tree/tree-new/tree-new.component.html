@@ -5,7 +5,7 @@
     <form [formGroup]="treeForm" (ngSubmit)="onCreateTree()">
       <div class="form-group row">
         <label for="name" class="col-form-label col-xl-1 col-md-2 text-md-right">Name</label>
-        <div class="col col mr-2 ml-md-0 ml-2">
+        <div class="col mr-2 ml-md-0 ml-2">
           <input type="text" id="name" placeholder="Name" class="form-control" formControlName="name">
           <small *ngIf="treeForm.get('name').invalid && treeForm.get('name').touched" class="text-danger">
             Name must be more than 3 characters

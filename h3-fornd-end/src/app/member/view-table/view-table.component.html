@@ -48,4 +48,5 @@
 <app-member-item *ngIf="editingMember"
                  [familyMember]="editingMember"
                  [familyMembers]="familyMembers"
-                 (cancelEditing)="editingMember = null"></app-member-item>
+                 [treeId]="treeId"
+                 (finishEditing)="onFinishEditing($event)"></app-member-item>

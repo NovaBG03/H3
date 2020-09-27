@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {FamilyMember, FamilyMemberListDTO, FamilyMemberResponseDTO, FamilyMembers} from '../shared/dtos.model';
+import {FamilyMember, FamilyMemberDataDTO, FamilyMemberListDTO, FamilyMemberResponseDTO, FamilyMembers, Gender} from '../shared/dtos.model';
 
 @Injectable({providedIn: 'root'})
 export class MemberService {
@@ -12,11 +12,17 @@ export class MemberService {
   getMembers(treeId: number): Observable<FamilyMembers> {
     return this.http.get<FamilyMemberListDTO>('http://localhost:8080/trees/' + treeId + '/members')
       .pipe(map(familyMemberListDTO => {
-        const members = familyMemberListDTO.familyMembers.map(familyMemberDTO => {
-          return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberDTO);
+        const members = familyMemberListDTO.familyMembers.map(familyMemberResponseDTO => {
+          return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
         });
-
         return new FamilyMembers(members);
+      }));
+  }
+
+  updateMember(treeId: number, memberId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
+    return this.http.put<FamilyMemberResponseDTO>(`http://localhost:8080/trees/${treeId}/members/${memberId}`, member)
+      .pipe(map(familyMemberResponseDTO => {
+        return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));
   }
 
@@ -32,7 +38,7 @@ export class MemberService {
       familyMemberResponseDTO.lastName,
       birthday,
       dateOfDeath,
-      familyMemberResponseDTO.gender,
+      Gender[familyMemberResponseDTO.gender],
       +familyMemberResponseDTO.primaryParentId,
       +familyMemberResponseDTO.secondaryParentId,
       partners);

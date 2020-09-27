@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 
-import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCollapseModule, NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -37,13 +37,14 @@ import { MemberItemComponent } from './member/member-item/member-item.component'
     TreeSettingsComponent,
     MemberItemComponent
   ],
-  imports: [
-    BrowserModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgbCollapseModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        NgbCollapseModule,
+        AppRoutingModule,
+        NgbDatepickerModule
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

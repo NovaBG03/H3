@@ -1,4 +1,4 @@
-import {FamilyTree, FamilyTreeData, FamilyTreeListDTO, FamilyTreeResponseDTO} from '../shared/dtos.model';
+import {FamilyTree, FamilyTreeDataDTO, FamilyTreeListDTO, FamilyTreeResponseDTO} from '../shared/dtos.model';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
@@ -23,7 +23,7 @@ export class TreeService {
       }));
   }
 
-  createTree(familyTreeData: FamilyTreeData): Observable<FamilyTree> {
+  createTree(familyTreeData: FamilyTreeDataDTO): Observable<FamilyTree> {
     return this.http.post<FamilyTreeResponseDTO>('http://localhost:8080/trees/', familyTreeData)
       .pipe(map(familyTreeResponseDTO => {
         return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);

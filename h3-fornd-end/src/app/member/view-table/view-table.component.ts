@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
-import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
+import {FamilyMember, FamilyMembers, Gender} from '../../shared/dtos.model';
 
 @Component({
   selector: 'app-view-table',
@@ -9,9 +9,9 @@ import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
   styleUrls: ['./view-table.component.css']
 })
 export class ViewTableComponent implements OnInit {
-  familyMembers: FamilyMembers = null;
-  displayMembers: FamilyMember[] = null;
-  // add array of members if you need correct list of members to do CRUD ops
+  treeId: number;
+  familyMembers: FamilyMembers;
+  displayMembers: FamilyMember[];
   highlightedMemberId: number = null;
   editingMember: FamilyMember = null;
 
@@ -20,12 +20,8 @@ export class ViewTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.parent.url.subscribe(parentUrlSegment => {
-      const treeId = +parentUrlSegment[0];
-      this.memberService.getMembers(treeId).subscribe(familyMembers => {
-        this.familyMembers = familyMembers;
-        const members = familyMembers.members;
-        this.displayMembers = members.map(member => this.swapParentsIfNeeded(member, members));
-      });
+      this.treeId = +parentUrlSegment[0];
+      this.loadMembers();
     });
   }
 
@@ -47,6 +43,13 @@ export class ViewTableComponent implements OnInit {
     this.highlightedMemberId = id;
   }
 
+  onFinishEditing(isChanged: boolean): void {
+    this.editingMember = null;
+    if (isChanged) {
+      this.loadMembers();
+    }
+  }
+
   private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {
     const primary = familyMembers.find(fm => fm.id === member.primaryParentId);
     if (!primary) {
@@ -58,12 +61,21 @@ export class ViewTableComponent implements OnInit {
       return member;
     }
 
-    if (primary.gender === 'FEMALE' && secondary.gender === 'MALE') {
+    if (primary.gender === Gender.FEMALE && secondary.gender === Gender.MALE) {
       member.primaryParentId = secondary.id;
       member.secondaryParentId = primary.id;
       return member;
     }
 
     return member;
+  }
+
+  private loadMembers(): void {
+    this.memberService.getMembers(this.treeId)
+      .subscribe(familyMembers => {
+        this.familyMembers = familyMembers;
+        const members = familyMembers.members;
+        this.displayMembers = members.map(member => this.swapParentsIfNeeded(member, members));
+      });
   }
 }
