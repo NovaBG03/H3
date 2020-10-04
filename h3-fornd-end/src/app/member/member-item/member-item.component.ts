@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FamilyMember, FamilyMemberDataDTO, FamilyMembers, Gender} from '../../shared/dtos.model';
 import {FormControl, FormGroup} from '@angular/forms';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
 import {MemberService} from '../member.service';
+import {merge, Observable, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-item',
@@ -11,21 +13,21 @@ import {MemberService} from '../member.service';
 })
 export class MemberItemComponent implements OnInit {
   @Input() treeId: number;
-  @Input('familyMembers') members: FamilyMembers;
+  @Input('familyMembers') familyMembers: FamilyMembers;
   @Input('familyMember') member: FamilyMember;
   memberChildren: FamilyMember[];
-  hasMadeChange = false;
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
 
   // outputs true if change is made, false if it isn't
   @Output() finishEditing = new EventEmitter<boolean>();
 
+
   constructor(private memberService: MemberService) {
   }
 
   ngOnInit(): void {
-    this.memberChildren = this.members.getChildren(this.member.id);
+    this.memberChildren = this.familyMembers.getChildren(this.member.id);
     this.initForm();
     console.log(this.member);
   }
@@ -83,6 +85,10 @@ export class MemberItemComponent implements OnInit {
       gender: new FormControl(this.member.gender),
       birthday: new FormControl(ngbBirthday),
       dateOfDeath: new FormControl(ngbDateOfDeath),
+      primaryParent: new FormControl(this.familyMembers.getMember(this.member.primaryParentId)),
+      secondaryParent: new FormControl(this.familyMembers.getMember(this.member.secondaryParentId))
     });
+
+    this.memberForm.valueChanges.subscribe(value => console.log(value));
   }
 }

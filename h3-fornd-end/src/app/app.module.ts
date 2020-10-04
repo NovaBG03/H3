@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 
-import {NgbCollapseModule, NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCollapseModule, NgbDatepickerModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -20,6 +20,7 @@ import {ViewTreeComponent} from './member/view-tree/view-tree.component';
 import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
 import { MemberItemComponent } from './member/member-item/member-item.component';
+import { MemberSearchComponent } from './member/member-item/member-search/member-search.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MemberItemComponent } from './member/member-item/member-item.component'
     ViewTreeComponent,
     ViewTableComponent,
     TreeSettingsComponent,
-    MemberItemComponent
+    MemberItemComponent,
+    MemberSearchComponent
   ],
     imports: [
         BrowserModule,
@@ -43,7 +45,8 @@ import { MemberItemComponent } from './member/member-item/member-item.component'
         HttpClientModule,
         NgbCollapseModule,
         AppRoutingModule,
-        NgbDatepickerModule
+        NgbDatepickerModule,
+        NgbTypeaheadModule
     ],
   providers: [
     {

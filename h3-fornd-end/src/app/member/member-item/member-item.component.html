@@ -1,6 +1,6 @@
 <div class="backdrop">
   <div class="alert-box">
-    <h4>Member</h4>
+    <h3>Member</h3>
     <hr>
 
     <form [formGroup]="memberForm" (ngSubmit)="onSave()">
@@ -53,6 +53,27 @@
           </div>
         </div>
       </div>
+
+      <div>
+        <h4>Parents</h4>
+        <div class="row">
+          <div class="col-6">
+            <app-member-search [parentForm]="memberForm"
+                               label="Primary Parent"
+                               controlName="primaryParent"
+                               [familyMembers]="familyMembers"
+                               [familyMember]="member"></app-member-search>
+          </div>
+          <div class="col-6">
+            <app-member-search [parentForm]="memberForm"
+                               label="Secondary Parent"
+                               controlName="secondaryParent"
+                               [familyMembers]="familyMembers"
+                               [familyMember]="member"></app-member-search>
+          </div>
+        </div>
+      </div>
+
 
       <div class="alert-box-actions">
         <button type="submit" class="btn btn-success m-1" [disabled]="memberForm.invalid">Save all</button>

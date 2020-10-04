@@ -1,0 +1,16 @@
+<div class="input-group" [formGroup]="parentForm">
+  <div class="input-group-prepend">
+    <label class="input-group-text" [for]="controlName">{{ label }}</label>
+  </div>
+  <input type="text"
+         [id]="controlName"
+         class="form-control"
+         [ngbTypeahead]="search"
+         [inputFormatter]="formatter"
+         [resultFormatter]="formatter"
+         [editable]="false"
+         (focus)="focus$.next($any($event).target.value)"
+         (click)="click$.next($any($event).target.value)"
+         [formControlName]="controlName"
+         #instance="ngbTypeahead"/>
+</div>
