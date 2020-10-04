@@ -58,8 +58,8 @@ export class MemberItemComponent implements OnInit {
       birthday,
       dateOfDeath,
       value.gender.toUpperCase(),
-      this.member.primaryParentId === 0 ? null : this.member.primaryParentId,
-      this.member.secondaryParentId === 0 ? null : this.member.secondaryParentId
+      value.primaryParent ? value.primaryParent.id : null,
+      value.secondaryParent ? value.secondaryParent.id : null
     );
 
     this.memberService.updateMember(this.treeId, this.member.id, familyMemberDataDTO)
@@ -89,6 +89,6 @@ export class MemberItemComponent implements OnInit {
       secondaryParent: new FormControl(this.familyMembers.getMember(this.member.secondaryParentId))
     });
 
-    this.memberForm.valueChanges.subscribe(value => console.log(value));
+    // this.memberForm.valueChanges.subscribe(value => console.log(value));
   }
 }
