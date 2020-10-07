@@ -1,10 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FamilyMember, FamilyMemberDataDTO, FamilyMembers, Gender} from '../../shared/dtos.model';
-import {FormControl, FormGroup} from '@angular/forms';
-import {NgbDate, NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {MemberService} from '../member.service';
-import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-member-item',
@@ -18,6 +16,8 @@ export class MemberItemComponent implements OnInit {
   memberChildren: FamilyMember[];
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
+  partnersFormArray: FormArray;
+  childrenFormArray: FormArray;
 
   // outputs true if change is made, false if it isn't
   @Output() finishEditing = new EventEmitter<boolean>();
@@ -29,7 +29,6 @@ export class MemberItemComponent implements OnInit {
   ngOnInit(): void {
     this.memberChildren = this.familyMembers.getChildren(this.member.id);
     this.initForm();
-    console.log(this.member);
   }
 
   onCancel(): void {
@@ -66,6 +65,28 @@ export class MemberItemComponent implements OnInit {
       .subscribe(familyMember => this.finishEditing.emit(true));
   }
 
+  addEmptyPartnerControl(): void {
+    this.partnersFormArray.push(new FormControl());
+    this.childrenFormArray.push(new FormArray([]));
+  }
+
+  removePartnerControl(index: number): void {
+    this.partnersFormArray.removeAt(index);
+    this.childrenFormArray.removeAt(index);
+  }
+
+  getChildControls(parentControlIndex: number): FormArray {
+    return this.childrenFormArray.controls[parentControlIndex] as FormArray;
+  }
+
+  addEmptyChildArray(parentIndex: number): void {
+    this.getChildControls(parentIndex).push(new FormControl());
+  }
+
+  removeChildControl(parentIndex: number, childIndex: number): void {
+    this.getChildControls(parentIndex).removeAt(childIndex);
+  }
+
   private initForm(): void {
     const birthday = this.member.birthday;
     let ngbBirthday = null;
@@ -79,6 +100,24 @@ export class MemberItemComponent implements OnInit {
       ngbDateOfDeath = new NgbDate(dateOfDeath.getUTCFullYear(), dateOfDeath.getUTCMonth() + 1, dateOfDeath.getUTCDate());
     }
 
+    this.partnersFormArray = new FormArray(this.member.partners.map(partnerId =>
+      new FormControl(this.familyMembers.getMember(partnerId))
+    ));
+
+    this.childrenFormArray = new FormArray(this.partnersFormArray.controls.map(control => {
+      const controlMember = control.value;
+
+      if (!controlMember) {
+        return new FormArray([]);
+      }
+
+      const multipleChildrenControls = this.familyMembers
+        .getMultipleChildren(this.member.id, controlMember.id)
+        .map(member => new FormControl(member));
+
+      return new FormArray(multipleChildrenControls);
+    }));
+
     this.memberForm = new FormGroup({
       firstName: new FormControl(this.member.firstName),
       lastName: new FormControl(this.member.lastName),
@@ -86,9 +125,10 @@ export class MemberItemComponent implements OnInit {
       birthday: new FormControl(ngbBirthday),
       dateOfDeath: new FormControl(ngbDateOfDeath),
       primaryParent: new FormControl(this.familyMembers.getMember(this.member.primaryParentId)),
-      secondaryParent: new FormControl(this.familyMembers.getMember(this.member.secondaryParentId))
+      secondaryParent: new FormControl(this.familyMembers.getMember(this.member.secondaryParentId)),
+      partners: this.partnersFormArray,
+      children: this.childrenFormArray
     });
-
     // this.memberForm.valueChanges.subscribe(value => console.log(value));
   }
 }

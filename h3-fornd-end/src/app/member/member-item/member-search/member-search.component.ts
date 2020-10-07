@@ -1,9 +1,9 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FamilyMember, FamilyMembers} from '../../../shared/dtos.model';
 import {merge, Observable, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-member-search',
@@ -12,18 +12,28 @@ import {FormGroup} from '@angular/forms';
 })
 export class MemberSearchComponent implements OnInit {
   @Input() controlName: string;
+  @Input() control: FormControl;
+
   @Input() label: string;
   @Input() parentForm: FormGroup;
   @Input() familyMembers: FamilyMembers;
   @Input() familyMember: FamilyMember;
 
-  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
+  @Input() canClose = false;
+  @Output() closeButtonClicked = new EventEmitter<void>();
+
+  @ViewChild('instance', {static: false}) instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
+  }
+
+  onClose(): void {
+    this.closeButtonClicked.emit();
   }
 
   formatter(member: FamilyMember): string {
@@ -39,5 +49,5 @@ export class MemberSearchComponent implements OnInit {
       map(term => (term === '' ? this.familyMembers.members
         : this.familyMembers.members.filter(m => m.fullName.toLowerCase().indexOf(term.toLowerCase()) > -1)).slice(0, 10))
     );
-  }
+  };
 }

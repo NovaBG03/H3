@@ -2,7 +2,8 @@
   <div class="input-group-prepend">
     <label class="input-group-text" [for]="controlName">{{ label }}</label>
   </div>
-  <input type="text"
+  <input *ngIf="controlName"
+         type="text"
          [id]="controlName"
          class="form-control"
          [ngbTypeahead]="search"
@@ -13,4 +14,19 @@
          (click)="click$.next($any($event).target.value)"
          [formControlName]="controlName"
          #instance="ngbTypeahead"/>
+  <input *ngIf="control"
+         type="text"
+         [id]="controlName"
+         class="form-control"
+         [ngbTypeahead]="search"
+         [inputFormatter]="formatter"
+         [resultFormatter]="formatter"
+         [editable]="false"
+         (focus)="focus$.next($any($event).target.value)"
+         (click)="click$.next($any($event).target.value)"
+         [formControl]="control"
+         #instance="ngbTypeahead"/>
+  <div class="input-group-append" *ngIf="canClose">
+    <button type="button" class="btn btn-danger" (click)="onClose()">X</button>
+  </div>
 </div>

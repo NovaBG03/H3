@@ -95,8 +95,18 @@ export class FamilyMembers {
   public getChildren(id: number): FamilyMember[] {
     const children: FamilyMember[] = [];
 
-    children.push(...this._members.filter(member => member.primaryParentId === id));
-    children.push(...this._members.filter(member => member.secondaryParentId === id));
+    children.push(...this._members.filter(member => member.primaryParentId === id
+      || member.secondaryParentId === id));
+
+    return children;
+  }
+
+  public getMultipleChildren(firstId: number, secondId: any): FamilyMember[] {
+    const children: FamilyMember[] = [];
+
+    children.push(...this._members
+      .filter(member => (member.primaryParentId === firstId && member.secondaryParentId === secondId)
+        || (member.primaryParentId === secondId && member.secondaryParentId === firstId)));
 
     return children;
   }

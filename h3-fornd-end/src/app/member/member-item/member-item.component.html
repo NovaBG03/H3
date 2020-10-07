@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div *ngIf="member.isDirectHeir || familyMembers.isEmptyMember(member)">
+      <div *ngIf="member.isDirectHeir || familyMembers.isEmptyMember(member)" class="mb-4">
         <h4>Parents</h4>
         <div class="row">
           <div class="col-6">
@@ -74,8 +74,41 @@
         </div>
       </div>
 
+      <div>
+        <h4>Partners</h4>
+        <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">
+          <app-member-search [parentForm]="memberForm"
+                             [label]="'Partner ' + (i + 1)"
+                             [control]="partnersFormArray.controls[i]"
+                             [familyMembers]="familyMembers"
+                             [familyMember]="member"
+                             [canClose]="true"
+                             (closeButtonClicked)="removePartnerControl(i)"></app-member-search>
 
-      <div class="alert-box-actions">
+          <div *ngIf="partnersFormArray.controls[i].value">
+            <div class="row" *ngFor="let child of getChildControls(i).controls; let j = index">
+              <app-member-search [parentForm]="memberForm"
+                                 [label]="'Child ' + (j + 1)"
+                                 [control]="getChildControls(i).controls[j]"
+                                 [familyMembers]="familyMembers"
+                                 [familyMember]="member"
+                                 [canClose]="true"
+                                 (closeButtonClicked)="removeChildControl(i, j)"
+                                 class="col-10 offset-1 mt-2"></app-member-search>
+            </div>
+            <div class="row">
+              <div class="col-10 offset-1 mt-2">
+                <button type="button" class="btn btn-success" (click)="addEmptyChildArray(i)">Add Child</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <button type="button" class="btn btn-success" (click)="addEmptyPartnerControl()">Add Partner</button>
+      </div>
+
+
+      <div class="alert-box-actions mt-4">
         <button type="submit" class="btn btn-success m-1" [disabled]="memberForm.invalid">Save all</button>
         <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
       </div>
