@@ -54,7 +54,8 @@
         </div>
       </div>
 
-      <div *ngIf="member.isDirectHeir || familyMembers.isEmptyMember(member)" class="mb-4">
+      <div *ngIf="(member.isDirectHeir || familyMembers.isEmptyMember(member))
+                  && member.id !== familyMembers.mainMember.id" class="mb-4">
         <h4>Parents</h4>
         <div class="row">
           <div class="col-6">
