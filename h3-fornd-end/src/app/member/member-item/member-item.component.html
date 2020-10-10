@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <div>
+      <div *ngIf="isEditing">
         <h4>Partners</h4>
         <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">
           <app-member-search [parentForm]="memberForm"

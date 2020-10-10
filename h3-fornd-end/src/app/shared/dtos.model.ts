@@ -94,6 +94,9 @@ export class FamilyMembers {
 
   public getChildren(id: number): FamilyMember[] {
     const children: FamilyMember[] = [];
+    if (!id) {
+      return children;
+    }
 
     children.push(...this._members.filter(member => member.primaryParentId === id
       || member.secondaryParentId === id));

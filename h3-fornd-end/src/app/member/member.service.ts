@@ -26,6 +26,13 @@ export class MemberService {
       }));
   }
 
+  createMember(treeId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
+    return this.http.post<FamilyMemberResponseDTO>(`http://localhost:8080/trees/${treeId}/members/`, member)
+      .pipe(map(familyMemberResponseDTO => {
+        return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
+      }));
+  }
+
   private mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO: FamilyMemberResponseDTO): FamilyMember {
     const partners: number[] = [];
     familyMemberResponseDTO.partners.forEach(partner => partners.push(+partner));

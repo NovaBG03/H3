@@ -3,7 +3,6 @@ import {FamilyMember, FamilyMemberDataDTO, FamilyMembers, Gender} from '../../sh
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {MemberService} from '../member.service';
-import {merge} from 'rxjs';
 
 @Component({
   selector: 'app-member-item',
@@ -13,21 +12,34 @@ import {merge} from 'rxjs';
 export class MemberItemComponent implements OnInit {
   @Input() treeId: number;
   @Input('familyMembers') familyMembers: FamilyMembers;
-  @Input('familyMember') member: FamilyMember;
-  memberChildren: FamilyMember[];
+  @Input('familyMember') member: FamilyMember; // if is null -> creating new user
+  memberChildren: FamilyMember[] = [];
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
   partnersFormArray: FormArray;
   childrenFormArray: FormArray;
+  isEditing = true;
 
   // outputs true if change is made, false if it isn't
   @Output() finishEditing = new EventEmitter<boolean>();
-
 
   constructor(private memberService: MemberService) {
   }
 
   ngOnInit(): void {
+    if (!this.member) {
+      this.member = new FamilyMember(null,
+        '',
+        '',
+        null,
+        null,
+        Gender.UNKNOWN,
+        null,
+        null,
+        []);
+      this.isEditing = false;
+    }
+
     this.memberChildren = this.familyMembers.getChildren(this.member.id);
     this.initForm();
   }
@@ -62,76 +74,83 @@ export class MemberItemComponent implements OnInit {
       value.secondaryParent ? value.secondaryParent.id : null
     );
 
-    const childrenToUpdate: FamilyMember[] = [];
-    const partnersToUpdate: FamilyMember[] = this.member.partners.map(id => this.familyMembers.getMember(id));
-    for (let i = 0; i < value.partners.length; i++) {
-      const partner = this.familyMembers.getMember(value.partners[i].id);
+    if (this.isEditing) {
 
-      const partnerIndex = partnersToUpdate.indexOf(partner);
-      if (partnerIndex > -1) {
-        partnersToUpdate.splice(partnerIndex, 1);
-      }
+      // some big brain stuff
+      const childrenToUpdate: FamilyMember[] = [];
+      const partnersToUpdate: FamilyMember[] = this.member.partners.map(id => this.familyMembers.getMember(id));
+      for (let i = 0; i < value.partners.length; i++) {
+        const partner = this.familyMembers.getMember(value.partners[i].id);
 
-      const multipleChildrenToRemove = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
-      for (const child of value.children[i]) {
-        const childMember = this.familyMembers.getMember(child.id);
-
-        const childIndex = multipleChildrenToRemove.indexOf(childMember);
-        if (childIndex > -1) {
-          multipleChildrenToRemove.splice(childIndex, 1);
+        const partnerIndex = partnersToUpdate.indexOf(partner);
+        if (partnerIndex > -1) {
+          partnersToUpdate.splice(partnerIndex, 1);
         }
 
-        if (this.member.isDirectHeir || this.member.id === this.familyMembers.mainMember.id) {
-          if (childMember.primaryParentId !== this.member.id || childMember.secondaryParentId !== partner.id) {
-            childMember.primaryParentId = this.member.id;
-            childMember.secondaryParentId = partner.id;
-            childrenToUpdate.push(childMember);
+        const multipleChildrenToRemove = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
+        for (const child of value.children[i]) {
+          const childMember = this.familyMembers.getMember(child.id);
+
+          const childIndex = multipleChildrenToRemove.indexOf(childMember);
+          if (childIndex > -1) {
+            multipleChildrenToRemove.splice(childIndex, 1);
           }
-        } else {
-          if (childMember.primaryParentId !== partner.id || childMember.secondaryParentId !== this.member.id) {
-            childMember.primaryParentId = partner.id;
-            childMember.secondaryParentId = this.member.id;
-            childrenToUpdate.push(childMember);
+
+          if (this.member.isDirectHeir || this.member.id === this.familyMembers.mainMember.id) {
+            if (childMember.primaryParentId !== this.member.id || childMember.secondaryParentId !== partner.id) {
+              childMember.primaryParentId = this.member.id;
+              childMember.secondaryParentId = partner.id;
+              childrenToUpdate.push(childMember);
+            }
+          } else {
+            if (childMember.primaryParentId !== partner.id || childMember.secondaryParentId !== this.member.id) {
+              childMember.primaryParentId = partner.id;
+              childMember.secondaryParentId = this.member.id;
+              childrenToUpdate.push(childMember);
+            }
+          }
+        }
+
+        for (const multipleChild of multipleChildrenToRemove) {
+          if (!childrenToUpdate.includes(multipleChild)) {
+            multipleChild.primaryParentId = null;
+            multipleChild.secondaryParentId = null;
+            childrenToUpdate.push(multipleChild);
           }
         }
       }
 
-      for (const multipleChild of multipleChildrenToRemove) {
-        if (!childrenToUpdate.includes(multipleChild)) {
-          multipleChild.primaryParentId = null;
-          multipleChild.secondaryParentId = null;
-          childrenToUpdate.push(multipleChild);
+      for (const partner of partnersToUpdate) {
+        const multipleChildren = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
+        for (const multipleChild of multipleChildren) {
+          if (!childrenToUpdate.includes(multipleChild)) {
+            multipleChild.primaryParentId = null;
+            multipleChild.secondaryParentId = null;
+            childrenToUpdate.push(multipleChild);
+          }
         }
       }
+
+      // TODO update members in one request
+      childrenToUpdate.map(child => {
+        this.memberService.updateMember(this.treeId, child.id, new FamilyMemberDataDTO(
+          child.firstName,
+          child.lastName,
+          child.birthday !== null ? child.birthday.toJSON() : null,
+          child.dateOfDeath !== null ? child.dateOfDeath.toJSON() : null,
+          child.gender.toUpperCase(),
+          child.primaryParentId,
+          child.secondaryParentId
+        )).subscribe();
+      });
+
+      this.memberService.updateMember(this.treeId, this.member.id, familyMemberDataDTO)
+        .subscribe(familyMember => this.finishEditing.emit(true));
+    } else {
+      this.memberService.createMember(this.treeId, familyMemberDataDTO)
+        .subscribe(familyMember => this.finishEditing.emit(true));
     }
 
-    for (const partner of partnersToUpdate) {
-      const multipleChildren = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
-      for (const multipleChild of multipleChildren) {
-        if (!childrenToUpdate.includes(multipleChild)) {
-          multipleChild.primaryParentId = null;
-          multipleChild.secondaryParentId = null;
-          childrenToUpdate.push(multipleChild);
-        }
-      }
-    }
-
-
-    // TODO update members in one request
-    childrenToUpdate.map(child => {
-      this.memberService.updateMember(this.treeId, child.id, new FamilyMemberDataDTO(
-        child.firstName,
-        child.lastName,
-        child.birthday !== null ? child.birthday.toJSON() : null,
-        child.dateOfDeath !== null ? child.dateOfDeath.toJSON() : null,
-        child.gender.toUpperCase(),
-        child.primaryParentId,
-        child.secondaryParentId
-      )).subscribe();
-    });
-
-    this.memberService.updateMember(this.treeId, this.member.id, familyMemberDataDTO)
-      .subscribe(familyMember => this.finishEditing.emit(true));
   }
 
   addEmptyPartnerControl(): void {

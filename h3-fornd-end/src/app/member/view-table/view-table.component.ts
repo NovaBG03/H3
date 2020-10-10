@@ -14,6 +14,7 @@ export class ViewTableComponent implements OnInit {
   displayMembers: FamilyMember[];
   highlightedMemberId: number = null;
   editingMember: FamilyMember = null;
+  isCreatingMember = false;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute) {
   }
@@ -47,8 +48,13 @@ export class ViewTableComponent implements OnInit {
     this.editingMember = this.familyMembers.getMember(memberId);
   }
 
+  onStartCreating(): void {
+    this.isCreatingMember = true;
+  }
+
   onFinishEditing(isChanged: boolean): void {
     this.editingMember = null;
+    this.isCreatingMember = false;
     if (isChanged) {
       this.loadMembers();
     }

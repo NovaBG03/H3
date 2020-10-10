@@ -41,11 +41,24 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <th scope="row">{{ this.familyMembers?.members.length + 1 }}</th>
+      <td class="text-center">
+        <span (click)="onStartCreating()" style="cursor: pointer;">➕</span>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
     </tbody>
   </table>
 </div>
 
-<app-member-item *ngIf="editingMember"
+<app-member-item *ngIf="editingMember || isCreatingMember"
                  [familyMember]="editingMember"
                  [familyMembers]="familyMembers"
                  [treeId]="treeId"
