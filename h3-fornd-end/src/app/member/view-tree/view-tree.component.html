@@ -1,1 +1,17 @@
+<div *ngIf="familyMembers?.members.length === 0"
+     class="center"
+     style="cursor: pointer;"
+     (click)="onStartCreating()">
+  <p class="font-weight-bold">Click to Add your Main Member</p>
+</div>
+
+<app-member-item *ngIf="editingMember || isCreatingMember"
+                 [familyMember]="editingMember"
+                 [familyMembers]="familyMembers"
+                 [treeId]="treeId"
+                 (finishEditing)="onFinishEditing($event)"></app-member-item>
+
+<div *ngIf="familyMembers && familyMembers.members.length != 0">
+    <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>
+</div>
 <div id="tree"></div>

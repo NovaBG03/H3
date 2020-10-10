@@ -9,10 +9,11 @@ import {FamilyMember, FamilyMembers, Gender} from '../../shared/dtos.model';
   styleUrls: ['./view-table.component.css']
 })
 export class ViewTableComponent implements OnInit {
-  treeId: number;
-  familyMembers: FamilyMembers;
   displayMembers: FamilyMember[];
   highlightedMemberId: number = null;
+
+  treeId: number;
+  familyMembers: FamilyMembers;
   editingMember: FamilyMember = null;
   isCreatingMember = false;
 

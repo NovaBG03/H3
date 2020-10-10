@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
 import OrgChart from '@balkangraph/orgchart.js';
-import {FamilyMember} from '../../shared/dtos.model';
+import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
 
 @Component({
   selector: 'app-view-tree',
@@ -10,8 +10,10 @@ import {FamilyMember} from '../../shared/dtos.model';
   styleUrls: ['./view-tree.component.css']
 })
 export class ViewTreeComponent implements OnInit {
-  members: FamilyMember[];
-  mainMember: FamilyMember;
+  treeId: number;
+  familyMembers: FamilyMembers;
+  editingMember: FamilyMember = null;
+  isCreatingMember = false;
   private chart: OrgChart;
 
   constructor(private memberService: MemberService, private route: ActivatedRoute) {
@@ -22,14 +24,24 @@ export class ViewTreeComponent implements OnInit {
     this.createChart();
 
     this.route.parent.url.subscribe(parentUrlSegment => {
-      const treeId = +parentUrlSegment[0];
-      this.memberService.getMembers(treeId).subscribe(familyMembers => {
-        this.members = familyMembers.members;
-        this.mainMember = familyMembers.mainMember;
-        this.loadMembers();
-      });
+      this.treeId = +parentUrlSegment[0];
+      this.loadMembers();
     });
   }
+
+  onStartCreating(): void {
+    this.isCreatingMember = true;
+  }
+
+  onFinishEditing(isChanged: boolean): void {
+    this.editingMember = null;
+    this.isCreatingMember = false;
+    if (isChanged) {
+      this.loadMembers();
+    }
+  }
+
+  // pid - partner id; tags: ['partner']
 
   private setUpTemplate(): void {
     OrgChart.templates.family_template = Object.assign({}, OrgChart.templates.ana);
@@ -67,9 +79,9 @@ export class ViewTreeComponent implements OnInit {
     });
 
     // sub for click event
-    this.chart.on('click', (obj) => {
-      console.log(obj);
-      console.log('single click');
+    this.chart.on('click', (sender, node) => {
+      const currentNode = node.node;
+      this.editingMember = this.familyMembers.getMember(currentNode.id);
     });
 
 
@@ -85,16 +97,24 @@ export class ViewTreeComponent implements OnInit {
     });
   }
 
-  // pid - partner id; tags: ['partner']
   // pid - directHeir; ppid - directHeirSpouse
   private loadMembers(): void {
-    const mapped = this.members.map((member) => {
+    this.memberService.getMembers(this.treeId).subscribe(familyMembers => {
+      this.familyMembers = familyMembers;
+      if (this.familyMembers.members.length > 0) {
+        this.loadChartData();
+      }
+    });
+  }
+
+  private loadChartData(): void {
+    const mapped = this.familyMembers.members.map((member) => {
       const tags: string[] = [];
       let pid: number = null;
       let ppid: number = null;
 
       const isDirectHeir = member.isDirectHeir;
-      const firstId = this.mainMember.id;
+      const firstId = this.familyMembers.mainMember.id;
 
       if (!isDirectHeir && member.partners.length > 0 && member.id !== firstId) {
         const partnerId = member.partners[0];
@@ -110,6 +130,7 @@ export class ViewTreeComponent implements OnInit {
       return {
         id: member.id,
         name: member.firstName + ' ' + member.lastName,
+        img: 'https://th.thgim.com/sci-tech/technology/internet/article17759222.ece/ALTERNATES/FREE_660/02th-egg-person',
         pid,
         ppid,
         tags
