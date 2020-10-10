@@ -2,7 +2,15 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {FamilyMember, FamilyMemberDataDTO, FamilyMemberListDTO, FamilyMemberResponseDTO, FamilyMembers, Gender} from '../shared/dtos.model';
+import {
+  FamilyMember,
+  FamilyMemberDataDTO,
+  FamilyMemberListDTO,
+  FamilyMemberResponseDTO,
+  FamilyMembers,
+  Gender,
+  MessageDTO
+} from '../shared/dtos.model';
 
 @Injectable({providedIn: 'root'})
 export class MemberService {
@@ -31,6 +39,11 @@ export class MemberService {
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));
+  }
+
+  deleteMember(treeId: number, memberId: number): Observable<string> {
+    return this.http.delete<MessageDTO>(`http://localhost:8080/trees/${treeId}/members/${memberId}`)
+      .pipe(map(messageDto => messageDto.message));
   }
 
   private mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO: FamilyMemberResponseDTO): FamilyMember {

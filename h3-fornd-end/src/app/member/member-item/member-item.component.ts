@@ -175,6 +175,11 @@ export class MemberItemComponent implements OnInit {
     this.getChildControls(parentIndex).removeAt(childIndex);
   }
 
+  onDelete(): void {
+    this.memberService.deleteMember(this.treeId, this.member.id)
+      .subscribe(message => this.finishEditing.emit(true));
+  }
+
   private initForm(): void {
     const birthday = this.member.birthday;
     let ngbBirthday = null;

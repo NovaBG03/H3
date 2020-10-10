@@ -176,3 +176,8 @@ export class FamilyMemberDataDTO {
               public secondaryParentId: number) {
   }
 }
+
+export class MessageDTO {
+  constructor(public message:	string) {
+  }
+}
