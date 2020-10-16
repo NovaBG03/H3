@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  font-size: 16px;
+  --h3-text-primary: #b6b6b6;
+  --h3-text-secondary: #ececec;
+  --h3-bg-primary: #23232e;
+  --h3-bg-secondary: #141418;
+  --h3-transition-speed: 600ms;
+}
+
+body {
+  color: black;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+
+body::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--h3-bg-primary);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: seagreen;
+}
+
+/* Large screens */
+@media only screen and (min-width: 600px) {
+  main {
+    margin-left: 5rem;
+    padding: 1rem;
+  }
+}
+

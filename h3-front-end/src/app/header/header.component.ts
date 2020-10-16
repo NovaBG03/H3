@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../authentication/auth.service';
 import {UserToken} from '../shared/dtos.model';
 import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user: UserToken = null;
   userSubscription: Subscription;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
      this.userSubscription = this.authService.user.subscribe(userToken => this.user = userToken);
@@ -33,5 +34,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+  }
+
+  isAuthRouteActive(): boolean {
+    return this.router.isActive('/auth?type=login', true) || this.router.isActive('/auth?type=register', true);
   }
 }
