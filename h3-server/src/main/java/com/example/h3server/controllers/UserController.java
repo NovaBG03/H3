@@ -55,6 +55,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public String delete(@ApiParam("Username") @PathVariable String username) {
+        // TODO delete user only if the request is send from the user
         userService.delete(username);
         return username;
     }
