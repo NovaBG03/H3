@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  isMenuCollapsed = false;
+  // isMenuCollapsed = false;
   user: UserToken = null;
   userSubscription: Subscription;
 
@@ -20,13 +20,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
      this.userSubscription = this.authService.user.subscribe(userToken => this.user = userToken);
   }
 
-  toggleMenu(): void {
+/*  toggleMenu(): void {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
 
   closeMenu(): void {
     this.isMenuCollapsed = true;
-  }
+  }*/
 
   onLogout(): void {
     this.authService.logout();
