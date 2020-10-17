@@ -17,6 +17,7 @@ body {
 
 body::-webkit-scrollbar {
   width: 0.25rem;
+  height: 0.5rem;
 }
 
 body::-webkit-scrollbar-track {
@@ -25,6 +26,13 @@ body::-webkit-scrollbar-track {
 
 body::-webkit-scrollbar-thumb {
   background: seagreen;
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+  main {
+    margin-bottom: 5rem;
+  }
 }
 
 /* Large screens */

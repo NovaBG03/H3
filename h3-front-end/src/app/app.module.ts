@@ -22,6 +22,7 @@ import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.componen
 import { MemberItemComponent } from './member/member-item/member-item.component';
 import { MemberSearchComponent } from './member/member-item/member-search/member-search.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AlertComponent } from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ViewTableComponent,
     TreeSettingsComponent,
     MemberItemComponent,
-    MemberSearchComponent
+    MemberSearchComponent,
+    AlertComponent
   ],
     imports: [
         BrowserModule,

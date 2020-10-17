@@ -41,8 +41,8 @@ export class AuthenticationComponent implements OnInit {
   }
 
   authenticate(): void {
-    console.log(this.authForm.value)
-    if (this.authForm.invalid) {
+    console.log(this.authForm.value);
+    if (this.authForm.invalid && !this.isLogin) {
       return;
     }
 
@@ -61,7 +61,10 @@ export class AuthenticationComponent implements OnInit {
         console.log(res);
         this.router.navigate(['home']);
       },
-      errorMessage => this.error = errorMessage);
+      errorMessage => {
+        this.error = errorMessage;
+        console.log(this.error);
+      });
   }
 
   toggleLoginState(): void {

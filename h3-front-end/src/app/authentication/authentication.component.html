@@ -1,50 +1,58 @@
 <img class="h3-wave" src="./../../assets/img/wave.png">
 <div class="h3-container">
   <div class="h3-img-content">
-    <img src="./../../assets/img/login-man.svg">
+    <img src="./../../assets/img/login-man.svg" *ngIf="isLogin">
+    <img src="./../../assets/img/sign-up-horse.svg" *ngIf="!isLogin">
   </div>
   <div class="h3-form-content">
     <form [formGroup]="authForm" (ngSubmit)="authenticate()">
       <img src="./../../assets/img/login-profile.svg">
       <h2 class="title">{{ state === 'Login' ? 'Welcome' : state}}</h2>
 
+      <div *ngIf="error">
+        <app-alert [message]="error" (onClose)="error = null"></app-alert>
+      </div>
+
       <div class="h3-field">
-        <input type="username" id="username" class="h3-input" formControlName="username">
+        <input type="username" id="username"
+               class="h3-input" [class.h3-input-validator]="!isLogin"
+               formControlName="username">
         <label [class.h3-move-label]="authForm.get('username').value"
                class="h3-label"
-               for="email">Username</label>
+               for="email">🧍 Username</label>
       </div>
 
       <div class="h3-field" *ngIf="!isLogin">
-        <input type="email" id="email" class="h3-input" formControlName="email">
+        <input type="email" id="email" class="h3-input h3-input-validator" formControlName="email">
         <label [class.h3-move-label]="authForm.get('email').value"
                class="h3-label"
-               for="email">Email</label>
+               for="email">✉ Email</label>
       </div>
 
       <div formGroupName="passwordGroup">
         <div class="h3-field">
-          <input type="password" id="password" class="h3-input" formControlName="password">
+          <input type="password" id="password"
+                 class="h3-input" [class.h3-input-validator]="!isLogin"
+                 formControlName="password">
           <label [class.h3-move-label]="authForm.get('passwordGroup.password').value"
+                 [class.h3-input-validator]="!isLogin"
                  class="h3-label"
-                 for="password">Password</label>
+                 for="password">🔑 Password</label>
         </div>
         <div class="h3-field" *ngIf="!isLogin">
-          <input type="password" id="confirmPassword" class="h3-input" formControlName="confirmPassword">
+          <input type="password" id="confirmPassword" class="h3-input h3-input-validator"
+                 formControlName="confirmPassword">
           <label [class.h3-move-label]="authForm.get('passwordGroup.confirmPassword').value"
                  class="h3-label"
-                 for="confirmPassword">Confirm Password</label>
+                 for="confirmPassword">🔒 Confirm Password</label>
         </div>
       </div>
 
-      <button type="submit" class="h3-btn">{{ state }}</button>
+      <button type="submit" class="h3-btn" [disabled]="!isLogin && authForm.invalid">{{ state }}</button>
 
-      <div *ngIf="isLogin">
-        <p>New to H3? <a class="link" (click)="toggleLoginState()">Create an account</a></p>
-      </div>
-
-      <div *ngIf="!isLogin">
-        <p>Already have an account? <a class="link" (click)="toggleLoginState()">Login</a></p>
+      <div>
+        <p *ngIf="isLogin">New to H3? <a class="link" (click)="toggleLoginState()">Create an account</a></p>
+        <p *ngIf="!isLogin">Already have an account? <a class="link" (click)="toggleLoginState()">Let's Login</a></p>
       </div>
 
     </form>
