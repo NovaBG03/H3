@@ -1,3 +1,316 @@
+.h3-wave{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  z-index: -1;
+}
+
+.h3-container{
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap :7rem;
+  padding: 0 2rem;
+}
+
+.h3-img-content{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.h3-form-content{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+.h3-img-content img{
+  width: 500px;
+}
+
+.h3-form-content img{
+  height: 100px;
+}
+
+.h3-form-content h2{
+  margin: 15px 0;
+  color: #333;
+  text-transform: uppercase;
+  font-size: 2.9rem;
+}
+
+form{
+  --text-color: #afafaf;
+  width: 360px;
+}
+
+.h3-field {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  border-bottom: 2px dashed var(--text-color);
+  margin: 4rem auto 1rem;
+  transition: 500ms;
+}
+
+.h3-label {
+  color:var(--text-color);
+  font-size: 1.2rem;
+  z-index: -1;
+  position: absolute;
+  bottom: -2rem;
+  left: 1vh;
+  transform: translateY(-2rem);
+  transform-origin: 0%;
+  transition: transform 400ms;
+}
+
+.h3-input {
+  outline: none;
+  border: none;
+  overflow: hidden;
+  margin: 0;
+  width: 100%;
+  padding: 0.25rem 0;
+  background: none;
+  color: white;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: border 500ms;
+}
+
+.h3-input:valid {
+  color: yellowgreen;
+}
+
+.h3-input:invalid {
+  color: orangered;
+}
+
+.h3-field::after {
+  content: "";
+  position: relative;
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: #38d39f;
+  transform: scaleX(0);
+  transform-origin: 0%;
+  opacity: 0;
+  transition: all 500ms ease;
+  top: 2px;
+}
+
+.h3-field:focus-within {
+  border-color: transparent;
+}
+
+.h3-field:focus-within::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.h3-field:focus-within .h3-label {
+  transform: scale(0.8) translateY(-5rem);
+  opacity: 1;
+}
+
+.h3-move-label {
+  transform: scale(0.8) translateY(-5rem);
+  opacity: 1;
+}
+
+
+a{
+  display: block;
+  text-align: right;
+  text-decoration: none;
+  color: #999;
+  font-size: 0.9rem;
+  transition: .3s;
+}
+
+a:hover{
+  cursor: pointer;
+  color: #38d39f;
+}
+
+.h3-btn{
+  display: block;
+  width: 100%;
+  height: 50px;
+  border-radius: 25px;
+  outline: none;
+  border: none;
+  background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
+  background-size: 200%;
+  font-size: 1.2rem;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  margin: 1rem 0;
+  cursor: pointer;
+  transition: .5s;
+}
+.h3-btn:hover{
+  background-position: right;
+}
+
+
+@media screen and (max-width: 1050px){
+  .h3-container{
+    grid-gap: 5rem;
+  }
+}
+
+@media screen and (max-width: 1000px){
+  form{
+    width: 290px;
+  }
+
+  .h3-form-content h2{
+    font-size: 2.4rem;
+    margin: 8px 0;
+  }
+
+  .h3-img-content img{
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 900px){
+  .h3-container{
+    grid-template-columns: 1fr;
+  }
+
+  .h3-img-content{
+    display: none;
+  }
+
+  .h3-wave{
+    display: none;
+  }
+
+  .h3-form-content{
+    justify-content: center;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*.h3-login-content .input-div{
+  position: relative;
+  display: grid;
+  grid-template-columns: 7% 93%;
+  margin: 25px 0;
+  padding: 5px 0;
+  border-bottom: 2px solid #d9d9d9;
+}
+
+.h3-login-content .input-div.one{
+  margin-top: 0;
+}
+
+.i {
+  color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.i fa-icon {
+  transition: .3s;
+}
+
+.input-div > div{
+  position: relative;
+  height: 45px;
+}
+
+.input-div > div > h5{
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 18px;
+  transition: .3s;
+}
+
+.input-div:before, .input-div:after{
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: #38d39f;
+  transition: .4s;
+}
+
+.input-div:before{
+  right: 50%;
+}
+
+.input-div:after{
+  left: 50%;
+}
+
+.input-div.focus:before, .input-div.focus:after{
+  width: 50%;
+}
+
+.input-div.focus > div > h5{
+  top: -5px;
+  font-size: 15px;
+}
+
+.input-div.focus > .i > i{
+  color: #38d39f;
+}
+
+.input-div > div > input{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0.5rem 0.7rem;
+  font-size: 1.2rem;
+  color: #555;
+  font-family: 'poppins', sans-serif;
+}
+
+.input-div.pass{
+  margin-bottom: 4px;
+}*/
+
+
+
+
+
+
+
+
+/*
 a {
   cursor: pointer;
 }
@@ -14,3 +327,4 @@ input.ng-invalid.ng-touched {
 div.ng-invalid.ng-touched > div > input#confirmPassword {
   border: 2px solid red;
 }
+*/

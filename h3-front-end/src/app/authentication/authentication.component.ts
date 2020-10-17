@@ -41,6 +41,7 @@ export class AuthenticationComponent implements OnInit {
   }
 
   authenticate(): void {
+    console.log(this.authForm.value)
     if (this.authForm.invalid) {
       return;
     }

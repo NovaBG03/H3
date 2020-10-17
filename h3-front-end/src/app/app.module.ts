@@ -21,6 +21,7 @@ import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
 import { MemberItemComponent } from './member/member-item/member-item.component';
 import { MemberSearchComponent } from './member/member-item/member-search/member-search.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { MemberSearchComponent } from './member/member-item/member-search/member
         NgbCollapseModule,
         AppRoutingModule,
         NgbDatepickerModule,
-        NgbTypeaheadModule
+        NgbTypeaheadModule,
+        FontAwesomeModule
     ],
   providers: [
     {

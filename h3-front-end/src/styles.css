@@ -1,5 +1,6 @@
 :root {
   font-size: 16px;
+  /*for the navbar*/
   --h3-text-primary: #b6b6b6;
   --h3-text-secondary: #ececec;
   --h3-bg-primary: #23232e;
@@ -30,7 +31,6 @@ body::-webkit-scrollbar-thumb {
 @media only screen and (min-width: 600px) {
   main {
     margin-left: 5rem;
-    padding: 1rem;
   }
 }
 

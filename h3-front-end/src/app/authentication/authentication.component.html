@@ -1,3 +1,59 @@
+<img class="h3-wave" src="./../../assets/img/wave.png">
+<div class="h3-container">
+  <div class="h3-img-content">
+    <img src="./../../assets/img/login-man.svg">
+  </div>
+  <div class="h3-form-content">
+    <form [formGroup]="authForm" (ngSubmit)="authenticate()">
+      <img src="./../../assets/img/login-profile.svg">
+      <h2 class="title">{{ state === 'Login' ? 'Welcome' : state}}</h2>
+
+      <div class="h3-field">
+        <input type="username" id="username" class="h3-input" formControlName="username">
+        <label [class.h3-move-label]="authForm.get('username').value"
+               class="h3-label"
+               for="email">Username</label>
+      </div>
+
+      <div class="h3-field" *ngIf="!isLogin">
+        <input type="email" id="email" class="h3-input" formControlName="email">
+        <label [class.h3-move-label]="authForm.get('email').value"
+               class="h3-label"
+               for="email">Email</label>
+      </div>
+
+      <div formGroupName="passwordGroup">
+        <div class="h3-field">
+          <input type="password" id="password" class="h3-input" formControlName="password">
+          <label [class.h3-move-label]="authForm.get('passwordGroup.password').value"
+                 class="h3-label"
+                 for="password">Password</label>
+        </div>
+        <div class="h3-field" *ngIf="!isLogin">
+          <input type="password" id="confirmPassword" class="h3-input" formControlName="confirmPassword">
+          <label [class.h3-move-label]="authForm.get('passwordGroup.confirmPassword').value"
+                 class="h3-label"
+                 for="confirmPassword">Confirm Password</label>
+        </div>
+      </div>
+
+      <button type="submit" class="h3-btn">{{ state }}</button>
+
+      <div *ngIf="isLogin">
+        <p>New to H3? <a class="link" (click)="toggleLoginState()">Create an account</a></p>
+      </div>
+
+      <div *ngIf="!isLogin">
+        <p>Already have an account? <a class="link" (click)="toggleLoginState()">Login</a></p>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+<!--
+
 <div class="row justify-content-center">
   <h1>{{ state }}</h1>
 </div>
@@ -70,3 +126,4 @@
 
   </div>
 </div>
+-->
