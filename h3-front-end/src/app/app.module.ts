@@ -11,7 +11,6 @@ import {HomeComponent} from './home/home.component';
 import {HeaderComponent} from './header/header.component';
 import {AuthenticationComponent} from './authentication/authentication.component';
 import {TreeListComponent} from './tree/tree-list/tree-list.component';
-import {TreeItemComponent} from './tree/tree-list/tree-item/tree-item.component';
 import {TreeComponent} from './tree/tree.component';
 import {AuthInterceptorService} from './authentication/auth-interceptor.service';
 import {TreeNewComponent} from './tree/tree-new/tree-new.component';
@@ -19,10 +18,9 @@ import {TreeViewComponent} from './tree/tree-view/tree-view.component';
 import {ViewTreeComponent} from './member/view-tree/view-tree.component';
 import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
-import { MemberItemComponent } from './member/member-item/member-item.component';
-import { MemberSearchComponent } from './member/member-item/member-search/member-search.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AlertComponent } from './shared/alert/alert.component';
+import {MemberItemComponent} from './member/member-item/member-item.component';
+import {MemberSearchComponent} from './member/member-item/member-search/member-search.component';
+import {AlertComponent} from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +29,6 @@ import { AlertComponent } from './shared/alert/alert.component';
     HeaderComponent,
     AuthenticationComponent,
     TreeListComponent,
-    TreeItemComponent,
     TreeComponent,
     TreeNewComponent,
     TreeViewComponent,
@@ -42,16 +39,15 @@ import { AlertComponent } from './shared/alert/alert.component';
     MemberSearchComponent,
     AlertComponent
   ],
-    imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        NgbCollapseModule,
-        AppRoutingModule,
-        NgbDatepickerModule,
-        NgbTypeaheadModule,
-        FontAwesomeModule
-    ],
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbCollapseModule,
+    AppRoutingModule,
+    NgbDatepickerModule,
+    NgbTypeaheadModule
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

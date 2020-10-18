@@ -1,13 +1,44 @@
-<div class="row">
-  <div class="col-md-3 mb-3 min-height" *ngFor="let tree of trees">
-    <app-tree-item [tree]="tree"></app-tree-item>
+<div class="h3-card-list">
+  <div class="h3-card h3-card-static" routerLink="new">
+    <div class="h3-card-static-content">
+      <h2>Create new Family Tree</h2>
+    </div>
   </div>
 
-  <div class="col-md-3 mb-3 min-height">
-    <button class="btn btn-block btn-light border h-100" routerLink="new">
-      <div class="display-1">+</div>
-    </button>
+  <div class="h3-card h3-card-dynamic" *ngFor="let tree of trees">
+    <div class="h3-card-header">
+      <p>{{ tree.createdAt | date:'mediumDate' }}</p>
+      <h2 [routerLink]="['..', tree.id, 'members']">{{ tree.name }}</h2>
+    </div>
+
+    <div class="h3-card-author">
+      <a class="h3-author-avatar">
+        <img class="img-fluid" src="./assets/img/default-profile-pic.jpg" />
+      </a>
+      <svg class="h3-half-circle" viewBox="0 0 106 57">
+        <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+      </svg>
+
+      <div class="h3-author-name">
+        <div class="h3-author-name-prefix">{{ tree.isPrivate ? 'Private' : 'Public' }}</div>
+        {{ username }}
+      </div>
+    </div>
+    <div class="h3-tags">
+      <a>tag</a>
+      <a>special</a>
+      <a>my-tree</a>
+    </div>
   </div>
 </div>
+
+<svg width="0" height="0" class="visually-hidden">
+  <defs>
+    <linearGradient id="orange-to-pink" x1="1" x2="0" y1="1" y2="0">
+      <stop class="h3-gradient-secondary" offset="0%" stop-color="#ffffff"/>
+      <stop class="h3-gradient-primary" offset="100%" stop-color="#000000"/>
+    </linearGradient>
+  </defs>
+</svg>
 
 <router-outlet></router-outlet>

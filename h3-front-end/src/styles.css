@@ -1,11 +1,15 @@
 :root {
   font-size: 16px;
+
+  --h3-color-primary: #38d39f;
+  --h3-color-secondary: yellowgreen;
+
   /*for the navbar*/
-  --h3-text-primary: #b6b6b6;
-  --h3-text-secondary: #ececec;
-  --h3-bg-primary: #23232e;
-  --h3-bg-secondary: #141418;
-  --h3-transition-speed: 600ms;
+  --h3-nav-text-primary: #b6b6b6;
+  --h3-nav-text-secondary: #ececec;
+  --h3-nav-bg-primary: #23232e;
+  --h3-nav-bg-secondary: #141418;
+  --h3-nav-transition-speed: 600ms;
 }
 
 body {
@@ -21,7 +25,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background: var(--h3-bg-primary);
+  background: var(--h3-nav-bg-primary);
 }
 
 body::-webkit-scrollbar-thumb {

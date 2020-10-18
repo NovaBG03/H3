@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 @Slf4j
 @Component
@@ -64,14 +65,14 @@ public class Bootstrap implements CommandLineRunner {
         this.familyTreeRepository.save(FamilyTree.builder()
                 .name("My First Family Tree")
                 .isPrivate(true)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2020, Month.AUGUST, 10, 13, 25))
                 .user(userRepository.findByUsername("root"))
                 .build());
 
         FamilyTree queensFamilyTree = this.familyTreeRepository.save(FamilyTree.builder()
                 .name("Queen's Family Tree")
                 .isPrivate(false)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 27, 22, 47))
                 .user(userRepository.findByUsername("root"))
                 .build());
 
