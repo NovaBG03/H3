@@ -7,16 +7,19 @@ import com.example.h3server.models.User;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.security.JwtTokenProvider;
 import com.example.h3server.utils.ModelValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -94,5 +97,11 @@ public class UserService {
 
     public String refresh(String username) {
         return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+    }
+
+    public void updateProfilePicture(MultipartFile image) {
+        log.info(image.getName());
+        log.info(image.getContentType());
+        log.info(String.valueOf(image.getSize()));
     }
 }

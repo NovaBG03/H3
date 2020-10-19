@@ -1,5 +1,6 @@
 package com.example.h3server.controllers;
 
+import com.example.h3server.dtos.MessageDTO;
 import com.example.h3server.dtos.user.UserDataDTO;
 import com.example.h3server.dtos.user.UserResponseDTO;
 import com.example.h3server.dtos.user.UserTokenDTO;
@@ -8,6 +9,7 @@ import com.example.h3server.services.UserService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,7 +57,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "The user doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public String delete(@ApiParam("Username") @PathVariable String username) {
-        // TODO delete user only if the request is send from the user
+        // TODO delete user only if the request is send from the user or admin
         userService.delete(username);
         return username;
     }
@@ -92,5 +94,13 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public String refresh(HttpServletRequest req) {
         return userService.refresh(req.getRemoteUser());
+    }
+
+
+    @PostMapping("/profilePicture")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public MessageDTO uploadProfilePicture(@RequestParam MultipartFile image) {
+        this.userService.updateProfilePicture(image);
+        return new MessageDTO("Profile picture uploaded successfully");
     }
 }

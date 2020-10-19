@@ -21,6 +21,10 @@ import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.componen
 import {MemberItemComponent} from './member/member-item/member-item.component';
 import {MemberSearchComponent} from './member/member-item/member-search/member-search.component';
 import {AlertComponent} from './shared/alert/alert.component';
+import {WelcomeComponent} from './home/welcome/welcome.component';
+import {UserProfileComponent} from './home/user-profile/user-profile.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
+import {Ng2ImgMaxModule} from 'ng2-img-max';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ import {AlertComponent} from './shared/alert/alert.component';
     TreeSettingsComponent,
     MemberItemComponent,
     MemberSearchComponent,
-    AlertComponent
+    AlertComponent,
+    WelcomeComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,9 @@ import {AlertComponent} from './shared/alert/alert.component';
     NgbCollapseModule,
     AppRoutingModule,
     NgbDatepickerModule,
-    NgbTypeaheadModule
+    NgbTypeaheadModule,
+    ImageCropperModule,
+    Ng2ImgMaxModule
   ],
   providers: [
     {
