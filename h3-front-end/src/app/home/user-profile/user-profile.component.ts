@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MessageDTO, UserToken} from '../../shared/dtos.model';
+import {ImageDTO, UserToken} from '../../shared/dtos.model';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../authentication/auth.service';
 import {HttpClient, HttpEventType} from '@angular/common/http';
 import {base64ToFile, ImageCroppedEvent} from 'ngx-image-cropper';
 import {Ng2ImgMaxService} from 'ng2-img-max';
-import {DomSanitizer} from '@angular/platform-browser';
+import {UserService} from '../../shared/user.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,7 +14,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   user: UserToken;
-  uploadedImage: any;
+  showingImageUrl: any;
 
   imageChangedEvent: Event;
   private croppedImageBase64: string;
@@ -22,11 +22,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
 
   constructor(private authService: AuthService, private http: HttpClient, private ng2ImgMax: Ng2ImgMaxService,
-              private sanitizer: DomSanitizer) {
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => this.user = user);
+    this.userService.getProfilePictureUrl(this.user.username)
+      .subscribe(img => this.showingImageUrl = img);
   }
 
   ngOnDestroy(): void {
@@ -62,29 +64,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     const blob = base64ToFile(this.croppedImageBase64);
     const image = this.blobToFile(blob, 'image');
 
-    this.ng2ImgMax.resizeImage(image, 250, 250).subscribe(
+    this.ng2ImgMax.resizeImage(image, 200, 200).subscribe(
       resultBlob => {
-        const objectURL = URL.createObjectURL(resultBlob);
-        this.uploadedImage = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-
-        const fd = new FormData();
-        fd.append('image', resultBlob, this.selectedFileName);
-
-        this.http.post<MessageDTO>('http://localhost:8080/users/profilePicture', fd,
-          {
-            reportProgress: true,
-            observe: 'events'
-          })
-          .subscribe(event => {
-            if (event.type === HttpEventType.UploadProgress) {
-              console.log('Uploaded Progress: ' + event.loaded / event.total * 100 + '%');
-            } else if (event.type === HttpEventType.Response) {
-              console.log(event.body.message);
-            }
+        this.userService.uploadProfilePicture(resultBlob)
+          .subscribe(message => {
+            console.log(message);
+            this.userService.getProfilePictureUrl(this.user.username)
+              .subscribe(img => {
+                this.showingImageUrl = img;
+              });
           });
       },
       error => {
-        console.log('😢 Oh no!', error);
+        console.log('Image Resizing Error!', error);
       }
     );
   }

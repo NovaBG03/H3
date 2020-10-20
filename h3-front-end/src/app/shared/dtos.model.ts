@@ -181,3 +181,8 @@ export class MessageDTO {
   constructor(public message:	string) {
   }
 }
+
+export class ImageDTO {
+  constructor(public imageBytes) {
+  }
+}

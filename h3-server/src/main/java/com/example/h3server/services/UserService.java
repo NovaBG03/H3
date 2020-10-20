@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Arrays;
 
 @Slf4j
@@ -99,9 +100,48 @@ public class UserService {
         return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
     }
 
-    public void updateProfilePicture(MultipartFile image) {
-        log.info(image.getName());
-        log.info(image.getContentType());
-        log.info(String.valueOf(image.getSize()));
+    public void updateProfilePicture(MultipartFile image, String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        
+        try {
+            byte[] bytes = image.getBytes();
+            int bytesLength = bytes.length;
+
+            Byte[] imageBytes = new Byte[bytesLength];
+            for (int i = 0; i < bytes.length; i++) {
+                imageBytes[i] = bytes[i];
+            }
+
+            user.setProfilePicture(imageBytes);
+        } catch (IOException e) {
+            //todo catch exception
+            log.error(e.getMessage());
+        }
+
+        userRepository.save(user);
+    }
+
+    public byte[] getProfilePicture(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        Byte[] bytes = user.getProfilePicture();
+        if (bytes == null) {
+            return null;
+        }
+
+        int bytesLength = bytes.length;
+
+        byte[] imageBytes = new byte[bytesLength];
+        for (int i = 0; i < bytesLength; i++ ) {
+            imageBytes[i] = bytes[i];
+        }
+
+        return imageBytes;
     }
 }

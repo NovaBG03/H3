@@ -35,6 +35,8 @@ UserController:
   delete: Deletes specific user by username
   search: Returns specific user by username
   me: Returns current user's data
+  uploadProfilePicture: Uploads new profile picture for the currently logged user
+  getProfilePicture: Returns profile picture for the specific user
 
 FamilyTreeController:
   getTrees: Returns all public trees for the specific user and all private if the request is send by their owner

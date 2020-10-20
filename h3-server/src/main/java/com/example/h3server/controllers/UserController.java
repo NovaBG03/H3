@@ -1,5 +1,6 @@
 package com.example.h3server.controllers;
 
+import com.example.h3server.dtos.ImageDTO;
 import com.example.h3server.dtos.MessageDTO;
 import com.example.h3server.dtos.user.UserDataDTO;
 import com.example.h3server.dtos.user.UserResponseDTO;
@@ -10,8 +11,10 @@ import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -99,8 +102,29 @@ public class UserController {
 
     @PostMapping("/profilePicture")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public MessageDTO uploadProfilePicture(@RequestParam MultipartFile image) {
-        this.userService.updateProfilePicture(image);
+    @ApiOperation(value = "${UserController.uploadProfilePicture}",
+            response = MessageDTO.class,
+            authorizations = { @Authorization(value="apiKey") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public MessageDTO uploadProfilePicture(@RequestParam MultipartFile image, @ApiIgnore Principal principal) {
+        this.userService.updateProfilePicture(image, principal.getName());
         return new MessageDTO("Profile picture uploaded successfully");
+    }
+
+    @GetMapping("/profilePicture/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @ApiOperation(value = "${UserController.getProfilePicture}",
+            response = ImageDTO.class,
+            authorizations = { @Authorization(value="apiKey") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The user doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public ImageDTO getProfilePicture(@PathVariable String username) {
+        return new ImageDTO(this.userService.getProfilePicture(username));
     }
 }

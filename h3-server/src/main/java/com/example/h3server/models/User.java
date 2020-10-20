@@ -40,6 +40,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Lob
+    private Byte[] profilePicture;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
@@ -48,11 +51,18 @@ public class User {
     private Set<FamilyTree> familyTrees = new HashSet<>();
 
     @Builder
-    public User(Long id, String username, String email, String password, List<Role> roles, Set<FamilyTree> familyTrees) {
+    public User(Long id,
+                String username,
+                String email,
+                String password,
+                Byte[] profilePicture,
+                List<Role> roles,
+                Set<FamilyTree> familyTrees) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.profilePicture = profilePicture;
         if (roles != null) {
             this.roles = roles;
         }

@@ -3,6 +3,7 @@ import {FamilyTree, UserToken} from '../../shared/dtos.model';
 import {TreeService} from '../tree.service';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../authentication/auth.service';
+import {UserService} from '../../shared/user.service';
 
 @Component({
   selector: 'app-tree-list',
@@ -14,13 +15,19 @@ export class TreeListComponent implements OnInit, OnDestroy, AfterViewInit {
   newTreeSub: Subscription;
   initialBackgroundColor: string;
   username: string;
+  profilePictureUrl: string;
   userSub: Subscription;
 
-  constructor(private treeService: TreeService, private authService: AuthService, private elementRef: ElementRef) {
+  constructor(private treeService: TreeService, private authService: AuthService, private elementRef: ElementRef,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
-    this.userSub = this.authService.user.subscribe(user => this.username = user.username);
+    this.userSub = this.authService.user.subscribe(user => {
+      this.username = user.username;
+      this.userService.getProfilePictureUrl(this.username)
+        .subscribe(img => this.profilePictureUrl = img);
+    });
 
     this.treeService.getOwnTrees().subscribe(familyTrees => {
       this.trees = familyTrees;
