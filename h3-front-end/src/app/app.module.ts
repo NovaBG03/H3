@@ -25,6 +25,7 @@ import {WelcomeComponent} from './home/welcome/welcome.component';
 import {UserProfileComponent} from './home/user-profile/user-profile.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {Ng2ImgMaxModule} from 'ng2-img-max';
+import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {Ng2ImgMaxModule} from 'ng2-img-max';
     MemberSearchComponent,
     AlertComponent,
     WelcomeComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ImageUploaderComponent
   ],
   imports: [
     BrowserModule,
