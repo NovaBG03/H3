@@ -10,18 +10,18 @@
   position: relative;
   background: linear-gradient(to left, var(--h3-color-secondary), var(--h3-color-primary));
   padding: 4px;
-  border-radius: 10%;
+  border-radius: 25px;
 }
 
 .h3-profile {
   background: #17141d;
   color: white;
   padding: 1rem 2rem;
-  border-radius: 10%;
+  border-radius: 25px;
 }
 
 .h3-profile-avatar {
-  margin: 2rem 0 0.5rem;
+  margin: 0.8rem 0 0.5rem;
   display: grid;
   grid-template-columns: auto;
   align-items: center;
@@ -36,6 +36,10 @@
   display: block;
   overflow: hidden;
   margin: 20px auto;
+}
+
+.h3-profile-pic:hover + .h3-circle {
+  stroke: url(#gradient-animation);
 }
 
 .h3-circle {
@@ -64,7 +68,14 @@
 }
 
 .h3-email {
-  font-size: 1rem;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 0;
+  color: #7a7a8c;
+}
+
+.h3-hint {
+  font-size: 0.9rem;
   font-style: normal;
   font-weight: 0;
   color: #7a7a8c;
@@ -81,7 +92,7 @@
 /* Large screens */
 @media only screen and (min-width: 600px) {
   .h3-border {
-    width: 450px;
-    margin: 2rem auto;
+    width: auto;
+    margin: 2rem 8rem;
   }
 }
