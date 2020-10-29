@@ -1,0 +1,87 @@
+.h3-profile-container {
+  margin: auto;
+  margin: 0;
+  overflow: hidden;
+  color: white;
+}
+
+.h3-border {
+  padding: 1rem;
+  position: relative;
+  background: linear-gradient(to left, var(--h3-color-secondary), var(--h3-color-primary));
+  padding: 4px;
+  border-radius: 10%;
+}
+
+.h3-profile {
+  background: #17141d;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 10%;
+}
+
+.h3-profile-avatar {
+  margin: 2rem 0 0.5rem;
+  display: grid;
+  grid-template-columns: auto;
+  align-items: center;
+  position: relative;
+}
+
+.h3-profile-pic {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  filter: grayscale(0%);
+  display: block;
+  overflow: hidden;
+  margin: 20px auto;
+}
+
+.h3-circle {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  width: 400px;
+  height: 240px;
+  fill: none;
+  stroke: url(#gradient);
+  stroke-width: 6;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.h3-user-info {
+  margin: auto;
+  text-align: center;
+  width: 90%;
+}
+
+.h3-username {
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.h3-email {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 0;
+  color: #7a7a8c;
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+  .h3-border {
+    width: 350px;
+    margin: 0.5rem auto;
+  }
+}
+
+/* Large screens */
+@media only screen and (min-width: 600px) {
+  .h3-border {
+    width: 450px;
+    margin: 2rem auto;
+  }
+}

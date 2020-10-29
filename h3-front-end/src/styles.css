@@ -32,6 +32,14 @@ body::-webkit-scrollbar-thumb {
   background: seagreen;
 }
 
+.h3-gradient-secondary {
+  stop-color: var(--h3-color-secondary);
+}
+
+.h3-gradient-primary {
+  stop-color: var(--h3-color-primary);
+}
+
 /* Small screens */
 @media only screen and (max-width: 600px) {
   main {
