@@ -7,7 +7,6 @@ import {NgbCollapseModule, NgbDatepickerModule, NgbTypeaheadModule} from '@ng-bo
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
 import {HeaderComponent} from './header/header.component';
 import {AuthenticationComponent} from './authentication/authentication.component';
 import {TreeListComponent} from './tree/tree-list/tree-list.component';
@@ -26,11 +25,11 @@ import {UserProfileComponent} from './home/user-profile/user-profile.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {Ng2ImgMaxModule} from 'ng2-img-max';
 import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     HeaderComponent,
     AuthenticationComponent,
     TreeListComponent,
@@ -45,7 +44,8 @@ import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.c
     AlertComponent,
     WelcomeComponent,
     UserProfileComponent,
-    ImageUploaderComponent
+    ImageUploaderComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 <nav class="h3-navbar">
   <ul class="h3-navbar-nav">
     <li class="h3-logo">
-      <a href="#" class="h3-nav-link" routerLink="/">
+      <a href="#" class="h3-nav-link" [routerLink]="homePage">
         <span class="h3-link-text logo-text">H3</span>
         <svg
           focusable="false"
@@ -30,7 +30,7 @@
 
     <li class="h3-nav-item" routerLinkActive="h3-active"
         [routerLinkActiveOptions]="{exact: true}">
-      <a class="h3-nav-link" routerLink="/home">
+      <a class="h3-nav-link" [routerLink]="homePage">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
           <g>
             <path fill="currentColor"
@@ -41,7 +41,7 @@
                   class="fa-primary"></path>
           </g>
         </svg>
-        <span class="h3-link-text">Home</span>
+        <span class="h3-link-text">{{ user ? 'My Profile' : 'Home'}}</span>
       </a>
     </li>
 

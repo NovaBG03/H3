@@ -59,7 +59,7 @@ export class AuthenticationComponent implements OnInit {
 
     authObservable.subscribe(res => {
         console.log(res);
-        this.router.navigate(['home']);
+        this.router.navigate([res.username]);
       },
       errorMessage => {
         this.error = errorMessage;

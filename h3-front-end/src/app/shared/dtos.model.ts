@@ -31,6 +31,20 @@ export class UserTokenDTO {
   }
 }
 
+export class UserResponseDTO {
+  constructor(public id: number,
+              public username: string,
+              public email: string) {
+  }
+}
+
+export class User {
+  constructor(public id: number,
+              public username: string,
+              public email: string) {
+  }
+}
+
 
 export class FamilyTree {
   constructor(public id: number,
@@ -178,7 +192,7 @@ export class FamilyMemberDataDTO {
 }
 
 export class MessageDTO {
-  constructor(public message:	string) {
+  constructor(public message: string) {
   }
 }
 

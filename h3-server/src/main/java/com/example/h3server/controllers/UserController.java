@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // allows only admins to search users
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") // allows only admins to search users
     @ApiOperation(value = "${UserController.search}",
             response = UserResponseDTO.class,
             authorizations = { @Authorization(value="apiKey") })

@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './home/home.component';
 import {AuthenticationComponent} from './authentication/authentication.component';
 import {TreeComponent} from './tree/tree.component';
 import {AuthGuard} from './authentication/auth.guard';
@@ -10,10 +9,13 @@ import {TreeViewComponent} from './tree/tree-view/tree-view.component';
 import {ViewTreeComponent} from './member/view-tree/view-tree.component';
 import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
+import {UserProfileComponent} from './home/user-profile/user-profile.component';
+import {WelcomeComponent} from './home/welcome/welcome.component';
+import {SearchComponent} from './search/search.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent, pathMatch: 'full'},
+  {path: 'home', component: WelcomeComponent, pathMatch: 'full'},
   {path: 'auth', component: AuthenticationComponent},
   {
     path: 'trees', component: TreeComponent, canActivate: [AuthGuard], children: [
@@ -22,6 +24,7 @@ const routes: Routes = [
           {path: 'new', component: TreeNewComponent},
         ]
       },
+      { path: 'search', component: SearchComponent},
       {
         path: ':id', component: TreeViewComponent, children: [
           {path: 'members', component: ViewTreeComponent},
@@ -31,6 +34,7 @@ const routes: Routes = [
       }
     ]
   },
+  {path: ':username', component: UserProfileComponent}
   // { path: '**', redirectTo: 'home' }
 ];
 

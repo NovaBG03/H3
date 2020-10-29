@@ -1,7 +1,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {AuthService} from '../authentication/auth.service';
 import {HttpClient, HttpEvent, HttpEventType} from '@angular/common/http';
-import {ImageDTO, MessageDTO} from './dtos.model';
+import {ImageDTO, MessageDTO, User, UserResponseDTO} from './dtos.model';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -25,6 +25,13 @@ export class UserService {
           return 'assets/img/default-profile-pic.png';
         }
         return 'data:image/jpeg;base64,' + imageDTO.imageBytes;
+      }));
+  }
+
+  getUserByUsername(username: string): Observable<User> {
+    return this.http.get<UserResponseDTO>('http://localhost:8080/users/' + username)
+      .pipe(map(userResponseDTO => {
+        return new User(userResponseDTO.id, userResponseDTO.username, userResponseDTO.email);
       }));
   }
 }

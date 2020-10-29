@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from '../authentication/auth.service';
 import {UserToken} from '../shared/dtos.model';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -14,19 +14,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user: UserToken = null;
   userSubscription: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
+
+  get homePage(): string {
+    if (this.user) {
+      return this.user.username;
+    }
+    return 'home';
+  }
 
   ngOnInit(): void {
-     this.userSubscription = this.authService.user.subscribe(userToken => this.user = userToken);
+    this.userSubscription = this.authService.user.subscribe(userToken => this.user = userToken);
   }
-
-/*  toggleMenu(): void {
-    this.isMenuCollapsed = !this.isMenuCollapsed;
-  }
-
-  closeMenu(): void {
-    this.isMenuCollapsed = true;
-  }*/
 
   onLogout(): void {
     this.authService.logout();
