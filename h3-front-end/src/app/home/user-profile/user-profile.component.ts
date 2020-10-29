@@ -65,7 +65,9 @@ export class UserProfileComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeProfilePicture(): void {
-    this.isChoosingPicture = true;
+    if (this.isOwnProfile()) {
+      this.isChoosingPicture = true;
+    }
   }
 
   ngOnDestroy(): void {
