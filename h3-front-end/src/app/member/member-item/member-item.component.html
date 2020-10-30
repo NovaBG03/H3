@@ -1,123 +1,123 @@
 <div class="backdrop">
   <div class="alert-box">
-    <h3>{{ member === familyMembers.mainMember ? 'Main ' : '' }}Member</h3>
-    <hr>
+    <div class="alert-box-header">
+      <h3>{{ member === familyMembers.mainMember ? 'Main ' : '' }}Member</h3>
+    </div>
+    <div class="alert-box-content">
+      <form [formGroup]="memberForm" (ngSubmit)="onSave()">
 
-    <form [formGroup]="memberForm" (ngSubmit)="onSave()">
-
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="">Name</span>
-          </div>
-          <input type="text" id="firstName" placeholder="First Name" class="form-control" formControlName="firstName">
-          <input type="text" id="lastName" placeholder="Last Name" class="form-control" formControlName="lastName">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="genderSelect">Gender</label>
-          </div>
-          <select class="custom-select" id="genderSelect" formControlName="gender">
-            <option [value]="gender" *ngFor="let gender of genders">{{ gender }}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="genderSelect">Birthday</label>
-          </div>
-          <input class="form-control" placeholder="yyyy-mm-dd"
-                 ngbDatepicker #birthdayPicker="ngbDatepicker"
-                 formControlName="birthday">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" (click)="birthdayPicker.toggle()" type="button">📅</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <label class="input-group-text" for="genderSelect">Date of Death</label>
-          </div>
-          <input class="form-control" placeholder="yyyy-mm-dd"
-                 ngbDatepicker #dateOfDeathPicker="ngbDatepicker"
-                 formControlName="dateOfDeath">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary" (click)="dateOfDeathPicker.toggle()" type="button">📅</button>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="(member.isDirectHeir || familyMembers.isEmptyMember(member))
-                  && member.id !== familyMembers.mainMember?.id" class="mb-4">
-        <h4>Parents</h4>
-        <div class="row">
-          <div class="col-6">
-            <app-member-search [parentForm]="memberForm"
-                               label="Primary Parent"
-                               controlName="primaryParent"
-                               [familyMembers]="familyMembers"
-                               [familyMember]="member"></app-member-search>
-          </div>
-          <div class="col-6">
-            <app-member-search [parentForm]="memberForm"
-                               label="Secondary Parent"
-                               controlName="secondaryParent"
-                               [familyMembers]="familyMembers"
-                               [familyMember]="member"></app-member-search>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="isEditing">
-        <h4>Partners</h4>
-        <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">
-          <app-member-search [parentForm]="memberForm"
-                             [label]="'Partner ' + (i + 1)"
-                             [control]="partnersFormArray.controls[i]"
-                             [familyMembers]="familyMembers"
-                             [familyMember]="member"
-                             [canClose]="true"
-                             (closeButtonClicked)="removePartnerControl(i)"></app-member-search>
-
-          <div *ngIf="partnersFormArray.controls[i].value">
-            <div class="row" *ngFor="let child of getChildControls(i).controls; let j = index">
-              <app-member-search [parentForm]="memberForm"
-                                 [label]="'Child ' + (j + 1)"
-                                 [control]="getChildControls(i).controls[j]"
-                                 [familyMembers]="familyMembers"
-                                 [familyMember]="member"
-                                 [canClose]="true"
-                                 (closeButtonClicked)="removeChildControl(i, j)"
-                                 class="col-10 offset-1 mt-2"></app-member-search>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="">Name</span>
             </div>
-            <div class="row">
-              <div class="col-10 offset-1 mt-2">
-                <button type="button" class="btn btn-success" (click)="addEmptyChildArray(i)">Add Child</button>
+            <input type="text" id="firstName" placeholder="First Name" class="form-control" formControlName="firstName">
+            <input type="text" id="lastName" placeholder="Last Name" class="form-control" formControlName="lastName">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="genderSelect">Gender</label>
+            </div>
+            <select class="custom-select" id="genderSelect" formControlName="gender">
+              <option [value]="gender" *ngFor="let gender of genders">{{ gender }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="genderSelect">Birthday</label>
+            </div>
+            <input class="form-control" placeholder="yyyy-mm-dd"
+                   ngbDatepicker #birthdayPicker="ngbDatepicker"
+                   formControlName="birthday">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" (click)="birthdayPicker.toggle()" type="button">📅</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="genderSelect">Date of Death</label>
+            </div>
+            <input class="form-control" placeholder="yyyy-mm-dd"
+                   ngbDatepicker #dateOfDeathPicker="ngbDatepicker"
+                   formControlName="dateOfDeath">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" (click)="dateOfDeathPicker.toggle()" type="button">📅</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="(member.isDirectHeir || familyMembers.isEmptyMember(member))
+                  && member.id !== familyMembers.mainMember?.id" class="mb-4">
+          <h4>Parents</h4>
+          <div class="row">
+            <div class="col-6">
+              <app-member-search [parentForm]="memberForm"
+                                 label="Primary Parent"
+                                 controlName="primaryParent"
+                                 [familyMembers]="familyMembers"
+                                 [familyMember]="member"></app-member-search>
+            </div>
+            <div class="col-6">
+              <app-member-search [parentForm]="memberForm"
+                                 label="Secondary Parent"
+                                 controlName="secondaryParent"
+                                 [familyMembers]="familyMembers"
+                                 [familyMember]="member"></app-member-search>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isEditing">
+          <h4>Partners</h4>
+          <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">
+            <app-member-search [parentForm]="memberForm"
+                               [label]="'Partner ' + (i + 1)"
+                               [control]="partnersFormArray.controls[i]"
+                               [familyMembers]="familyMembers"
+                               [familyMember]="member"
+                               [canClose]="true"
+                               (closeButtonClicked)="removePartnerControl(i)"></app-member-search>
+
+            <div *ngIf="partnersFormArray.controls[i].value">
+              <div class="row" *ngFor="let child of getChildControls(i).controls; let j = index">
+                <app-member-search [parentForm]="memberForm"
+                                   [label]="'Child ' + (j + 1)"
+                                   [control]="getChildControls(i).controls[j]"
+                                   [familyMembers]="familyMembers"
+                                   [familyMember]="member"
+                                   [canClose]="true"
+                                   (closeButtonClicked)="removeChildControl(i, j)"
+                                   class="col-10 offset-1 mt-2"></app-member-search>
+              </div>
+              <div class="row">
+                <div class="col-10 offset-1 mt-2">
+                  <button type="button" class="btn btn-success" (click)="addEmptyChildArray(i)">Add Child</button>
+                </div>
               </div>
             </div>
+
           </div>
-
+          <button type="button" class="btn btn-success" (click)="addEmptyPartnerControl()">Add Partner</button>
         </div>
-        <button type="button" class="btn btn-success" (click)="addEmptyPartnerControl()">Add Partner</button>
-      </div>
 
 
-      <div class="alert-box-actions mt-4">
-        <button type="submit" class="btn btn-success mr-1" [disabled]="memberForm.invalid">Save all</button>
-        <button *ngIf="isEditing && this.familyMembers.mainMember !== member"
-                type="button"
-                class="btn btn-dark mr-1"
-                (click)="onDelete()">Delete</button>
-        <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
-      </div>
-    </form>
-
+        <div class="alert-box-actions">
+          <button type="submit" class="btn btn-success mr-1" [disabled]="memberForm.invalid">Save all</button>
+          <button *ngIf="isEditing && this.familyMembers.mainMember !== member"
+                  type="button"
+                  class="btn btn-dark mr-1"
+                  (click)="onDelete()">Delete</button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
   </div>
 </div>
