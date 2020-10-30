@@ -53,14 +53,16 @@ export class UserProfileComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateProfilePic(blob: Blob): void {
-    this.userService.uploadProfilePicture(blob)
-      .subscribe(message => {
-        console.log(message);
-        this.userService.getProfilePictureUrl(this.user.username)
-          .subscribe(img => {
-            this.showingImageUrl = img;
-          });
-      });
+    if (blob) {
+      this.userService.uploadProfilePicture(blob)
+        .subscribe(message => {
+          console.log(message);
+          this.userService.getProfilePictureUrl(this.user.username)
+            .subscribe(img => {
+              this.showingImageUrl = img;
+            });
+        });
+    }
     this.isChoosingPicture = false;
   }
 

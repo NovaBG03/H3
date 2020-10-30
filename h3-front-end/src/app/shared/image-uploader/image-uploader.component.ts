@@ -60,4 +60,7 @@ export class ImageUploaderComponent implements OnInit {
     return obj as File;
   }
 
+  onCancelUpload(): void {
+    this.imageUploaded.emit(null);
+  }
 }

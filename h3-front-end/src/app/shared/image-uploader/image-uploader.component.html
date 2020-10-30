@@ -1,24 +1,30 @@
-<div class="row">
-  <p>Upload Profile Picture:</p>
-</div>
-<div class="row">
-  <input type="file" (change)="onfileChange($event)">
-  <image-cropper
-    [imageChangedEvent]="imageChangedEvent"
-    [maintainAspectRatio]="true"
-    [aspectRatio]="1 / 1"
-    format="png"
-    (imageCropped)="imageCropped($event)"
-    (imageLoaded)="imageLoaded()"
-    (cropperReady)="cropperReady()"
-    (loadImageFailed)="loadImageFailed()"
-  ></image-cropper>
-</div>
-<div class="row">
-  <div class="col-md-4">
-    <button type="button"
-            class="btn btn-primary btn-block mt-2"
-            (click)="onUpload()"
-            [disabled]="!imageChangedEvent">Upload</button>
+<div class="backdrop">
+  <div class="alert-box">
+    <div class="alert-box-header">
+      <p>Upload Profile Picture:</p>
+    </div>
+    <div class="alert-box-content">
+      <input type="file" (change)="onfileChange($event)">
+      <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="1 / 1"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded()"
+        (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()"
+      ></image-cropper>
+
+      <div class="alert-box-actions">
+        <button type="button"
+                class="btn btn-success btn-block"
+                (click)="onUpload()"
+                [disabled]="!imageChangedEvent">Upload</button>
+        <button type="button"
+                class="btn btn-danger btn-block"
+                (click)="onCancelUpload()">Cancel</button>
+      </div>
+    </div>
   </div>
 </div>
