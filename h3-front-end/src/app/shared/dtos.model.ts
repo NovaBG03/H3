@@ -50,7 +50,8 @@ export class FamilyTree {
   constructor(public id: number,
               public name: string,
               public isPrivate: boolean,
-              public createdAt: Date) {
+              public createdAt: Date,
+              public owner: string) {
   }
 }
 
@@ -58,7 +59,8 @@ export class FamilyTreeResponseDTO {
   constructor(public id: number,
               public name: string,
               public isPrivate: boolean,
-              public createdAt: string) {
+              public createdAt: string,
+              public owner: string) {
   }
 }
 

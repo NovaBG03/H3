@@ -87,9 +87,6 @@ public class FamilyTreeService {
         List<FamilyTree> familyTrees = this.familyTreeRepository
                 .findAllByNameContainingIgnoreCase(treePattern.trim());
 
-        System.out.println(treePattern);
-        System.out.println(familyTrees.size());
-
         if (user.isAdmin()) {
             return familyTrees;
         }

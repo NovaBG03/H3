@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {TreeService} from '../tree/tree.service';
-import OrgChart from '@balkangraph/orgchart.js';
 import {FamilyTree} from '../shared/dtos.model';
 
 @Component({

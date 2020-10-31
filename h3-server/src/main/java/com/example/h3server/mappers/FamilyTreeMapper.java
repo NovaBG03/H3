@@ -12,6 +12,7 @@ public interface FamilyTreeMapper {
 
     FamilyTreeMapper INSTANCE = Mappers.getMapper(FamilyTreeMapper.class);
 
+    @Mapping(target = "owner", source = "user.username")
     FamilyTreeResponseDTO familyTreeToFamilyTreeResponseDTO(FamilyTree familyTree);
 
     FamilyTree familyTreeDataDTOToFamilyTree(FamilyTreeDataDTO familyTreeDataDTO);

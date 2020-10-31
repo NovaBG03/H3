@@ -26,6 +26,9 @@ public class FamilyTreeResponseDTO {
     @ApiModelProperty(position = 3)
     private LocalDateTime createdAt;
 
+    @ApiModelProperty(position = 4)
+    private String owner;
+
     @JsonProperty("isPrivate")
     @ApiModelProperty(position = 2)
     public boolean getIsPrivate() {
