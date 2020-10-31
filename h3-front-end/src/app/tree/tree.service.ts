@@ -1,8 +1,8 @@
 import {FamilyTree, FamilyTreeDataDTO, FamilyTreeListDTO, FamilyTreeResponseDTO} from '../shared/dtos.model';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
-import {map, take, tap} from 'rxjs/operators';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {AuthService} from '../authentication/auth.service';
 
 @Injectable({providedIn: 'root'})
@@ -13,13 +13,15 @@ export class TreeService {
   }
 
   getOwnTrees(): Observable<FamilyTree[]> {
-    let username: string;
-    this.authService.user.pipe(take(1)).subscribe(user => username = user.username);
-    return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/' + username)
-      .pipe(map(familyTreeListDTO => {
-        return familyTreeListDTO.familyTrees.map(familyTreeResponseDTO => {
-          return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
-        });
+    return this.authService.user.pipe(
+      take(1),
+      switchMap(user => {
+        return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/' + user.username)
+          .pipe(map(familyTreeListDTO => {
+            return familyTreeListDTO.familyTrees.map(familyTreeResponseDTO => {
+              return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
+            });
+          }));
       }));
   }
 
@@ -29,6 +31,17 @@ export class TreeService {
         return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
       }), tap(familyTree => {
         this.createdNewTree.next(familyTree);
+      }));
+  }
+
+  findTree(treePattern: string): Observable<FamilyTree[]> {
+    return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/', {
+      params: new HttpParams().append('treePattern', treePattern)
+    })
+      .pipe(map(familyTreeListDTO => {
+        return familyTreeListDTO.familyTrees.map(familyTreeResponseDTO => {
+          return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
+        });
       }));
   }
 
