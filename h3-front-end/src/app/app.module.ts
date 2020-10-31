@@ -26,6 +26,7 @@ import {ImageCropperModule} from 'ngx-image-cropper';
 import {Ng2ImgMaxModule} from 'ng2-img-max';
 import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.component';
 import { SearchComponent } from './search/search.component';
+import { EmptyComponent } from './shared/empty/empty.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { SearchComponent } from './search/search.component';
     WelcomeComponent,
     UserProfileComponent,
     ImageUploaderComponent,
-    SearchComponent
+    SearchComponent,
+    EmptyComponent
   ],
   imports: [
     BrowserModule,

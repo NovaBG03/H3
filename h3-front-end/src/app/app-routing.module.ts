@@ -12,6 +12,7 @@ import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.componen
 import {UserProfileComponent} from './home/user-profile/user-profile.component';
 import {WelcomeComponent} from './home/welcome/welcome.component';
 import {SearchComponent} from './search/search.component';
+import {EmptyComponent} from './shared/empty/empty.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -24,7 +25,12 @@ const routes: Routes = [
           {path: 'new', component: TreeNewComponent},
         ]
       },
-      { path: 'search', component: SearchComponent},
+      {
+        path: 'search', component: SearchComponent, children: [
+          {path: '', component: TreeListComponent, pathMatch: 'full' },
+          {path: ':treePattern', component: TreeListComponent}
+        ]
+      },
       {
         path: ':id', component: TreeViewComponent, children: [
           {path: 'members', component: ViewTreeComponent},

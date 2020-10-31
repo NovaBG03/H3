@@ -35,6 +35,10 @@ export class TreeService {
   }
 
   findTree(treePattern: string): Observable<FamilyTree[]> {
+    if (!treePattern) {
+      treePattern = '';
+    }
+
     return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/', {
       params: new HttpParams().append('treePattern', treePattern)
     })

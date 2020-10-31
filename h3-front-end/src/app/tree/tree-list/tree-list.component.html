@@ -1,5 +1,5 @@
 <div class="h3-card-list">
-  <div class="h3-card h3-card-static" routerLink="new">
+  <div class="h3-card h3-card-static" routerLink="new" *ngIf="isMyTrees">
     <div class="h3-card-static-content">
       <h2>Create new Family Tree</h2>
     </div>
@@ -8,12 +8,12 @@
   <div class="h3-card h3-card-dynamic" *ngFor="let tree of trees">
     <div class="h3-card-header">
       <p>{{ tree.createdAt | date:'mediumDate' }}</p>
-      <h2 [routerLink]="['..', tree.id, 'members']">{{ tree.name }}</h2>
+      <h2 [routerLink]="['/', 'trees', tree.id, 'members']">{{ tree.name }}</h2>
     </div>
 
     <div class="h3-card-author">
-      <a class="h3-author-avatar">
-        <img class="img-fluid" [src]="profilePictureUrl" />
+      <a class="h3-author-avatar" [routerLink]="['/', tree.owner]">
+        <img class="img-fluid" [src]="profilePictures[tree.owner]" />
       </a>
       <svg class="h3-half-circle" viewBox="0 0 106 57">
         <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
@@ -21,7 +21,7 @@
 
       <div class="h3-author-name">
         <div class="h3-author-name-prefix">{{ tree.isPrivate ? 'Private' : 'Public' }}</div>
-        {{ username }}
+        {{ tree.owner }}
       </div>
     </div>
     <div class="h3-tags">

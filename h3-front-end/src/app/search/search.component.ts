@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {TreeService} from '../tree/tree.service';
-import {FamilyTree} from '../shared/dtos.model';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -10,27 +9,33 @@ import {FamilyTree} from '../shared/dtos.model';
 })
 export class SearchComponent implements OnInit {
   searchForm: FormGroup;
-  trees: FamilyTree[];
 
-  constructor(private treeService: TreeService) { }
+  constructor(private router: Router, private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
     this.initForm();
+  }
+
+  search(): void {
+    let treePattern = this.searchForm.value.treePattern;
+
+    if (!treePattern) {
+      treePattern = '';
+    }
+
+    this.router.navigate(['trees', 'search', treePattern]);
+
+    /*this.treeService.findTree(treePattern)
+      .subscribe(trees => {
+        this.trees = trees;
+        console.log(this.trees);
+      });*/
   }
 
   private initForm(): void {
     this.searchForm = new FormGroup({
       treePattern: new FormControl()
     });
-  }
-
-  search(): void {
-    const treePattern = this.searchForm.value.treePattern;
-
-    this.treeService.findTree(treePattern)
-      .subscribe(trees => {
-        this.trees = trees;
-        console.log(this.trees);
-      });
   }
 }
