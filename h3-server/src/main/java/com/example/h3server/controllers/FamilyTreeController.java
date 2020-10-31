@@ -100,4 +100,23 @@ public class FamilyTreeController {
         return new MessageDTO("Family Tree deleted successfully");
     }
 
+    @GetMapping()
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyTreeController.findTrees}",
+            response = FamilyTreeListDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The user doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public FamilyTreeListDTO findTrees(@RequestParam String treePattern, @ApiIgnore Principal principal) {
+        List<FamilyTreeResponseDTO> familyTreeDTOs = this.familyTreeService.findFamilyTrees(treePattern, principal.getName())
+                .stream()
+                .map(familyTree -> FamilyTreeMapper.INSTANCE.familyTreeToFamilyTreeResponseDTO(familyTree))
+                .collect(Collectors.toList());
+
+        return new FamilyTreeListDTO(familyTreeDTOs);
+    }
+
 }

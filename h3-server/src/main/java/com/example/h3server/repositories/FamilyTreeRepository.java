@@ -13,5 +13,7 @@ public interface FamilyTreeRepository extends JpaRepository<FamilyTree, Long> {
 
     List<FamilyTree> findAllByUser(User user);
 
+    List<FamilyTree> findAllByNameContainingIgnoreCase(String treeName);
+
     FamilyTree findByIdAndUserUsername(Long id, String username);
 }

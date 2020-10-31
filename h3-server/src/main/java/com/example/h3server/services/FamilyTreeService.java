@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,5 +79,24 @@ public class FamilyTreeService {
         }
 
         return treeFromDb;
+    }
+
+    public List<FamilyTree> findFamilyTrees(String treePattern, String principalUsername) {
+        final User user = userRepository.findByUsername(principalUsername);
+
+        List<FamilyTree> familyTrees = this.familyTreeRepository
+                .findAllByNameContainingIgnoreCase(treePattern.trim());
+
+        System.out.println(treePattern);
+        System.out.println(familyTrees.size());
+
+        if (user.isAdmin()) {
+            return familyTrees;
+        }
+
+        return familyTrees
+                .stream()
+                .filter(familyTree -> !familyTree.getIsPrivate())
+                .collect(Collectors.toList());
     }
 }

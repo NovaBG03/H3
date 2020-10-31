@@ -79,4 +79,8 @@ public class User {
         this.familyTrees.add(familyTree);
         familyTree.setUser(this);
     }
+
+    public Boolean isAdmin() {
+        return this.roles.contains(Role.ROLE_ADMIN);
+    }
 }
