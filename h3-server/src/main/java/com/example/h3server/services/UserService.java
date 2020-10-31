@@ -7,6 +7,8 @@ import com.example.h3server.models.User;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.security.JwtTokenProvider;
 import com.example.h3server.utils.ModelValidator;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -44,7 +47,9 @@ public class UserService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             User user = userRepository.findByUsername(username);
 
-            final String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            final String token = jwtTokenProvider
+                    .createToken(user.getUsername(), Lists.newArrayList(user.getRoles()));
+
             return UserTokenDTO.builder()
                     .token(token)
                     .expiresIn(jwtTokenProvider.getExpirationDate(token))
@@ -60,13 +65,15 @@ public class UserService {
 
     public UserTokenDTO signUp(User user) {
         if (!userRepository.existsByUsername(user.getUsername())) {
-            user.setRoles(Arrays.asList(Role.ROLE_USER));
+            user.setRoles(Sets.newHashSet(Role.ROLE_USER));
 
             ModelValidator.validate(user);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User savedUser = userRepository.save(user);
 
-            final String token = jwtTokenProvider.createToken(savedUser.getUsername(), savedUser.getRoles());
+            final String token = jwtTokenProvider
+                    .createToken(savedUser.getUsername(), Lists.newArrayList(savedUser.getRoles()));
+
             return UserTokenDTO.builder()
                     .token(token)
                     .expiresIn(jwtTokenProvider.getExpirationDate(token))
@@ -97,7 +104,8 @@ public class UserService {
     }
 
     public String refresh(String username) {
-        return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+        return jwtTokenProvider
+                .createToken(username, Lists.newArrayList(userRepository.findByUsername(username).getRoles()));
     }
 
     public void updateProfilePicture(MultipartFile image, String username) {

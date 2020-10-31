@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,5 +26,5 @@ public class UserResponseDTO {
     private String email;
 
     @ApiModelProperty(position = 3)
-    private List<Role> roles;
+    private Set<Role> roles;
 }

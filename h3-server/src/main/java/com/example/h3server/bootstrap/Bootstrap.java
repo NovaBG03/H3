@@ -69,7 +69,7 @@ public class Bootstrap implements CommandLineRunner {
                 .user(userRepository.findByUsername("root"))
                 .build());
 
-        FamilyTree queensFamilyTree = this.familyTreeRepository.save(FamilyTree.builder()
+        this.familyTreeRepository.save(FamilyTree.builder()
                 .name("Queen's Family Tree")
                 .isPrivate(false)
                 .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 27, 22, 47))
@@ -77,9 +77,6 @@ public class Bootstrap implements CommandLineRunner {
                 .build());
 
         log.info("Loaded Family Trees: " + this.familyTreeRepository.count());
-
-        // for testing, TODO remove
-        // this.familyTreeRepository.delete(queensFamilyTree);
     }
 
     private void loadFamilyMembers() {

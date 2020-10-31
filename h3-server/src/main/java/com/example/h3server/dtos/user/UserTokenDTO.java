@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -31,10 +29,10 @@ public class UserTokenDTO {
     private String email;
 
     @ApiModelProperty(position = 5)
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @Builder
-    public UserTokenDTO(String token, Date expiresIn, Long id, String username, String email, List<Role> roles) {
+    public UserTokenDTO(String token, Date expiresIn, Long id, String username, String email, Set<Role> roles) {
         this.token = token;
         this.expiresIn = expiresIn;
         this.id = id;

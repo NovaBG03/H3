@@ -6,6 +6,7 @@ import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,7 +79,7 @@ class FamilyTreeServiceTest {
                 .username(username)
                 .email("email")
                 .password("password")
-                .roles(Arrays.asList(Role.ROLE_USER))
+                .roles(Sets.newHashSet(Role.ROLE_USER))
                 .familyTrees(new HashSet<>(familyTrees))
                 .build();
     }

@@ -4,10 +4,12 @@ import com.example.h3server.dtos.user.UserDataDTO;
 import com.example.h3server.dtos.user.UserResponseDTO;
 import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ class UserMapperTest {
     private String username = "username";
     private String email = "email";
     private String password = "password";
-    private List<Role> roles = Arrays.asList(Role.ROLE_USER, Role.ROLE_ADMIN);
+    private Set<Role> roles = Sets.newHashSet(Role.ROLE_USER, Role.ROLE_ADMIN);
 
     @Test
     void userToUserResponseDTO() {

@@ -3,8 +3,10 @@ package com.example.h3server.services;
 import com.example.h3server.exception.CustomException;
 import com.example.h3server.models.FamilyMember;
 import com.example.h3server.models.FamilyTree;
+import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
+import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.utils.ModelValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,17 +18,23 @@ public class FamilyMemberService {
 
     private final FamilyMemberRepository familyMemberRepository;
     private final FamilyTreeRepository familyTreeRepository;
+    private final UserRepository userRepository;
 
     public FamilyMemberService(FamilyMemberRepository familyMemberRepository,
-                               FamilyTreeRepository familyTreeRepository) {
+                               FamilyTreeRepository familyTreeRepository,
+                               UserRepository userRepository) {
         this.familyMemberRepository = familyMemberRepository;
         this.familyTreeRepository = familyTreeRepository;
+        this.userRepository = userRepository;
     }
 
     public List<FamilyMember> getMembers(Long treeId, String username) {
-        FamilyTree familyTree = getTreeOrThrowException(treeId);
+        final FamilyTree familyTree = getTreeOrThrowException(treeId);
+        final User user = userRepository.findByUsername(username);
 
-        if (familyTree.getIsPrivate() && !familyTree.getUser().getUsername().equals(username)) {
+        if (familyTree.getIsPrivate()
+                && !user.getUsername().equals(familyTree.getUser().getUsername())
+                && !user.isAdmin()) {
             throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
         }
 

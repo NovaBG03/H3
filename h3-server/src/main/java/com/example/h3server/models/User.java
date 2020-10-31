@@ -45,7 +45,7 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<FamilyTree> familyTrees = new HashSet<>();
@@ -56,7 +56,7 @@ public class User {
                 String email,
                 String password,
                 Byte[] profilePicture,
-                List<Role> roles,
+                Set<Role> roles,
                 Set<FamilyTree> familyTrees) {
         this.id = id;
         this.username = username;

@@ -6,6 +6,8 @@ import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.security.JwtTokenProvider;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,11 +59,11 @@ class UserServiceTest {
     String token = "token";
     Date expiresIn = new Date();
     User user;
-    List<Role> roles;
+    Set<Role> roles;
 
     @BeforeEach
     void setUp() {
-        roles = Arrays.asList(Role.ROLE_USER);
+        roles = Sets.newHashSet(Role.ROLE_USER);
         user = User.builder()
                 .id(id)
                 .email(email)
@@ -74,7 +77,7 @@ class UserServiceTest {
     void signInSuccessfully() {
         // given
         given(userRepository.findByUsername(username)).willReturn(user);
-        given(jwtTokenProvider.createToken(username, roles)).willReturn(token);
+        given(jwtTokenProvider.createToken(username, Lists.newArrayList(roles))).willReturn(token);
         given(jwtTokenProvider.getExpirationDate(token)).willReturn(expiresIn);
 
         // when
@@ -119,7 +122,7 @@ class UserServiceTest {
         given(userRepository.existsByUsername(username)).willReturn(false);
         given(passwordEncoder.encode(password)).willReturn(encodedPassword);
         given(userRepository.save(userCaptor.capture())).willReturn(savedUser);
-        given(jwtTokenProvider.createToken(username, roles)).willReturn(token);
+        given(jwtTokenProvider.createToken(username, Lists.newArrayList(roles))).willReturn(token);
         given(jwtTokenProvider.getExpirationDate(token)).willReturn(expiresIn);
 
         // when
@@ -128,7 +131,7 @@ class UserServiceTest {
         // then
         User capturedUser = userCaptor.getValue();
         assertEquals(encodedPassword, capturedUser.getPassword());
-        assertEquals(Arrays.asList(Role.ROLE_USER), capturedUser.getRoles());
+        assertEquals(Sets.newHashSet(Role.ROLE_USER), capturedUser.getRoles());
 
         assertEquals(id, userTokenDTO.getId());
         assertEquals(token, userTokenDTO.getToken());
@@ -212,7 +215,7 @@ class UserServiceTest {
     void refresh() {
         // given
         given(userRepository.findByUsername(username)).willReturn(user);
-        given(jwtTokenProvider.createToken(username, roles)).willReturn(token);
+        given(jwtTokenProvider.createToken(username, Lists.newArrayList(roles))).willReturn(token);
 
         // when
         String refreshedToken = userService.refresh(username);

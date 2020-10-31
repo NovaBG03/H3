@@ -7,6 +7,8 @@ import com.example.h3server.models.Role;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
+import com.example.h3server.repositories.UserRepository;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +20,7 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -37,6 +36,9 @@ class FamilyMemberServiceTest {
     @Mock
     FamilyTreeRepository familyTreeRepository;
 
+    @Mock
+    UserRepository userRepository;
+
     @InjectMocks
     FamilyMemberService familyMemberService;
 
@@ -45,8 +47,9 @@ class FamilyMemberServiceTest {
     String username = "username";
     String email = "email@main.com";
     String encodedPassword = "encodedPassword";
-    List<Role> userRoles = Arrays.asList(Role.ROLE_USER);
+    Set<Role> userRoles = Sets.newHashSet(Role.ROLE_USER);
     User user;
+    User randomUser;
 
     Long treeId = 10L;
     String treeName = "tree name";
@@ -77,6 +80,11 @@ class FamilyMemberServiceTest {
 
     @BeforeEach
     void setUp() {
+        randomUser = User.builder()
+                .username(randomUsername)
+                .roles(Sets.newHashSet(Role.ROLE_USER))
+                .build();
+
         user = User.builder()
                 .id(userId)
                 .username(username)
@@ -127,6 +135,7 @@ class FamilyMemberServiceTest {
         // given
         given(familyTreeRepository.findById(treeId)).willReturn(Optional.of(familyTree));
         given(familyMemberRepository.findAllByFamilyTreeId(treeId)).willReturn(familyMembers);
+        given(userRepository.findByUsername(username)).willReturn(user);
 
         // when
         List<FamilyMember> foundMembers = familyMemberService.getMembers(treeId, username);
@@ -141,6 +150,7 @@ class FamilyMemberServiceTest {
         familyTree.setIsPrivate(false);
         given(familyTreeRepository.findById(treeId)).willReturn(Optional.of(familyTree));
         given(familyMemberRepository.findAllByFamilyTreeId(treeId)).willReturn(familyMembers);
+        given(userRepository.findByUsername(randomUsername)).willReturn(randomUser);
 
         // when
         List<FamilyMember> foundMembers = familyMemberService.getMembers(treeId, randomUsername);
@@ -153,6 +163,7 @@ class FamilyMemberServiceTest {
     void getMembersNotOwnPrivateTree() {
         // given
         given(familyTreeRepository.findById(treeId)).willReturn(Optional.of(familyTree));
+        given(userRepository.findByUsername(randomUsername)).willReturn(randomUser);
 
         // when
         // then
