@@ -47,6 +47,22 @@ public class FamilyTreeController {
         return new FamilyTreeListDTO(familyTreeDTOs);
     }
 
+    @GetMapping("/id/{treeId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyTreeController.getTree}",
+            response = FamilyTreeResponseDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The family tree doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public FamilyTreeResponseDTO getTree(@PathVariable Long treeId, @ApiIgnore Principal principal) {
+        return FamilyTreeMapper.INSTANCE
+                .familyTreeToFamilyTreeResponseDTO(
+                        this.familyTreeService.getFamilyTree(treeId, principal.getName()));
+    }
+
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyTreeController.createNewTree}",
@@ -118,5 +134,4 @@ public class FamilyTreeController {
 
         return new FamilyTreeListDTO(familyTreeDTOs);
     }
-
 }

@@ -20,6 +20,7 @@ export class MemberSearchComponent implements OnInit {
   @Input() familyMember: FamilyMember;
 
   @Input() canClose = false;
+
   @Output() closeButtonClicked = new EventEmitter<void>();
 
   @ViewChild('instance', {static: false}) instance: NgbTypeahead;

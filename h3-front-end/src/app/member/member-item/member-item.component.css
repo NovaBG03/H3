@@ -1,3 +1,7 @@
+input:read-only {
+  background-color: whitesmoke;
+}
+
 .backdrop {
   position: fixed;
   top: 0;

@@ -13,12 +13,13 @@ export class MemberItemComponent implements OnInit {
   @Input() treeId: number;
   @Input('familyMembers') familyMembers: FamilyMembers;
   @Input('familyMember') member: FamilyMember; // if is null -> creating new user
+  @Input() isOwner: boolean;
   memberChildren: FamilyMember[] = [];
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
   partnersFormArray: FormArray;
   childrenFormArray: FormArray;
-  isEditing = true;
+  isNotNew = true;
 
   // outputs true if change is made, false if it isn't
   @Output() finishEditing = new EventEmitter<boolean>();
@@ -37,7 +38,7 @@ export class MemberItemComponent implements OnInit {
         null,
         null,
         []);
-      this.isEditing = false;
+      this.isNotNew = false;
     }
 
     this.memberChildren = this.familyMembers.getChildren(this.member.id);
@@ -74,7 +75,7 @@ export class MemberItemComponent implements OnInit {
       value.secondaryParent ? value.secondaryParent.id : null
     );
 
-    if (this.isEditing) {
+    if (this.isNotNew) {
 
       // some big brain stuff
       const childrenToUpdate: FamilyMember[] = [];

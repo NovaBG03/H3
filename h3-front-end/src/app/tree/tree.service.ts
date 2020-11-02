@@ -49,6 +49,13 @@ export class TreeService {
       }));
   }
 
+  getTree(treeId: number): Observable<FamilyTree> {
+    console.log('getting tree');
+    return this.http.get<FamilyTreeResponseDTO>('http://localhost:8080/trees/id/' + treeId)
+      .pipe(map(familyTreeResponseDTO =>
+        this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO)));
+  }
+
   private mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO: FamilyTreeResponseDTO): FamilyTree {
     return new FamilyTree(familyTreeResponseDTO.id,
       familyTreeResponseDTO.name,

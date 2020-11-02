@@ -3,7 +3,7 @@
     <thead>
     <tr>
       <th>#</th>
-      <th>Edit</th>
+      <th>{{ isOwner ? 'Edit' : 'View'}}</th>
       <th>Name</th>
       <th>Gender</th>
       <th class="text-center">Birthday</th>
@@ -18,7 +18,9 @@
         [ngClass]="{'table-info': member.id === highlightedMemberId}">
       <th scope="row">{{ i + 1 }}</th>
       <td class="text-center">
-        <span (click)="onStartEditing(member.id)" style="cursor: pointer;">&#x270F;</span>
+        <span (click)="onStartEditing(member.id)" style="cursor: pointer;">
+          {{ isOwner ? '✏️' : '🔍' }}
+        </span>
       </td>
       <td>{{ member.fullName }}</td>
       <td>{{ member.gender | lowercase }}</td>
@@ -41,7 +43,7 @@
         </div>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="isOwner">
       <th scope="row">{{ this.familyMembers?.members.length + 1 }}</th>
       <td class="text-center">
         <span (click)="onStartCreating()" style="cursor: pointer;">➕</span>
@@ -62,4 +64,5 @@
                  [familyMember]="editingMember"
                  [familyMembers]="familyMembers"
                  [treeId]="treeId"
+                 [isOwner]="isOwner"
                  (finishEditing)="onFinishEditing($event)"></app-member-item>

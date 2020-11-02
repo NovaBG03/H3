@@ -1,30 +1,50 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
 import OrgChart from '@balkangraph/orgchart.js';
 import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {TreeService} from '../../tree/tree.service';
+import {AuthService} from '../../authentication/auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-view-tree',
   templateUrl: './view-tree.component.html',
   styleUrls: ['./view-tree.component.css']
 })
-export class ViewTreeComponent implements OnInit {
+export class ViewTreeComponent implements OnInit, OnDestroy {
   treeId: number;
   familyMembers: FamilyMembers;
   editingMember: FamilyMember = null;
   isCreatingMember = false;
+  isOwner: boolean;
+  private userSub: Subscription;
   private chart: OrgChart;
 
-  constructor(private memberService: MemberService, private route: ActivatedRoute) {
+  constructor(private memberService: MemberService,
+              private route: ActivatedRoute,
+              private treeService: TreeService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.setUpTemplate();
     this.createChart();
 
-    this.route.parent.url.subscribe(parentUrlSegment => {
-      this.treeId = +parentUrlSegment[0];
+    this.userSub = this.route.parent.url.pipe(
+      map(parentUrlSegment => +parentUrlSegment[0]),
+      tap(treeId => this.treeId = treeId),
+      switchMap(treeId => {
+        return this.treeService.getTree(treeId).pipe(
+          switchMap(tree => {
+            return this.authService.user.pipe(
+              map(user => user.username === tree.owner)
+            );
+          }));
+      })
+    ).subscribe(isOwner => {
+      this.isOwner = isOwner;
       this.loadMembers();
     });
   }
@@ -159,5 +179,9 @@ export class ViewTreeComponent implements OnInit {
     //   { id: 17, pid: 12, ppid: 14, tags: ['blue'], name: 'Prince Charlotte of Cambridge', img: 'https://cdn.balkan.app/shared/f18.png'},
     //   { id: 18, pid: 12, ppid: 14, tags: ['blue'], name: 'Prince Louis of Cambridge', img: 'https://cdn.balkan.app/shared/f19.png'}
     // ]);
+  }
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
   }
 }

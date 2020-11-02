@@ -1,14 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
 import {FamilyMember, FamilyMembers, Gender} from '../../shared/dtos.model';
+import {AuthService} from '../../authentication/auth.service';
+import {TreeService} from '../../tree/tree.service';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-view-table',
   templateUrl: './view-table.component.html',
   styleUrls: ['./view-table.component.css']
 })
-export class ViewTableComponent implements OnInit {
+export class ViewTableComponent implements OnInit, OnDestroy {
   displayMembers: FamilyMember[];
   highlightedMemberId: number = null;
 
@@ -16,13 +20,29 @@ export class ViewTableComponent implements OnInit {
   familyMembers: FamilyMembers;
   editingMember: FamilyMember = null;
   isCreatingMember = false;
+  isOwner: boolean;
+  private userSub: Subscription;
 
-  constructor(private memberService: MemberService, private route: ActivatedRoute) {
+  constructor(private memberService: MemberService,
+              private route: ActivatedRoute,
+              private authService: AuthService,
+              private treeService: TreeService) {
   }
 
   ngOnInit(): void {
-    this.route.parent.url.subscribe(parentUrlSegment => {
-      this.treeId = +parentUrlSegment[0];
+    this.userSub = this.route.parent.url.pipe(
+      map(parentUrlSegment => +parentUrlSegment[0]),
+      tap(treeId => this.treeId = treeId),
+      switchMap(treeId => {
+        return this.treeService.getTree(treeId).pipe(
+          switchMap(tree => {
+            return this.authService.user.pipe(
+              map(user => user.username === tree.owner)
+            );
+          }));
+      })
+    ).subscribe(isOwner => {
+      this.isOwner = isOwner;
       this.loadMembers();
     });
   }
@@ -59,6 +79,10 @@ export class ViewTableComponent implements OnInit {
     if (isChanged) {
       this.loadMembers();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
   }
 
   private loadMembers(): void {

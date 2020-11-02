@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +38,21 @@ public class FamilyTreeService {
         }
 
         return familyTrees.stream().filter(familyTree -> !familyTree.getIsPrivate()).collect(Collectors.toList());
+    }
+
+    public FamilyTree getFamilyTree(Long id, String principalUsername) {
+        FamilyTree familyTree = this.familyTreeRepository.findById(id)
+                .orElseThrow(() -> new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND));
+
+        User principal = userRepository.findByUsername(principalUsername);
+
+        if (familyTree.getIsPrivate()
+                && !familyTree.getUser().getUsername().equals(principalUsername)
+                && !principal.isAdmin()) {
+            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        return familyTree;
     }
 
     public FamilyTree createNewFamilyTree(FamilyTree familyTree, String principalUsername) {
