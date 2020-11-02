@@ -76,6 +76,13 @@ public class Bootstrap implements CommandLineRunner {
                 .user(userRepository.findByUsername("root"))
                 .build());
 
+        this.familyTreeRepository.save(FamilyTree.builder()
+                .name("User's Family Tree")
+                .isPrivate(false)
+                .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 28, 12, 23))
+                .user(userRepository.findByUsername("user"))
+                .build());
+
         log.info("Loaded Family Trees: " + this.familyTreeRepository.count());
     }
 
@@ -161,6 +168,49 @@ public class Bootstrap implements CommandLineRunner {
                 .build();
         familyTree.addFamilyMember(lilPetko);
         familyMemberRepository.save(lilPetko);
+
+
+        FamilyTree userTree = this.familyTreeRepository.findById(3L).get();
+
+        FamilyMember peshoPeshev = FamilyMember.builder()
+                .firstName("Pesho")
+                .lastName("Peshev")
+                .birthday(LocalDate.of(1955, 5, 5))
+                .gender(Gender.MALE)
+                .build();
+        userTree.addFamilyMember(peshoPeshev);
+        familyMemberRepository.save(peshoPeshev);
+
+        FamilyMember sashkaPesheva = FamilyMember.builder()
+                .firstName("Sashka")
+                .lastName("Pesheva")
+                .gender(Gender.FEMALE)
+                .birthday(LocalDate.of(1960, 11, 9))
+                .build();
+        userTree.addFamilyMember(sashkaPesheva);
+        familyMemberRepository.save(sashkaPesheva);
+
+        FamilyMember liliqPesheva = FamilyMember.builder()
+                .firstName("Liliq")
+                .lastName("Pesheva")
+                .birthday(LocalDate.of(1998, 11, 11))
+                .primaryParent(peshoPeshev)
+                .secondaryParent(sashkaPesheva)
+                .gender(Gender.FEMALE)
+                .build();
+        userTree.addFamilyMember(liliqPesheva);
+        familyMemberRepository.save(liliqPesheva);
+
+        FamilyMember vilioPeshev = FamilyMember.builder()
+                .firstName("Vilio")
+                .lastName("Peshev")
+                .birthday(LocalDate.of(2000, 3, 25))
+                .primaryParent(peshoPeshev)
+                .secondaryParent(sashkaPesheva)
+                .gender(Gender.MALE)
+                .build();
+        userTree.addFamilyMember(vilioPeshev);
+        familyMemberRepository.save(vilioPeshev);
 
         log.info("Loaded Family Members: " + this.familyMemberRepository.count());
     }
