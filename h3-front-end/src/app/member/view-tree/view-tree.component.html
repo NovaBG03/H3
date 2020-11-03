@@ -1,8 +1,13 @@
-<div *ngIf="familyMembers?.members.length === 0"
+<div *ngIf="isOwner && familyMembers?.members.length === 0"
      class="center"
      style="cursor: pointer;"
      (click)="onStartCreating()">
   <p class="font-weight-bold">Click to Add your Main Member</p>
+</div>
+
+<div *ngIf="!isOwner && familyMembers?.members.length === 0"
+     class="center">
+  <span class="font-weight-bold">This Family Tree is Empty!</span>
 </div>
 
 <div *ngIf="isOwner && familyMembers && familyMembers.members.length != 0">
