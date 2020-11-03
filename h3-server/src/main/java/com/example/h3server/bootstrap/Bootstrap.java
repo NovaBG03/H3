@@ -37,6 +37,201 @@ public class Bootstrap implements CommandLineRunner {
         this.loadUsers();
         this.loadFamilyTrees();
         this.loadFamilyMembers();
+        this.loadTerterFamily();
+    }
+
+    private void loadTerterFamily() {
+        FamilyTree familyTree = FamilyTree.builder()
+                .name("Династия на тертеревци")
+                .isPrivate(false)
+                .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 3, 9, 2))
+                .user(userRepository.findByUsername("root"))
+                .build();
+        this.familyTreeRepository.save(familyTree);
+
+        FamilyMember unknownFather = FamilyMember.builder()
+                .firstName("Неизвестен")
+                .lastName("Баща")
+                .gender(Gender.MALE)
+                .build();
+        familyTree.addFamilyMember(unknownFather);
+        familyMemberRepository.save(unknownFather);
+
+        FamilyMember unknownMother = FamilyMember.builder()
+                .firstName("Неизвестен")
+                .lastName("Майка")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(unknownMother);
+        familyMemberRepository.save(unknownMother);
+
+        FamilyMember georgiTerter1 = FamilyMember.builder()
+                .firstName("Георги I")
+                .lastName("Тертер")
+                .gender(Gender.MALE)
+                .primaryParent(unknownFather)
+                .secondaryParent(unknownMother)
+                .build();
+        familyTree.addFamilyMember(georgiTerter1);
+        familyMemberRepository.save(georgiTerter1);
+
+        FamilyMember maria = FamilyMember.builder()
+                .firstName("Мария")
+                .lastName("(Българка)")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(maria);
+        familyMemberRepository.save(maria);
+
+        FamilyMember teodorSvetoslav = FamilyMember.builder()
+                .firstName("Теодор")
+                .lastName("Светослав")
+                .gender(Gender.MALE)
+                .primaryParent(georgiTerter1)
+                .secondaryParent(maria)
+                .build();
+        familyTree.addFamilyMember(teodorSvetoslav);
+        familyMemberRepository.save(teodorSvetoslav);
+
+        FamilyMember unknownChild = FamilyMember.builder()
+                .firstName("Неизвестно")
+                .lastName("дете")
+                .gender(Gender.UNKNOWN)
+                .primaryParent(georgiTerter1)
+                .secondaryParent(maria)
+                .build();
+        familyTree.addFamilyMember(unknownChild);
+        familyMemberRepository.save(unknownChild);
+
+        FamilyMember efrosina = FamilyMember.builder()
+                .firstName("Ефросина")
+                .lastName("(Енкона)")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(efrosina);
+        familyMemberRepository.save(efrosina);
+
+        FamilyMember georgiTerter2 = FamilyMember.builder()
+                .firstName("Георги II")
+                .lastName("Тертер")
+                .gender(Gender.MALE)
+                .primaryParent(teodorSvetoslav)
+                .secondaryParent(efrosina)
+                .build();
+        familyTree.addFamilyMember(georgiTerter2);
+        familyMemberRepository.save(georgiTerter2);
+
+        FamilyMember teodoraPaleologina = FamilyMember.builder()
+                .firstName("Теодора")
+                .lastName("Палеологина")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(teodoraPaleologina);
+        familyMemberRepository.save(teodoraPaleologina);
+
+        FamilyMember emptyChild = FamilyMember.builder()
+                .firstName("Нямат")
+                .lastName("Деца")
+                .gender(Gender.UNKNOWN)
+                .primaryParent(teodorSvetoslav)
+                .secondaryParent(teodoraPaleologina)
+                .build();
+        familyTree.addFamilyMember(emptyChild);
+        familyMemberRepository.save(emptyChild);
+
+        FamilyMember kiraMaria = FamilyMember.builder()
+                .firstName("Кира")
+                .lastName("Мария")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(kiraMaria);
+        familyMemberRepository.save(kiraMaria);
+
+        FamilyMember annaTerter = FamilyMember.builder()
+                .firstName("Анна")
+                .lastName("Тертер")
+                .gender(Gender.FEMALE)
+                .primaryParent(georgiTerter1)
+                .secondaryParent(kiraMaria)
+                .build();
+        familyTree.addFamilyMember(annaTerter);
+        familyMemberRepository.save(annaTerter);
+
+        FamilyMember stefanUroshMilutin2 = FamilyMember.builder()
+                .firstName("Стефан Урош II")
+                .lastName("Милутин")
+                .gender(Gender.MALE)
+                .build();
+        familyTree.addFamilyMember(stefanUroshMilutin2);
+        familyMemberRepository.save(stefanUroshMilutin2);
+
+        FamilyMember emptyChild2 = FamilyMember.builder()
+                .firstName("Нямат")
+                .lastName("Деца")
+                .gender(Gender.UNKNOWN)
+                .primaryParent(annaTerter)
+                .secondaryParent(stefanUroshMilutin2)
+                .build();
+        familyTree.addFamilyMember(emptyChild2);
+        familyMemberRepository.save(emptyChild2);
+
+        FamilyMember mihailDuka = FamilyMember.builder()
+                .firstName("Михаил")
+                .lastName("Дука")
+                .gender(Gender.MALE)
+                .build();
+        familyTree.addFamilyMember(mihailDuka);
+        familyMemberRepository.save(mihailDuka);
+
+        FamilyMember unknownChild2 = FamilyMember.builder()
+                .firstName("Неизвестно")
+                .lastName("Дете")
+                .gender(Gender.UNKNOWN)
+                .primaryParent(annaTerter)
+                .secondaryParent(mihailDuka)
+                .build();
+        familyTree.addFamilyMember(unknownChild2);
+        familyMemberRepository.save(unknownChild2);
+
+        FamilyMember unknownChild3 = FamilyMember.builder()
+                .firstName("Неизвестно")
+                .lastName("Дете")
+                .gender(Gender.UNKNOWN)
+                .primaryParent(annaTerter)
+                .secondaryParent(mihailDuka)
+                .build();
+        familyTree.addFamilyMember(unknownChild3);
+        familyMemberRepository.save(unknownChild3);
+
+        FamilyMember eltimirDespot = FamilyMember.builder()
+                .firstName("Елтимир")
+                .lastName("(деспот)")
+                .gender(Gender.MALE)
+                .primaryParent(unknownFather)
+                .secondaryParent(unknownMother)
+                .build();
+        familyTree.addFamilyMember(eltimirDespot);
+        familyMemberRepository.save(eltimirDespot);
+
+        FamilyMember mariaSmilecova = FamilyMember.builder()
+                .firstName("Мария")
+                .lastName("Смилецова")
+                .gender(Gender.FEMALE)
+                .build();
+        familyTree.addFamilyMember(mariaSmilecova);
+        familyMemberRepository.save(mariaSmilecova);
+
+        FamilyMember ioanDragushin = FamilyMember.builder()
+                .firstName("Йоан")
+                .lastName("Драгушин")
+                .gender(Gender.MALE)
+                .primaryParent(eltimirDespot)
+                .secondaryParent(mariaSmilecova)
+                .build();
+        familyTree.addFamilyMember(ioanDragushin);
+        familyMemberRepository.save(ioanDragushin);
+
+        log.info("Loaded Terter Family");
     }
 
     private void loadUsers() {
