@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {map, switchMap, take, tap} from 'rxjs/operators';
 import {AuthService} from '../authentication/auth.service';
+import {environment} from '../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class TreeService {
@@ -16,7 +17,7 @@ export class TreeService {
     return this.authService.user.pipe(
       take(1),
       switchMap(user => {
-        return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/' + user.username)
+        return this.http.get<FamilyTreeListDTO>(environment.domain + '/trees/' + user.username)
           .pipe(map(familyTreeListDTO => {
             return familyTreeListDTO.familyTrees.map(familyTreeResponseDTO => {
               return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
@@ -26,7 +27,7 @@ export class TreeService {
   }
 
   createTree(familyTreeData: FamilyTreeDataDTO): Observable<FamilyTree> {
-    return this.http.post<FamilyTreeResponseDTO>('http://localhost:8080/trees/', familyTreeData)
+    return this.http.post<FamilyTreeResponseDTO>(environment.domain + '/trees/', familyTreeData)
       .pipe(map(familyTreeResponseDTO => {
         return this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO);
       }), tap(familyTree => {
@@ -39,7 +40,7 @@ export class TreeService {
       treePattern = '';
     }
 
-    return this.http.get<FamilyTreeListDTO>('http://localhost:8080/trees/', {
+    return this.http.get<FamilyTreeListDTO>(environment.domain + '/trees/', {
       params: new HttpParams().append('treePattern', treePattern)
     })
       .pipe(map(familyTreeListDTO => {
@@ -51,7 +52,7 @@ export class TreeService {
 
   getTree(treeId: number): Observable<FamilyTree> {
     console.log('getting tree');
-    return this.http.get<FamilyTreeResponseDTO>('http://localhost:8080/trees/id/' + treeId)
+    return this.http.get<FamilyTreeResponseDTO>(environment.domain + '/trees/id/' + treeId)
       .pipe(map(familyTreeResponseDTO =>
         this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO)));
   }

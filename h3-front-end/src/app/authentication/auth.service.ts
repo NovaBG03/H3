@@ -4,6 +4,7 @@ import {UserData, UserToken, UserTokenDTO} from '../shared/dtos.model';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {environment} from '../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<UserToken> {
-    return this.http.post<UserTokenDTO>('http://localhost:8080/users/signIn', null, {
+    return this.http.post<UserTokenDTO>(environment.domain + '/users/signIn', null, {
       params: new HttpParams()
         .append('username', username)
         .append('password', password)
@@ -55,7 +56,7 @@ export class AuthService {
   }
 
   register(userData: UserData): Observable<UserToken> {
-    return this.http.post<UserTokenDTO>('http://localhost:8080/users/signUp', userData)
+    return this.http.post<UserTokenDTO>(environment.domain + '/users/signUp', userData)
       .pipe(catchError(this.handleError),
         map(userTokenDTO => this.userTokenDTOToUserToken(userTokenDTO)),
         tap(userToken => this.handleAuthentication(userToken)));

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 @Api(tags = "users")
 public class UserController {

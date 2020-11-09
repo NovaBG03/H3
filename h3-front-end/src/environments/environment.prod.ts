@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: false,
+  domain: 'https://h3-api.herokuapp.com'
 };

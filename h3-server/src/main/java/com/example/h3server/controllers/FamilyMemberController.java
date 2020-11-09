@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/trees/{treeId}/members")
 @Api(tags = "family members")
 public class FamilyMemberController {

@@ -11,6 +11,7 @@ import {
   Gender,
   MessageDTO
 } from '../shared/dtos.model';
+import {environment} from '../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class MemberService {
@@ -18,7 +19,7 @@ export class MemberService {
   }
 
   getMembers(treeId: number): Observable<FamilyMembers> {
-    return this.http.get<FamilyMemberListDTO>('http://localhost:8080/trees/' + treeId + '/members')
+    return this.http.get<FamilyMemberListDTO>( environment.domain + '/trees/' + treeId + '/members')
       .pipe(map(familyMemberListDTO => {
         const members = familyMemberListDTO.familyMembers.map(familyMemberResponseDTO => {
           return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
@@ -28,21 +29,21 @@ export class MemberService {
   }
 
   updateMember(treeId: number, memberId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
-    return this.http.put<FamilyMemberResponseDTO>(`http://localhost:8080/trees/${treeId}/members/${memberId}`, member)
+    return this.http.put<FamilyMemberResponseDTO>( `${environment.domain}/trees/${treeId}/members/${memberId}`, member)
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));
   }
 
   createMember(treeId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
-    return this.http.post<FamilyMemberResponseDTO>(`http://localhost:8080/trees/${treeId}/members/`, member)
+    return this.http.post<FamilyMemberResponseDTO>(`${environment.domain}/trees/${treeId}/members/`, member)
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));
   }
 
   deleteMember(treeId: number, memberId: number): Observable<string> {
-    return this.http.delete<MessageDTO>(`http://localhost:8080/trees/${treeId}/members/${memberId}`)
+    return this.http.delete<MessageDTO>(`${environment.domain}/trees/${treeId}/members/${memberId}`)
       .pipe(map(messageDto => messageDto.message));
   }
 
