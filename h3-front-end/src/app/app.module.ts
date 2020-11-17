@@ -27,6 +27,7 @@ import {Ng2ImgMaxModule} from 'ng2-img-max';
 import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.component';
 import { SearchComponent } from './search/search.component';
 import { EmptyComponent } from './shared/empty/empty.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { EmptyComponent } from './shared/empty/empty.component';
     UserProfileComponent,
     ImageUploaderComponent,
     SearchComponent,
-    EmptyComponent
+    EmptyComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

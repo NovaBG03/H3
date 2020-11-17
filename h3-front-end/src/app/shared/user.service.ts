@@ -1,12 +1,12 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AuthService} from '../authentication/auth.service';
-import {HttpClient, HttpEvent, HttpEventType} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {ImageDTO, MessageDTO, User, UserResponseDTO} from './dtos.model';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({providedIn: 'root'})
 export class UserService {
   constructor(private authService: AuthService, private http: HttpClient) {
   }
@@ -34,5 +34,10 @@ export class UserService {
       .pipe(map(userResponseDTO => {
         return new User(userResponseDTO.id, userResponseDTO.username, userResponseDTO.email);
       }));
+  }
+
+  isServerUp(): Observable<boolean> {
+    return this.http.get<MessageDTO>(environment.domain + '/public/ping')
+      .pipe(map(messageDto => true), catchError(err => of(false)));
   }
 }

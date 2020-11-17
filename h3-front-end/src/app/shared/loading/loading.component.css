@@ -1,0 +1,83 @@
+body {
+  overflow: hidden;
+}
+
+.h3-overlay {
+  position: fixed;
+  background: black;
+  height: 100vh;
+  width: 100vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  opacity: 0.8;
+}
+
+.h3-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.h3-bar {
+  width: 6px;
+  height: 60px;
+  background: black;
+  display: inline-block;
+  margin: 2px;
+  transform-origin: bottom center;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+.h3-bar1 {
+  animation-delay: 0.1s;
+}
+
+.h3-bar1 {
+  animation-delay: 0.1s;
+}
+
+.h3-bar2 {
+  animation-delay: 0.2s;
+}
+
+.h3-bar3 {
+  animation-delay: 0.3s;
+}
+
+.h3-bar4 {
+  animation-delay: 0.4s;
+}
+
+.h3-bar5 {
+  animation-delay: 0.5s;
+}
+
+.h3-bar6 {
+  animation-delay: 0.6s;
+}
+
+.h3-bar7 {
+  animation-delay: 0.7s;
+}
+
+.h3-bar8 {
+  animation-delay: 0.8s;
+}
+
+@keyframes loading {
+  0% {
+    transform: scaleY(0.1);
+    background: #fff;
+  }
+  50% {
+    transform: scaleY(1);
+    background: var(--h3-color-primary);
+  }
+  100% {
+    transform: scaleY(1);
+    background: transparent;
+  }
+}
