@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +20,9 @@ public class FamilyTreeDataDTO {
     private String name;
 
     private Boolean isPrivate;
+
+    @ApiModelProperty(position = 2)
+    private List<String> tags;
 
     @JsonProperty("isPrivate")
     @ApiModelProperty(position = 1)

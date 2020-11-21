@@ -51,7 +51,8 @@ export class FamilyTree {
               public name: string,
               public isPrivate: boolean,
               public createdAt: Date,
-              public owner: string) {
+              public owner: string,
+              public tags: string[]) {
   }
 }
 
@@ -60,7 +61,8 @@ export class FamilyTreeResponseDTO {
               public name: string,
               public isPrivate: boolean,
               public createdAt: string,
-              public owner: string) {
+              public owner: string,
+              public tags: string[]) {
   }
 }
 
@@ -70,7 +72,9 @@ export class FamilyTreeListDTO {
 }
 
 export class FamilyTreeDataDTO {
-  constructor(public name: string, public isPrivate: boolean) {
+  constructor(public name: string,
+              public isPrivate: boolean,
+              public tags: string[]) {
   }
 }
 

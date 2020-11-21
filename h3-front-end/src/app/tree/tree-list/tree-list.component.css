@@ -126,6 +126,7 @@ a {
   padding: .5rem 0 1rem;
   line-height: 2;
   margin: 1rem 0 0;
+  width: 400px;
 }
 
 .h3-tags a {
@@ -148,6 +149,24 @@ a {
   -webkit-background-clip: text;
   -webkit-box-decoration-break: clone;
   border-color: white;
+}
+
+.h3-tags .h3-tag-no-hover:hover {
+  background: #7a7a8c;
+  text-shadow: none;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-box-decoration-break: clone;
+  border-color: #28242f;
+  cursor: default;
+}
+
+.h3-tags .h3-tag-add {
+  background: linear-gradient(90deg, var(--h3-color-secondary), var(--h3-color-primary));
+  text-shadow: none;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-box-decoration-break: clone;
 }
 
 

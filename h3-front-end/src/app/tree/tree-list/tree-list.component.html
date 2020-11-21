@@ -13,7 +13,7 @@
 
     <div class="h3-card-author">
       <a class="h3-author-avatar" [routerLink]="['/', tree.owner]">
-        <img class="img-fluid" [src]="profilePictures[tree.owner]" />
+        <img class="img-fluid" [src]="profilePictures[tree.owner]"/>
       </a>
       <svg class="h3-half-circle" viewBox="0 0 106 57">
         <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
@@ -25,9 +25,14 @@
       </div>
     </div>
     <div class="h3-tags">
-      <a>tag</a>
-      <a>special</a>
-      <a>my-tree</a>
+      <div *ngIf="tree.tags.length">
+        <a *ngFor="let tag of tree.tags.slice(0, 3)">{{ tag }}</a>
+        <a *ngIf="tree.tags.length > 3">...</a>
+      </div>
+      <div *ngIf="!tree.tags.length">
+        <a *ngIf="isMyTrees" class="h3-tag-add" [routerLink]="['/', 'trees', tree.id, 'settings']">+add tags</a>
+        <a *ngIf="!isMyTrees" class="h3-tag-no-hover">no tags</a>
+      </div>
     </div>
   </div>
 </div>

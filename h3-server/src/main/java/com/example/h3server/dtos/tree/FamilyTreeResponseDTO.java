@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +29,9 @@ public class FamilyTreeResponseDTO {
 
     @ApiModelProperty(position = 4)
     private String owner;
+
+    @ApiModelProperty(position = 5)
+    private List<String> tags;
 
     @JsonProperty("isPrivate")
     @ApiModelProperty(position = 2)

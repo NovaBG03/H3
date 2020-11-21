@@ -42,13 +42,21 @@ public class FamilyTree {
     @OneToMany(mappedBy = "familyTree", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<FamilyMember> familyMembers = new HashSet<>();
 
+    @ManyToMany()
+    @JoinTable(
+            name = "trees_tags",
+            joinColumns = @JoinColumn(name = "family_tree_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<TreeTag> tags = new HashSet<>();
+
     @Builder
     public FamilyTree(Long id,
                       String name,
                       LocalDateTime createdAt,
                       Boolean isPrivate,
                       User user,
-                      Set<FamilyMember> familyMembers) {
+                      Set<FamilyMember> familyMembers,
+                      Set<TreeTag> tags) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
@@ -56,6 +64,9 @@ public class FamilyTree {
         this.user = user;
         if (familyMembers != null) {
             this.familyMembers = familyMembers;
+        }
+        if (tags != null) {
+            this.tags = tags;
         }
     }
 
@@ -70,5 +81,10 @@ public class FamilyTree {
                 .filter(member -> member.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void addTag(TreeTag treeTag) {
+        treeTag.getFamilyTrees().add(this);
+        this.tags.add(treeTag);
     }
 }

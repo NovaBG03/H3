@@ -6,6 +6,7 @@ import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.utils.ModelValidator;
+import com.google.common.collect.Sets;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,14 @@ public class FamilyTreeService {
 
     private final FamilyTreeRepository familyTreeRepository;
     private final UserRepository userRepository;
+    private final TreeTagService treeTagService;
 
-    public FamilyTreeService(FamilyTreeRepository familyTreeRepository, UserRepository userRepository) {
+    public FamilyTreeService(FamilyTreeRepository familyTreeRepository,
+                             UserRepository userRepository,
+                             TreeTagService treeTagService) {
         this.familyTreeRepository = familyTreeRepository;
         this.userRepository = userRepository;
+        this.treeTagService = treeTagService;
     }
 
     public List<FamilyTree> getFamilyTrees(String username, String principalUsername) {
@@ -62,6 +67,7 @@ public class FamilyTreeService {
         user.addFamilyTree(familyTree);
 
         familyTree.setCreatedAt(LocalDateTime.now());
+        familyTree.setTags(Sets.newHashSet());
 
         ModelValidator.validate(familyTree);
         FamilyTree savedFamilyTree = this.familyTreeRepository.save(familyTree);
@@ -75,6 +81,10 @@ public class FamilyTreeService {
         treeFromDb.setIsPrivate(familyTree.getIsPrivate());
 
         ModelValidator.validate(treeFromDb);
+        treeFromDb.getTags()
+                .stream()
+                .map(treeTag -> treeTagService.getOrCreateTreeTag(treeTag.getLabel()))
+                .collect(Collectors.toSet());
         FamilyTree savedTree = this.familyTreeRepository.save(treeFromDb);
 
         return savedTree;

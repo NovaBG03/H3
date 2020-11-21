@@ -3,7 +3,9 @@ package com.example.h3server.bootstrap;
 import com.example.h3server.models.*;
 import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
+import com.example.h3server.repositories.TreeTagRepository;
 import com.example.h3server.repositories.UserRepository;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,15 +23,18 @@ public class Bootstrap implements CommandLineRunner {
     private final UserRepository userRepository;
     private final FamilyTreeRepository familyTreeRepository;
     private final FamilyMemberRepository familyMemberRepository;
+    private final TreeTagRepository treeTagRepository;
 
     public Bootstrap(PasswordEncoder passwordEncoder,
                      UserRepository userRepository,
                      FamilyTreeRepository familyTreeRepository,
-                     FamilyMemberRepository familyMemberRepository) {
+                     FamilyMemberRepository familyMemberRepository,
+                     TreeTagRepository treeTagRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.familyTreeRepository = familyTreeRepository;
         this.familyMemberRepository = familyMemberRepository;
+        this.treeTagRepository = treeTagRepository;
     }
 
     @Override
@@ -257,11 +262,20 @@ public class Bootstrap implements CommandLineRunner {
     }
 
     private void loadFamilyTrees() {
+        TreeTag firstTag = treeTagRepository.save(TreeTag.builder().label("first-tree").build());
+        TreeTag rootTag = treeTagRepository.save(TreeTag.builder().label("root-tree").build());
+        TreeTag queenTag = treeTagRepository.save(TreeTag.builder().label("queen").build());
+        TreeTag royalTag = treeTagRepository.save(TreeTag.builder().label("royal").build());
+        TreeTag coolTag = treeTagRepository.save(TreeTag.builder().label("cool").build());
+        TreeTag amazingTag = treeTagRepository.save(TreeTag.builder().label("amazing").build());
+        TreeTag userTag = treeTagRepository.save(TreeTag.builder().label("user-tree").build());
+
         this.familyTreeRepository.save(FamilyTree.builder()
                 .name("My First Family Tree")
                 .isPrivate(true)
                 .createdAt(LocalDateTime.of(2020, Month.AUGUST, 10, 13, 25))
                 .user(userRepository.findByUsername("root"))
+                .tags(Sets.newHashSet(firstTag, rootTag, amazingTag, coolTag, rootTag, queenTag))
                 .build());
 
         this.familyTreeRepository.save(FamilyTree.builder()
@@ -269,6 +283,7 @@ public class Bootstrap implements CommandLineRunner {
                 .isPrivate(false)
                 .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 27, 22, 47))
                 .user(userRepository.findByUsername("root"))
+                .tags(Sets.newHashSet(queenTag, royalTag))
                 .build());
 
         this.familyTreeRepository.save(FamilyTree.builder()
@@ -276,9 +291,12 @@ public class Bootstrap implements CommandLineRunner {
                 .isPrivate(false)
                 .createdAt(LocalDateTime.of(2020, Month.NOVEMBER, 28, 12, 23))
                 .user(userRepository.findByUsername("user"))
+                .tags(Sets.newHashSet(coolTag, amazingTag, userTag))
                 .build());
 
         log.info("Loaded Family Trees: " + this.familyTreeRepository.count());
+        log.info("Loaded Tree Tags: " + this.treeTagRepository.count());
+
     }
 
     private void loadFamilyMembers() {

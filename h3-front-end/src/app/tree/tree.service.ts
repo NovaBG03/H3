@@ -62,6 +62,7 @@ export class TreeService {
       familyTreeResponseDTO.name,
       familyTreeResponseDTO.isPrivate,
       new Date(familyTreeResponseDTO.createdAt),
-      familyTreeResponseDTO.owner);
+      familyTreeResponseDTO.owner,
+      familyTreeResponseDTO.tags.sort());
   }
 }
