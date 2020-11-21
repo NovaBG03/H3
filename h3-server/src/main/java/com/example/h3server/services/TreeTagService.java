@@ -2,6 +2,7 @@ package com.example.h3server.services;
 
 import com.example.h3server.models.TreeTag;
 import com.example.h3server.repositories.TreeTagRepository;
+import com.example.h3server.utils.ModelValidator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,15 @@ public class TreeTagService {
             return tag;
         }
 
-        return treeTagRepository.save(TreeTag.builder().label(label).build());
+        tag = TreeTag.builder().label(label).build();
+        ModelValidator.validate(tag);
+        return treeTagRepository.save(tag);
+    }
+
+    public void deleteUnnecessaryTreeTag(TreeTag tag) {
+        System.out.println(treeTagRepository.findTreesCountWithTag(tag.getId()));
+        if (treeTagRepository.findTreesCountWithTag(tag.getId()) == 0) {
+            treeTagRepository.delete(tag);
+        }
     }
 }

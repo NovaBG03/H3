@@ -1,1 +1,40 @@
-<p>tree-settings works!</p>
+<div class="container mt-3">
+  <form [formGroup]="settingsForm" (ngSubmit)="onUpdate()">
+    <div class="form-group">
+      <label for="name">Tree Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Enter name" formControlName="name">
+    </div>
+
+    <div class="custom-control custom-switch mb-2">
+      <input type="checkbox" class="custom-control-input" id="isPrivate" formControlName="isPrivate">
+      <label class="custom-control-label" for="isPrivate">
+        Is {{ settingsForm.get('isPrivate').value ? 'Private' : 'Public' }}
+      </label>
+    </div>
+
+    <hr/>
+    <h5>Tags</h5>
+    <div *ngFor="let tagControl of this.tagsFormArray.controls; let i = index">
+      <div class="input-group mb-3">
+        <input type="text"
+               class="form-control"
+               placeholder="Enter tag"
+               [value]="tagControl.value"
+               [formControl]="tagControl">
+        <div class="input-group-append">
+          <button class="btn btn-danger" (click)="removeTagControl(i)">X</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-2 row">
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-primary btn-block mb-2" (click)="addTagControl()">Add Tag</button>
+      </div>
+      <div class="col-sm-2 offset-sm-8">
+        <button type="submit" class="btn btn-success btn-block">Update</button>
+      </div>
+    </div>
+  </form>
+</div>

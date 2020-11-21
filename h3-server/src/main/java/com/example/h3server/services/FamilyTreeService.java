@@ -2,6 +2,7 @@ package com.example.h3server.services;
 
 import com.example.h3server.exception.CustomException;
 import com.example.h3server.models.FamilyTree;
+import com.example.h3server.models.TreeTag;
 import com.example.h3server.models.User;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,11 +83,18 @@ public class FamilyTreeService {
         treeFromDb.setIsPrivate(familyTree.getIsPrivate());
 
         ModelValidator.validate(treeFromDb);
-        treeFromDb.getTags()
+        Collection<TreeTag> tagsToDelete = Sets.newHashSet(treeFromDb.getTags());
+
+        treeFromDb.setTags(familyTree.getTags()
                 .stream()
                 .map(treeTag -> treeTagService.getOrCreateTreeTag(treeTag.getLabel()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
+
+        treeFromDb.getTags().forEach(tag -> tagsToDelete.remove(tag));
+
         FamilyTree savedTree = this.familyTreeRepository.save(treeFromDb);
+
+        tagsToDelete.forEach(tagToDelete -> treeTagService.deleteUnnecessaryTreeTag(tagToDelete));
 
         return savedTree;
     }

@@ -51,8 +51,16 @@ export class TreeService {
   }
 
   getTree(treeId: number): Observable<FamilyTree> {
-    console.log('getting tree');
     return this.http.get<FamilyTreeResponseDTO>(environment.domain + '/trees/id/' + treeId)
+      .pipe(map(familyTreeResponseDTO =>
+        this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO)));
+  }
+
+  updateTree(tree: FamilyTree): Observable<FamilyTree> {
+    return this.http.put<FamilyTreeResponseDTO>(environment.domain + '/trees/' + tree.id,
+      new FamilyTreeDataDTO(tree.name,
+        tree.isPrivate,
+        tree.tags))
       .pipe(map(familyTreeResponseDTO =>
         this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO)));
   }

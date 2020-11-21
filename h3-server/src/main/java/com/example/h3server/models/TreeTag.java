@@ -22,7 +22,7 @@ public class TreeTag {
     private Long id;
 
     @NotNull(message = "TreeTag label must be from 3 to 30 symbols")
-    @Size(min = 3, max = 30, message = "TreeTag label must be from 3 to 30 symbols")
+    @Size(min = 3, max = 10, message = "TreeTag label must be from 3 to 30 symbols")
     @Column(nullable = false, unique = true)
     private String label;
 
