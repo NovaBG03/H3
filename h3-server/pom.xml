@@ -52,12 +52,11 @@
             <optional>true</optional>
         </dependency>
 
-        <!--		TODO Change H2 with MySQL-->
-        <!--		<dependency>-->
-        <!--			&lt;!&ndash; Use MySQL Connector-J &ndash;&gt;-->
-        <!--			<groupId>mysql</groupId>-->
-        <!--			<artifactId>mysql-connector-java</artifactId>-->
-        <!--		</dependency>-->
+        <dependency>
+            <!-- Use MySQL Connector-J -->
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>

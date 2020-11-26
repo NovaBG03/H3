@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "tags")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor

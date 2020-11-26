@@ -39,10 +39,12 @@ public class Bootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        this.loadUsers();
-        this.loadFamilyTrees();
-        this.loadFamilyMembers();
-        this.loadTerterFamily();
+        if (this.userRepository.count() == 0) {
+            this.loadUsers();
+            this.loadFamilyTrees();
+            this.loadFamilyMembers();
+            this.loadTerterFamily();
+        }
     }
 
     private void loadTerterFamily() {
