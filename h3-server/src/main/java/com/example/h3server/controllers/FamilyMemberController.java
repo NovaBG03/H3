@@ -1,11 +1,11 @@
 package com.example.h3server.controllers;
 
 import com.example.h3server.dtos.MessageDTO;
+import com.example.h3server.dtos.couple.CoupleListDTO;
 import com.example.h3server.dtos.member.FamilyMemberDataDTO;
 import com.example.h3server.dtos.member.FamilyMemberListDTO;
 import com.example.h3server.dtos.member.FamilyMemberResponseDTO;
-import com.example.h3server.mappers.FamilyMemberMapper;
-import com.example.h3server.models.FamilyMember;
+import com.example.h3server.mappers.CoupleMapper;
 import com.example.h3server.services.FamilyMemberService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,17 +36,12 @@ public class FamilyMemberController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyMemberListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
-        List<FamilyMember> familyMembers = familyMemberService
-                .getMembers(treeId, principal.getName());
-
-        List<FamilyMemberResponseDTO> familyMemberResponseDTOs = familyMembers
+    public CoupleListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
+        // todo fix docs
+        return new CoupleListDTO(familyMemberService.getAllCouples(treeId, principal.getName())
                 .stream()
-                .map(familyMember -> FamilyMemberMapper.INSTANCE
-                        .familyMemberToFamilyMemberResponseDTO(familyMember, familyMembers))
-                .collect(Collectors.toList());
-
-        return new FamilyMemberListDTO(familyMemberResponseDTOs);
+                .map(couple -> CoupleMapper.INSTANCE.coupleToCoupleResponseDTO(couple))
+                .collect(Collectors.toList()));
     }
 
     @PostMapping()
@@ -67,9 +61,12 @@ public class FamilyMemberController {
     public FamilyMemberResponseDTO addMember(@PathVariable Long treeId,
                                              @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
                                              @ApiIgnore Principal principal) {
-        FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
-        FamilyMember newMember = familyMemberService.addMember(treeId, familyMember, principal.getName());
-        return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+        return null;
+        // todo fix
+
+        // FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
+        // FamilyMember newMember = familyMemberService.addMember(treeId, familyMember, principal.getName());
+        // return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
     }
 
     @PutMapping("/{memberId}")
@@ -91,9 +88,10 @@ public class FamilyMemberController {
                                                 @PathVariable Long memberId,
                                                 @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
                                                 @ApiIgnore Principal principal) {
-        FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
-        FamilyMember newMember = familyMemberService.updateMember(treeId, memberId, familyMember, principal.getName());
-        return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+        // FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
+        // FamilyMember newMember = familyMemberService.updateMember(treeId, memberId, familyMember, principal.getName());
+        // return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+        return null;
     }
 
     @DeleteMapping("/{memberId}")

@@ -39,7 +39,7 @@
 
         <!--		TODO Test Spring Security Methods-->
         <!--		<dependency>-->
-        <!--			&lt;!&ndash; Make method based security testing easier &ndash;&gt;-->
+        <!--			Make method based security testing easier &ndash;&gt;-->
         <!--			<groupId>org.springframework.security</groupId>-->
         <!--			<artifactId>spring-security-test</artifactId>-->
         <!--			<scope>test</scope>-->

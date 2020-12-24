@@ -36,35 +36,18 @@ public class FamilyMember {
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.UNKNOWN;
 
-    @OneToOne
-    @JoinColumn(name = "primary_parent_id")
-    private FamilyMember primaryParent;
-
-    @OneToOne
-    @JoinColumn(name = "secondary_parent_id")
-    private FamilyMember secondaryParent;
-
-    @ManyToOne
-    private FamilyTree familyTree;
-
     @Builder
     public FamilyMember(Long id,
                         String firstName,
                         String lastName,
                         LocalDate birthday,
                         LocalDate dateOfDeath,
-                        FamilyMember primaryParent,
-                        FamilyMember secondaryParent,
-                        FamilyTree familyTree,
                         Gender gender) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
         this.dateOfDeath = dateOfDeath;
-        this.primaryParent = primaryParent;
-        this.secondaryParent = secondaryParent;
-        this.familyTree = familyTree;
         if (gender != null) {
             this.gender = gender;
         }

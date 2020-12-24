@@ -39,8 +39,10 @@ public class FamilyTree {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "familyTree", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private Set<FamilyMember> familyMembers = new HashSet<>();
+    @OneToMany(mappedBy = "familyTree",
+            // fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    private Set<Couple> couples = new HashSet<>();
 
     @ManyToMany()
     @JoinTable(
@@ -55,33 +57,33 @@ public class FamilyTree {
                       LocalDateTime createdAt,
                       Boolean isPrivate,
                       User user,
-                      Set<FamilyMember> familyMembers,
+                      Set<Couple> couples,
                       Set<TreeTag> tags) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
         this.isPrivate = isPrivate;
         this.user = user;
-        if (familyMembers != null) {
-            this.familyMembers = familyMembers;
+        if (couples != null) {
+            this.couples = couples;
         }
         if (tags != null) {
             this.tags = tags;
         }
     }
 
-    public void addFamilyMember(FamilyMember familyMember) {
-        familyMember.setFamilyTree(this);
-        this.familyMembers.add(familyMember);
+    public void addCouple(Couple couple) {
+        couple.setFamilyTree(this);
+        this.couples.add(couple);
     }
 
-    public FamilyMember getFamilyMember(Long id) {
-        return this.familyMembers
-                .stream()
-                .filter(member -> member.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
+//    public FamilyMember getFamilyMember(Long id) {
+//        return this.familyMembers
+//                .stream()
+//                .filter(member -> member.getId().equals(id))
+//                .findFirst()
+//                .orElse(null);
+//    }
 
     public void addTag(TreeTag treeTag) {
         treeTag.getFamilyTrees().add(this);

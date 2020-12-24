@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface FamilyMemberRepository extends JpaRepository<FamilyMember, Long> {
 
-    List<FamilyMember> findAllByFamilyTreeId(Long id);
+    // List<FamilyMember> findAllByFamilyTreeId(Long id);
 }
