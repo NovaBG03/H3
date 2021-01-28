@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 export class UserData {
   constructor(public username: string, public email: string, public password: string) {
   }
@@ -205,4 +207,40 @@ export class MessageDTO {
 export class ImageDTO {
   constructor(public imageBytes) {
   }
+}
+
+export class CoupleListDTO {
+  constructor(public couples: CoupleResponseDTO[]) {
+  }
+}
+
+export class CoupleResponseDTO {
+  constructor(public primaryParentId: number,
+              public partnerParentId: number,
+              public primaryParentName: string,
+              public partnerParentName: string,
+              public treeId: number,
+              public leftIndex: number,
+              public rightIndex: number,
+              public depthIndex: number) {
+  }
+}
+
+export interface Couple extends d3.SimulationLinkDatum {
+  primaryParentId: number;
+  partnerParentId: number;
+  primaryParentName: string;
+  partnerParentName: string;
+  treeId: number;
+  leftIndex: number;
+  rightIndex: number;
+  depthIndex: number;
+}
+
+export interface CoupleLink extends d3.SimulationLinkDatum<Couple> {
+}
+
+export interface Graph {
+  nodes: Couple[];
+  links: CoupleLink[];
 }

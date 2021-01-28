@@ -3,11 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
+  Couple,
+  CoupleListDTO,
+  CoupleResponseDTO,
   FamilyMember,
   FamilyMemberDataDTO,
-  FamilyMemberListDTO,
   FamilyMemberResponseDTO,
-  FamilyMembers,
   Gender,
   MessageDTO
 } from '../shared/dtos.model';
@@ -18,18 +19,18 @@ export class MemberService {
   constructor(private http: HttpClient) {
   }
 
-  getMembers(treeId: number): Observable<FamilyMembers> {
-    return this.http.get<FamilyMemberListDTO>( environment.domain + '/trees/' + treeId + '/members')
-      .pipe(map(familyMemberListDTO => {
-        const members = familyMemberListDTO.familyMembers.map(familyMemberResponseDTO => {
-          return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
+  getCouples(treeId: number): Observable<Couple[]> {
+    return this.http.get<CoupleListDTO>(environment.domain + '/trees/' + treeId + '/members')
+      .pipe(map(coupleListDTO => {
+        const couples = coupleListDTO.couples.map(coupleResponseDTO => {
+          return this.mapCoupleResponseDTOToCouple(coupleResponseDTO);
         });
-        return new FamilyMembers(members);
+        return couples;
       }));
   }
 
   updateMember(treeId: number, memberId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
-    return this.http.put<FamilyMemberResponseDTO>( `${environment.domain}/trees/${treeId}/members/${memberId}`, member)
+    return this.http.put<FamilyMemberResponseDTO>(`${environment.domain}/trees/${treeId}/members/${memberId}`, member)
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));
@@ -63,5 +64,18 @@ export class MemberService {
       +familyMemberResponseDTO.primaryParentId,
       +familyMemberResponseDTO.secondaryParentId,
       partners);
+  }
+
+  private mapCoupleResponseDTOToCouple(coupleResponseDTO: CoupleResponseDTO): Couple {
+    return {
+      primaryParentId: coupleResponseDTO.primaryParentId,
+      partnerParentId: coupleResponseDTO.partnerParentId,
+      primaryParentName: coupleResponseDTO.primaryParentName,
+      partnerParentName: coupleResponseDTO.partnerParentName,
+      treeId: coupleResponseDTO.treeId,
+      leftIndex: coupleResponseDTO.leftIndex,
+      rightIndex: coupleResponseDTO.rightIndex,
+      depthIndex: coupleResponseDTO.depthIndex
+    };
   }
 }

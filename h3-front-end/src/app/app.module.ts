@@ -28,6 +28,7 @@ import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.c
 import { SearchComponent } from './search/search.component';
 import { EmptyComponent } from './shared/empty/empty.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { ViewGraphComponent } from './member/view-graph/view-graph.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { LoadingComponent } from './shared/loading/loading.component';
     ImageUploaderComponent,
     SearchComponent,
     EmptyComponent,
-    LoadingComponent
+    LoadingComponent,
+    ViewGraphComponent
   ],
   imports: [
     BrowserModule,

@@ -125,7 +125,7 @@ export class ViewTreeComponent implements OnInit, OnDestroy {
 
   // pid - directHeir; ppid - directHeirSpouse
   private loadMembers(): void {
-    this.memberService.getMembers(this.treeId).subscribe(familyMembers => {
+    this.memberService.getCouples(this.treeId).subscribe(familyMembers => {
       this.familyMembers = familyMembers;
       if (this.familyMembers.members.length > 0) {
         this.loadChartData();

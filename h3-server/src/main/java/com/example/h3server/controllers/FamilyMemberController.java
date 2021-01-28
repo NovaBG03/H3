@@ -29,7 +29,7 @@ public class FamilyMemberController {
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyMemberController.getMembers}",
-            response = FamilyMemberListDTO.class,
+            response = CoupleListDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),

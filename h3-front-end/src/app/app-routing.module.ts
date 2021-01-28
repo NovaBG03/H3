@@ -12,7 +12,7 @@ import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.componen
 import {UserProfileComponent} from './home/user-profile/user-profile.component';
 import {WelcomeComponent} from './home/welcome/welcome.component';
 import {SearchComponent} from './search/search.component';
-import {EmptyComponent} from './shared/empty/empty.component';
+import {ViewGraphComponent} from './member/view-graph/view-graph.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -36,6 +36,7 @@ const routes: Routes = [
           {path: 'members', component: ViewTreeComponent},
           {path: 'table', component: ViewTableComponent},
           {path: 'settings', component: TreeSettingsComponent},
+          {path: 'graph', component: ViewGraphComponent}
         ]
       }
     ]

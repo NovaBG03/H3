@@ -53,7 +53,7 @@ public class CoupleService {
     }
 
     public List<Couple> getAllCouples(FamilyTree familyTree) {
-        return this.coupleRepository.getAllCouples(familyTree.getId())
+        List<Couple> couples = this.coupleRepository.getAllCouples(familyTree.getId())
                 .stream()
                 .map(coupleInterface -> Couple.builder()
                         .primaryParentId(coupleInterface.getPrimaryParentId())
@@ -66,5 +66,6 @@ public class CoupleService {
                         .depthIndex(coupleInterface.getDepthIndex())
                         .build())
                 .collect(Collectors.toList());
+        return couples;
     }
 }

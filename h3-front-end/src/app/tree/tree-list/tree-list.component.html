@@ -8,7 +8,7 @@
   <div class="h3-card h3-card-dynamic" *ngFor="let tree of trees">
     <div class="h3-card-header">
       <p>{{ tree.createdAt | date:'mediumDate' }}</p>
-      <h2 [routerLink]="['/', 'trees', tree.id, 'members']">{{ tree.name }}</h2>
+      <h2 [routerLink]="['/', 'trees', tree.id, 'graph']">{{ tree.name }}</h2>
     </div>
 
     <div class="h3-card-author">

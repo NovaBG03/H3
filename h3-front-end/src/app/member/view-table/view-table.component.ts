@@ -86,7 +86,7 @@ export class ViewTableComponent implements OnInit, OnDestroy {
   }
 
   private loadMembers(): void {
-    this.memberService.getMembers(this.treeId)
+    this.memberService.getCouples(this.treeId)
       .subscribe(familyMembers => {
         this.familyMembers = familyMembers;
 
