@@ -86,26 +86,26 @@ export class ViewTableComponent implements OnInit, OnDestroy {
   }
 
   private loadMembers(): void {
-    this.memberService.getCouples(this.treeId)
-      .subscribe(familyMembers => {
-        this.familyMembers = familyMembers;
-
-        const membersClone: FamilyMember[] = [];
-        familyMembers.members.forEach(member => {
-          membersClone.push(new FamilyMember(
-            member.id,
-            member.firstName,
-            member.lastName,
-            member.birthday ? new Date(member.birthday) : null,
-            member.dateOfDeath ? new Date(member.dateOfDeath) : null,
-            member.gender,
-            member.primaryParentId,
-            member.secondaryParentId,
-            member.partners.slice()));
-        });
-
-        this.displayMembers = membersClone.map(member => this.swapParentsIfNeeded(member, membersClone));
-      });
+    // this.memberService.getCouples(this.treeId)
+    //   .subscribe(familyMembers => {
+    //     this.familyMembers = familyMembers;
+    //
+    //     const membersClone: FamilyMember[] = [];
+    //     familyMembers.members.forEach(member => {
+    //       membersClone.push(new FamilyMember(
+    //         member.id,
+    //         member.firstName,
+    //         member.lastName,
+    //         member.birthday ? new Date(member.birthday) : null,
+    //         member.dateOfDeath ? new Date(member.dateOfDeath) : null,
+    //         member.gender,
+    //         member.primaryParentId,
+    //         member.secondaryParentId,
+    //         member.partners.slice()));
+    //     });
+    //
+    //     this.displayMembers = membersClone.map(member => this.swapParentsIfNeeded(member, membersClone));
+    //   });
   }
 
   private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {

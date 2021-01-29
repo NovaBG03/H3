@@ -22,7 +22,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   private userSub: Subscription;
 
   // new
-  private data: Graph =
+  data: Graph =
     {
       nodes: [],
       links: []

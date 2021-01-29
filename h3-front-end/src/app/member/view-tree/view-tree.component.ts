@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
 import OrgChart from '@balkangraph/orgchart.js';
-import {FamilyMember, FamilyMembers, Gender} from '../../shared/dtos.model';
+import {FamilyMember, FamilyMembers} from '../../shared/dtos.model';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {TreeService} from '../../tree/tree.service';
 import {AuthService} from '../../authentication/auth.service';
@@ -62,6 +62,10 @@ export class ViewTreeComponent implements OnInit, OnDestroy {
   }
 
   // pid - partner id; tags: ['partner']
+
+  ngOnDestroy(): void {
+    this.userSub.unsubscribe();
+  }
 
   private setUpTemplate(): void {
     OrgChart.templates.family_template = Object.assign({}, OrgChart.templates.ana);
@@ -125,12 +129,12 @@ export class ViewTreeComponent implements OnInit, OnDestroy {
 
   // pid - directHeir; ppid - directHeirSpouse
   private loadMembers(): void {
-    this.memberService.getCouples(this.treeId).subscribe(familyMembers => {
-      this.familyMembers = familyMembers;
-      if (this.familyMembers.members.length > 0) {
-        this.loadChartData();
-      }
-    });
+    // this.memberService.getCouples(this.treeId).subscribe(familyMembers => {
+    //   this.familyMembers = familyMembers;
+    //   if (this.familyMembers.members.length > 0) {
+    //     this.loadChartData();
+    //   }
+    // });
   }
 
   private loadChartData(): void {
@@ -187,9 +191,5 @@ export class ViewTreeComponent implements OnInit, OnDestroy {
     //   { id: 17, pid: 12, ppid: 14, tags: ['blue'], name: 'Prince Charlotte of Cambridge', img: 'https://cdn.balkan.app/shared/f18.png'},
     //   { id: 18, pid: 12, ppid: 14, tags: ['blue'], name: 'Prince Louis of Cambridge', img: 'https://cdn.balkan.app/shared/f19.png'}
     // ]);
-  }
-
-  ngOnDestroy(): void {
-    this.userSub.unsubscribe();
   }
 }
