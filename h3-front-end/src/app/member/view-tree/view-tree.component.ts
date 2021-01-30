@@ -143,19 +143,19 @@ export class ViewTreeComponent implements OnInit, OnDestroy {
       let pid: number = null;
       let ppid: number = null;
 
-      const isDirectHeir = member.isDirectHeir;
-      const firstId = this.familyMembers.mainMember.id;
-
-      if (!isDirectHeir && member.partners.length > 0 && member.id !== firstId) {
-        const partnerId = member.partners[0];
-        pid = partnerId;
-        tags.push('partner');
-      }
-
-      if (isDirectHeir) {
-        pid = member.primaryParentId;
-        ppid = member.secondaryParentId;
-      }
+      // const isDirectHeir = member.isDirectHeir;
+      // const firstId = this.familyMembers.mainMember.id;
+      //
+      // if (!isDirectHeir && member.partners.length > 0 && member.id !== firstId) {
+      //   const partnerId = member.partners[0];
+      //   pid = partnerId;
+      //   tags.push('partner');
+      // }
+      //
+      // if (isDirectHeir) {
+      //   pid = member.primaryParentId;
+      //   ppid = member.secondaryParentId;
+      // }
 
       tags.push(member.gender.valueOf());
 

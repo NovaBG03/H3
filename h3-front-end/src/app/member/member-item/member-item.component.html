@@ -1,7 +1,7 @@
 <div class="backdrop">
   <div class="alert-box">
     <div class="alert-box-header">
-      <h3>{{ member === familyMembers.mainMember ? 'Main ' : '' }}Member</h3>
+      <h3>Member</h3>
     </div>
     <div class="alert-box-content">
       <form [formGroup]="memberForm" (ngSubmit)="onSave()">
@@ -94,119 +94,119 @@
           </div>
         </div>
 
-        <div *ngIf="(member.isDirectHeir || familyMembers.isEmptyMember(member))
-                  && member.id !== familyMembers.mainMember?.id" class="mb-4">
-          <h4>Parents</h4>
-          <div class="row">
-            <div class="col-6">
-              <app-member-search *ngIf="isOwner"
-                                 [parentForm]="memberForm"
-                                 label="Primary Parent"
-                                 controlName="primaryParent"
-                                 [familyMembers]="familyMembers"
-                                 [familyMember]="member"></app-member-search>
+<!--        <div *ngIf="(member.isDirectHeir || familyMembers.isEmptyMember(member))-->
+<!--                  && member.id !== familyMembers.mainMember?.id" class="mb-4">-->
+<!--          <h4>Parents</h4>-->
+<!--          <div class="row">-->
+<!--            <div class="col-6">-->
+<!--              <app-member-search *ngIf="isOwner"-->
+<!--                                 [parentForm]="memberForm"-->
+<!--                                 label="Primary Parent"-->
+<!--                                 controlName="primaryParent"-->
+<!--                                 [familyMembers]="familyMembers"-->
+<!--                                 [familyMember]="member"></app-member-search>-->
 
-              <div class="input-group" *ngIf="!isOwner">
-                <div class="input-group-prepend">
-                  <label class="input-group-text" for="genderSelect">Primary Parent</label>
-                </div>
-                <input type="text"
-                       class="form-control"
-                       [value]="familyMembers.getMember(member.primaryParentId).fullName"
-                       readonly="readonly">
-              </div>
-            </div>
-            <div class="col-6">
-              <app-member-search *ngIf="isOwner"
-                                 [parentForm]="memberForm"
-                                 label="Secondary Parent"
-                                 controlName="secondaryParent"
-                                 [familyMembers]="familyMembers"
-                                 [familyMember]="member"></app-member-search>
+<!--              <div class="input-group" *ngIf="!isOwner">-->
+<!--                <div class="input-group-prepend">-->
+<!--                  <label class="input-group-text" for="genderSelect">Primary Parent</label>-->
+<!--                </div>-->
+<!--                <input type="text"-->
+<!--                       class="form-control"-->
+<!--                       [value]="familyMembers.getMember(member.primaryParentId).fullName"-->
+<!--                       readonly="readonly">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--              <app-member-search *ngIf="isOwner"-->
+<!--                                 [parentForm]="memberForm"-->
+<!--                                 label="Secondary Parent"-->
+<!--                                 controlName="secondaryParent"-->
+<!--                                 [familyMembers]="familyMembers"-->
+<!--                                 [familyMember]="member"></app-member-search>-->
 
-              <div class="input-group" *ngIf="!isOwner">
-                <div class="input-group-prepend">
-                  <label class="input-group-text" for="genderSelect">Secondary Parent</label>
-                </div>
-                <input type="text"
-                       class="form-control"
-                       [value]="familyMembers.getMember(member.secondaryParentId).fullName"
-                       readonly="readonly">
-              </div>
-            </div>
-          </div>
-        </div>
+<!--              <div class="input-group" *ngIf="!isOwner">-->
+<!--                <div class="input-group-prepend">-->
+<!--                  <label class="input-group-text" for="genderSelect">Secondary Parent</label>-->
+<!--                </div>-->
+<!--                <input type="text"-->
+<!--                       class="form-control"-->
+<!--                       [value]="familyMembers.getMember(member.secondaryParentId).fullName"-->
+<!--                       readonly="readonly">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div *ngIf="isNotNew">
-          <h4 *ngIf="isOwner || partnersFormArray.controls.length">Partners</h4>
-          <div *ngIf="isOwner">
-            <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">
-              <app-member-search [parentForm]="memberForm"
-                                 [label]="'Partner ' + (i + 1)"
-                                 [control]="partnersFormArray.controls[i]"
-                                 [familyMembers]="familyMembers"
-                                 [familyMember]="member"
-                                 [canClose]="isOwner"
-                                 (closeButtonClicked)="removePartnerControl(i)"></app-member-search>
+<!--        <div *ngIf="isNotNew">-->
+<!--          <h4 *ngIf="isOwner || partnersFormArray.controls.length">Partners</h4>-->
+<!--          <div *ngIf="isOwner">-->
+<!--            <div class="mb-3" *ngFor="let partnerControl of partnersFormArray.controls; let i = index">-->
+<!--              <app-member-search [parentForm]="memberForm"-->
+<!--                                 [label]="'Partner ' + (i + 1)"-->
+<!--                                 [control]="partnersFormArray.controls[i]"-->
+<!--                                 [familyMembers]="familyMembers"-->
+<!--                                 [familyMember]="member"-->
+<!--                                 [canClose]="isOwner"-->
+<!--                                 (closeButtonClicked)="removePartnerControl(i)"></app-member-search>-->
 
-              <div *ngIf="partnersFormArray.controls[i].value">
-                <div class="row" *ngFor="let child of getChildControls(i).controls; let j = index">
-                  <app-member-search [parentForm]="memberForm"
-                                     [label]="'Child ' + (j + 1)"
-                                     [control]="getChildControls(i).controls[j]"
-                                     [familyMembers]="familyMembers"
-                                     [familyMember]="member"
-                                     [canClose]="isOwner"
-                                     (closeButtonClicked)="removeChildControl(i, j)"
-                                     class="col-10 offset-1 mt-2"></app-member-search>
-                </div>
-                <div class="row">
-                  <div class="col-10 offset-1 mt-2">
-                    <button type="button"
-                            class="btn btn-success"
-                            (click)="addEmptyChildArray(i)">Add Child
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<!--              <div *ngIf="partnersFormArray.controls[i].value">-->
+<!--                <div class="row" *ngFor="let child of getChildControls(i).controls; let j = index">-->
+<!--                  <app-member-search [parentForm]="memberForm"-->
+<!--                                     [label]="'Child ' + (j + 1)"-->
+<!--                                     [control]="getChildControls(i).controls[j]"-->
+<!--                                     [familyMembers]="familyMembers"-->
+<!--                                     [familyMember]="member"-->
+<!--                                     [canClose]="isOwner"-->
+<!--                                     (closeButtonClicked)="removeChildControl(i, j)"-->
+<!--                                     class="col-10 offset-1 mt-2"></app-member-search>-->
+<!--                </div>-->
+<!--                <div class="row">-->
+<!--                  <div class="col-10 offset-1 mt-2">-->
+<!--                    <button type="button"-->
+<!--                            class="btn btn-success"-->
+<!--                            (click)="addEmptyChildArray(i)">Add Child-->
+<!--                    </button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div *ngIf="!isOwner">
-            <div class="mb-3" *ngFor="let partnerId of member.partners; let i = index">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <label class="input-group-text" for="genderSelect">Partner {{ i + 1 }}</label>
-                </div>
-                <input type="text"
-                       class="form-control"
-                       [value]="familyMembers.getMember(partnerId).fullName"
-                       readonly="readonly">
-              </div>
+<!--          <div *ngIf="!isOwner">-->
+<!--            <div class="mb-3" *ngFor="let partnerId of member.partners; let i = index">-->
+<!--              <div class="input-group">-->
+<!--                <div class="input-group-prepend">-->
+<!--                  <label class="input-group-text" for="genderSelect">Partner {{ i + 1 }}</label>-->
+<!--                </div>-->
+<!--                <input type="text"-->
+<!--                       class="form-control"-->
+<!--                       [value]="familyMembers.getMember(partnerId).fullName"-->
+<!--                       readonly="readonly">-->
+<!--              </div>-->
 
-              <div *ngIf="partnersFormArray.controls[i].value">
-                <div class="row" *ngFor="let child of familyMembers.getMultipleChildren(member.id, partnerId); let j = index">
-                  <div class="input-group col-10 offset-1 mt-2">
-                    <div class="input-group-prepend">
-                      <label class="input-group-text" for="genderSelect">Child {{ j + 1 }}</label>
-                    </div>
-                    <input type="text"
-                           class="form-control"
-                           [value]="child.fullName"
-                           readonly="readonly">
-                  </div>
-                </div>
-              </div>
+<!--              <div *ngIf="partnersFormArray.controls[i].value">-->
+<!--                <div class="row" *ngFor="let child of familyMembers.getMultipleChildren(member.id, partnerId); let j = index">-->
+<!--                  <div class="input-group col-10 offset-1 mt-2">-->
+<!--                    <div class="input-group-prepend">-->
+<!--                      <label class="input-group-text" for="genderSelect">Child {{ j + 1 }}</label>-->
+<!--                    </div>-->
+<!--                    <input type="text"-->
+<!--                           class="form-control"-->
+<!--                           [value]="child.fullName"-->
+<!--                           readonly="readonly">-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
 
-            </div>
-          </div>
+<!--            </div>-->
+<!--          </div>-->
 
-          <button *ngIf="isOwner"
-                  type="button"
-                  class="btn btn-success"
-                  (click)="addEmptyPartnerControl()">Add Partner
-          </button>
-        </div>
+<!--          <button *ngIf="isOwner"-->
+<!--                  type="button"-->
+<!--                  class="btn btn-success"-->
+<!--                  (click)="addEmptyPartnerControl()">Add Partner-->
+<!--          </button>-->
+<!--        </div>-->
 
 
         <div class="alert-box-actions">
@@ -216,7 +216,7 @@
                   [disabled]="memberForm.invalid">Save all
           </button>
 
-          <button *ngIf="isOwner && isNotNew && this.familyMembers.mainMember !== member"
+          <button *ngIf="isOwner && isNotNew"
                   type="button"
                   class="btn btn-dark mr-1"
                   (click)="onDelete()">Delete
@@ -229,3 +229,4 @@
       </form>
     </div>
   </div>
+</div>

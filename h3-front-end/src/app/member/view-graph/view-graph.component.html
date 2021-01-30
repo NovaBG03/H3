@@ -16,7 +16,6 @@
 
 <app-member-item *ngIf="editingMember || isCreatingMember"
                  [familyMember]="editingMember"
-                 [familyMembers]="familyMembers"
                  [treeId]="treeId"
                  [isOwner]="isOwner"
                  (finishEditing)="onFinishEditing($event)"></app-member-item>

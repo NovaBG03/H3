@@ -7,7 +7,7 @@ import {
   CoupleListDTO,
   CoupleResponseDTO,
   FamilyMember,
-  FamilyMemberDataDTO,
+  FamilyMemberDataDTO, FamilyMemberListDTO,
   FamilyMemberResponseDTO,
   Gender,
   MessageDTO
@@ -20,12 +20,22 @@ export class MemberService {
   }
 
   getCouples(treeId: number): Observable<Couple[]> {
-    return this.http.get<CoupleListDTO>(environment.domain + '/trees/' + treeId + '/members')
+    return this.http.get<CoupleListDTO>(environment.domain + '/trees/' + treeId + '/members/couples')
       .pipe(map(coupleListDTO => {
         const couples = coupleListDTO.couples.map(coupleResponseDTO => {
           return this.mapCoupleResponseDTOToCouple(coupleResponseDTO);
         });
         return couples;
+      }));
+  }
+
+  getFamilyMembers(treeId: number): Observable<FamilyMember[]> {
+    return this.http.get<FamilyMemberListDTO>(environment.domain + '/trees/' + treeId + '/members')
+      .pipe(map(familyMemberListDTO => {
+        const members = familyMemberListDTO.familyMembers.map(familyMemberResponseDTO => {
+          return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
+        });
+        return members;
       }));
   }
 
@@ -49,9 +59,6 @@ export class MemberService {
   }
 
   private mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO: FamilyMemberResponseDTO): FamilyMember {
-    const partners: number[] = [];
-    familyMemberResponseDTO.partners.forEach(partner => partners.push(+partner));
-
     const birthday: Date = familyMemberResponseDTO.birthday ? new Date(familyMemberResponseDTO.birthday) : null;
     const dateOfDeath: Date = familyMemberResponseDTO.dateOfDeath ? new Date(familyMemberResponseDTO.dateOfDeath) : null;
 
@@ -60,10 +67,7 @@ export class MemberService {
       familyMemberResponseDTO.lastName,
       birthday,
       dateOfDeath,
-      Gender[familyMemberResponseDTO.gender],
-      +familyMemberResponseDTO.primaryParentId,
-      +familyMemberResponseDTO.secondaryParentId,
-      partners);
+      Gender[familyMemberResponseDTO.gender]);
   }
 
   private mapCoupleResponseDTOToCouple(coupleResponseDTO: CoupleResponseDTO): Couple {

@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 public interface FamilyMemberMapper {
 
     FamilyMemberMapper INSTANCE = Mappers.getMapper(FamilyMemberMapper.class);
+
+    FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember);
+
 // todo fix
 
 //    static List<Long> getPartners(FamilyMember familyMember, List<FamilyMember> familyMembers) {
@@ -49,13 +52,6 @@ public interface FamilyMemberMapper {
 //            expression = "java(FamilyMemberMapper.getPartners(familyMember, familyMembers))")
 //    FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember,
 //                                                                  List<FamilyMember> familyMembers);
-//
-//    @Mapping(target = "primaryParentId",
-//            expression = "java(familyMember.getPrimaryParent() != null ? familyMember.getPrimaryParent().getId() : null)")
-//    @Mapping(target = "secondaryParentId",
-//            expression = "java(familyMember.getSecondaryParent() != null ? familyMember.getSecondaryParent().getId() : null)")
-//    FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember);
-//
 //    @Mapping(target = "primaryParent",
 //            expression = "java(FamilyMember.builder().id(familyMemberDataDTO.getPrimaryParentId()).build())")
 //    @Mapping(target = "secondaryParent",

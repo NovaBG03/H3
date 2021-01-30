@@ -31,22 +31,22 @@
       <td>{{ member.gender | lowercase }}</td>
       <td class="text-center">{{ !member.birthday ? '-' : member.birthday | date }}</td>
       <td class="text-center">{{ !member.dateOfDeath ? '-' : member.dateOfDeath | date }}</td>
-      <td class="text-center"
-          [ngStyle]="{cursor: getDisplayMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"
-          (mouseenter)="onMemberHighlighted(member.primaryParentId)"
-          (mouseleave)="onMemberHighlighted(null)">{{ getDisplayMemberFullName(member.primaryParentId) }}</td>
-      <td class="text-center"
-          [ngStyle]="{cursor: getDisplayMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"
-          (mouseenter)="onMemberHighlighted(member.secondaryParentId)"
-          (mouseleave)="onMemberHighlighted(null)">{{ getDisplayMemberFullName(member.secondaryParentId) }}</td>
-      <td>
-        <div *ngFor="let partnerId of member.partners"
-             style="cursor: pointer;"
-             (mouseenter)="onMemberHighlighted(partnerId)"
-             (mouseleave)="onMemberHighlighted(null)">
-          {{ getDisplayMemberFullName(partnerId) }}
-        </div>
-      </td>
+<!--      <td class="text-center"-->
+<!--          [ngStyle]="{cursor: getDisplayMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"-->
+<!--          (mouseenter)="onMemberHighlighted(member.primaryParentId)"-->
+<!--          (mouseleave)="onMemberHighlighted(null)">{{ getDisplayMemberFullName(member.primaryParentId) }}</td>-->
+<!--      <td class="text-center"-->
+<!--          [ngStyle]="{cursor: getDisplayMemberFullName(member.secondaryParentId) === '-' ? '' : 'pointer'}"-->
+<!--          (mouseenter)="onMemberHighlighted(member.secondaryParentId)"-->
+<!--          (mouseleave)="onMemberHighlighted(null)">{{ getDisplayMemberFullName(member.secondaryParentId) }}</td>-->
+<!--      <td>-->
+<!--        <div *ngFor="let partnerId of member.partners"-->
+<!--             style="cursor: pointer;"-->
+<!--             (mouseenter)="onMemberHighlighted(partnerId)"-->
+<!--             (mouseleave)="onMemberHighlighted(null)">-->
+<!--          {{ getDisplayMemberFullName(partnerId) }}-->
+<!--        </div>-->
+<!--      </td>-->
     </tr>
     <tr *ngIf="isOwner">
       <th scope="row">{{ this.familyMembers?.members.length + 1 }}</th>

@@ -32,15 +32,20 @@ public class FamilyMemberService {
         this.coupleService = coupleService;
     }
 
+    public List<FamilyMember> getAllMembers(Long treeId, String username) {
+        final FamilyTree familyTree = getTreeOrThrowException(treeId);
+        final User user = userRepository.findByUsername(username);
+
+        checkIfUserHaveAccess(familyTree, user);
+
+        return familyMemberRepository.findAllByFamilyTreeId(treeId);
+    }
+
     public List<Couple> getAllCouples(Long treeId, String username) {
         final FamilyTree familyTree = getTreeOrThrowException(treeId);
         final User user = userRepository.findByUsername(username);
 
-        if (familyTree.getIsPrivate()
-                && !user.getUsername().equals(familyTree.getUser().getUsername())
-                && !user.isAdmin()) {
-            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
-        }
+        checkIfUserHaveAccess(familyTree, user);
 
         return coupleService.getAllCouples(familyTree);
     }
@@ -165,5 +170,13 @@ public class FamilyMemberService {
     private FamilyTree getTreeOrThrowException(Long treeId) {
         return familyTreeRepository.findById(treeId)
                 .orElseThrow(() -> new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND));
+    }
+
+    private void checkIfUserHaveAccess(FamilyTree familyTree, User user) {
+        if (familyTree.getIsPrivate()
+                && !user.getUsername().equals(familyTree.getUser().getUsername())
+                && !user.isAdmin()) {
+            throw new CustomException("The family tree doesn't exist", HttpStatus.NOT_FOUND);
+        }
     }
 }

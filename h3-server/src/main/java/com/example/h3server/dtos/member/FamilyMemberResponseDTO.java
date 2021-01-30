@@ -34,13 +34,4 @@ public class FamilyMemberResponseDTO {
 
     @ApiModelProperty(position = 5)
     private Gender gender;
-
-    @ApiModelProperty(position = 6)
-    private Long primaryParentId;
-
-    @ApiModelProperty(position = 7)
-    private Long secondaryParentId;
-
-    @ApiModelProperty(position = 8)
-    private List<Long> partners = new ArrayList<>();
 }

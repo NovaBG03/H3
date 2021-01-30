@@ -109,21 +109,21 @@ export class ViewTableComponent implements OnInit, OnDestroy {
   }
 
   private swapParentsIfNeeded(member: FamilyMember, familyMembers: FamilyMember[]): FamilyMember {
-    const primary = familyMembers.find(fm => fm.id === member.primaryParentId);
-    if (!primary) {
-      return member;
-    }
-
-    const secondary = familyMembers.find(fm => fm.id === member.secondaryParentId);
-    if (!secondary) {
-      return member;
-    }
-
-    if (primary.gender === Gender.FEMALE && secondary.gender === Gender.MALE) {
-      member.primaryParentId = secondary.id;
-      member.secondaryParentId = primary.id;
-      return member;
-    }
+    // const primary = familyMembers.find(fm => fm.id === member.primaryParentId);
+    // if (!primary) {
+    //   return member;
+    // }
+    //
+    // const secondary = familyMembers.find(fm => fm.id === member.secondaryParentId);
+    // if (!secondary) {
+    //   return member;
+    // }
+    //
+    // if (primary.gender === Gender.FEMALE && secondary.gender === Gender.MALE) {
+    //   // member.primaryParentId = secondary.id;
+    //   // member.secondaryParentId = primary.id;
+    //   return member;
+    // }
 
     return member;
   }

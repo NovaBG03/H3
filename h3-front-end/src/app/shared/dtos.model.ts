@@ -120,8 +120,8 @@ export class FamilyMembers {
       return children;
     }
 
-    children.push(...this._members.filter(member => member.primaryParentId === id
-      || member.secondaryParentId === id));
+    // children.push(...this._members.filter(member => member.primaryParentId === id
+    //   || member.secondaryParentId === id));
 
     return children;
   }
@@ -129,17 +129,18 @@ export class FamilyMembers {
   public getMultipleChildren(firstId: number, secondId: any): FamilyMember[] {
     const children: FamilyMember[] = [];
 
-    children.push(...this._members
-      .filter(member => (member.primaryParentId === firstId && member.secondaryParentId === secondId)
-        || (member.primaryParentId === secondId && member.secondaryParentId === firstId)));
+    // children.push(...this._members
+    //   .filter(member => (member.primaryParentId === firstId && member.secondaryParentId === secondId)
+    //     || (member.primaryParentId === secondId && member.secondaryParentId === firstId)));
 
     return children;
   }
 
   public isEmptyMember(member: FamilyMember): boolean {
-    return !member.isDirectHeir
-      && this.getChildren(member.id).length === 0
-      && member.partners.length === 0;
+    return false;
+    // return !member.isDirectHeir
+    //   && this.getChildren(member.id).length === 0
+    //   && member.partners.length === 0;
   }
 }
 
@@ -155,18 +156,11 @@ export class FamilyMember {
               public lastName: string,
               public birthday: Date,
               public dateOfDeath: Date,
-              public gender: Gender,
-              public primaryParentId: number,
-              public secondaryParentId: number,
-              public partners: number[]) {
+              public gender: Gender) {
   }
 
   get fullName(): string {
     return this.firstName + ' ' + this.lastName;
-  }
-
-  get isDirectHeir(): boolean {
-    return !!this.primaryParentId;
   }
 }
 
@@ -176,10 +170,7 @@ export class FamilyMemberResponseDTO {
               public lastName: string,
               public birthday: string,
               public dateOfDeath: string,
-              public gender: string,
-              public primaryParentId: number,
-              public secondaryParentId: number,
-              public partners: number[]) {
+              public gender: string) {
   }
 }
 

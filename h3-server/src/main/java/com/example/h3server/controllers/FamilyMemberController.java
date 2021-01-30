@@ -6,6 +6,7 @@ import com.example.h3server.dtos.member.FamilyMemberDataDTO;
 import com.example.h3server.dtos.member.FamilyMemberListDTO;
 import com.example.h3server.dtos.member.FamilyMemberResponseDTO;
 import com.example.h3server.mappers.CoupleMapper;
+import com.example.h3server.mappers.FamilyMemberMapper;
 import com.example.h3server.services.FamilyMemberService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,8 +37,24 @@ public class FamilyMemberController {
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 404, message = "The family tree doesn't exist"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public CoupleListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
-        // todo fix docs
+    public FamilyMemberListDTO getMembers(@PathVariable Long treeId, @ApiIgnore Principal principal) {
+        return new FamilyMemberListDTO(familyMemberService.getAllMembers(treeId, principal.getName())
+                .stream()
+                .map(member -> FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(member))
+                .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/couples")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyMemberController.getCouples}",
+            response = CoupleListDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The family tree doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public CoupleListDTO getCouples(@PathVariable Long treeId, @ApiIgnore Principal principal) {
         return new CoupleListDTO(familyMemberService.getAllCouples(treeId, principal.getName())
                 .stream()
                 .map(couple -> CoupleMapper.INSTANCE.coupleToCoupleResponseDTO(couple))
