@@ -184,9 +184,7 @@ export class FamilyMemberDataDTO {
               public lastName: string,
               public birthday: string,
               public dateOfDeath: string,
-              public gender: string,
-              public primaryParentId: number,
-              public secondaryParentId: number) {
+              public gender: string) {
   }
 }
 
