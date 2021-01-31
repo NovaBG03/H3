@@ -7,6 +7,7 @@ import com.example.h3server.dtos.member.FamilyMemberListDTO;
 import com.example.h3server.dtos.member.FamilyMemberResponseDTO;
 import com.example.h3server.mappers.CoupleMapper;
 import com.example.h3server.mappers.FamilyMemberMapper;
+import com.example.h3server.models.FamilyMember;
 import com.example.h3server.services.FamilyMemberService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +62,30 @@ public class FamilyMemberController {
                 .collect(Collectors.toList()));
     }
 
+    @PutMapping("/{memberId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyMemberController.updateMember}",
+            response = FamilyMemberResponseDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong / " +
+                    "First name must be from 3 to 225 symbols / " +
+                    "Last name must be from 3 to 225 symbols"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The family tree doesn't exist / " +
+                    "The family member doesn't exist / " +
+                    "Invalid father id / " +
+                    "Invalid mother id"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public FamilyMemberResponseDTO updateMember(@PathVariable Long treeId,
+                                                @PathVariable Long memberId,
+                                                @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
+                                                @ApiIgnore Principal principal) {
+        FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
+        FamilyMember newMember = familyMemberService.updateMember(treeId, memberId, familyMember, principal.getName());
+        return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+    }
+
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyMemberController.addMember}",
@@ -84,31 +109,6 @@ public class FamilyMemberController {
         // FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
         // FamilyMember newMember = familyMemberService.addMember(treeId, familyMember, principal.getName());
         // return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
-    }
-
-    @PutMapping("/{memberId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiOperation(value = "${FamilyMemberController.updateMember}",
-            response = FamilyMemberResponseDTO.class,
-            authorizations = {@Authorization(value = "apiKey")})
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong / " +
-                    "First name must be from 3 to 225 symbols / " +
-                    "Last name must be from 3 to 225 symbols"),
-            @ApiResponse(code = 403, message = "Access denied"),
-            @ApiResponse(code = 404, message = "The family tree doesn't exist / " +
-                    "The family member doesn't exist / " +
-                    "Invalid father id / " +
-                    "Invalid mother id"),
-            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public FamilyMemberResponseDTO updateMember(@PathVariable Long treeId,
-                                                @PathVariable Long memberId,
-                                                @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
-                                                @ApiIgnore Principal principal) {
-        // FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
-        // FamilyMember newMember = familyMemberService.updateMember(treeId, memberId, familyMember, principal.getName());
-        // return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
-        return null;
     }
 
     @DeleteMapping("/{memberId}")

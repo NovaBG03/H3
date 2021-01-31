@@ -50,6 +50,31 @@ public class FamilyMemberService {
         return coupleService.getAllCouples(familyTree);
     }
 
+    public FamilyMember updateMember(Long treeId, Long memberId, FamilyMember familyMember, String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+        FamilyMember memberFromDb = null;
+        try {
+            memberFromDb = this.familyMemberRepository.findByIdAndFamilyTreeId(memberId, treeId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        if (memberFromDb == null) {
+            throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        familyMember.setId(memberFromDb.getId());
+
+        ModelValidator.validate(familyMember);
+        return familyMemberRepository.save(familyMember);
+    }
+
     public FamilyMember addMainMember(Long treeId, FamilyMember familyMember, String username) {
         FamilyTree familyTree = getTreeOrThrowException(treeId);
 
@@ -88,32 +113,6 @@ public class FamilyMemberService {
         coupleService.addChildToCouple(primaryParentId, partnerParentId, familyMember.getId());
 
         return savedMember;
-    }
-
-    public FamilyMember updateMember(Long treeId, Long memberId, FamilyMember familyMember, String username) {
-        FamilyTree familyTree = getTreeOrThrowException(treeId);
-
-        if (!familyTree.getUser().getUsername().equals(username)) {
-            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
-        }
-
-        // todo fix
-        return null;
-//         FamilyMember memberFromDb = null; //familyTree.getFamilyMember(memberId);
-//         if (memberFromDb == null) {
-//             throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
-//         }
-//
-//         // todo should update parents
-//
-//         memberFromDb.setFirstName(familyMember.getFirstName());
-//         memberFromDb.setLastName(familyMember.getLastName());
-//         memberFromDb.setBirthday(familyMember.getBirthday());
-//         memberFromDb.setDateOfDeath(familyMember.getDateOfDeath());
-//         memberFromDb.setGender(familyMember.getGender());
-//
-//         ModelValidator.validate(memberFromDb);
-//         return familyMemberRepository.save(memberFromDb);
     }
 
     public void deleteMember(Long treeId, Long memberId, String username) {

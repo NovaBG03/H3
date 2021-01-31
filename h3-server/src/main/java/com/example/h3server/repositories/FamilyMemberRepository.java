@@ -23,4 +23,18 @@ public interface FamilyMemberRepository extends JpaRepository<FamilyMember, Long
             "on fm.id = i.id;",
             nativeQuery = true)
     List<FamilyMember> findAllByFamilyTreeId(@Param("tree_id") Long treeId);
+
+    @Query(value = "select * from family_member as fm " +
+            "right join " +
+            "(select distinct nf.primary_parent_id as id " +
+            " from nested_family as nf " +
+            " where nf.primary_parent_id <> 0 and nf.family_tree_id = :tree_id " +
+            " union " +
+            " select distinct nf.partner_parent_id as id " +
+            " from nested_family as nf " +
+            " where nf.partner_parent_id <> 0 and nf.family_tree_id = :tree_id) as i " +
+            "on fm.id = i.id " +
+            "where :member_id = fm.id;",
+            nativeQuery = true)
+    FamilyMember findByIdAndFamilyTreeId(@Param("member_id") Long memberId, @Param("tree_id") Long treeId);
 }

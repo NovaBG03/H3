@@ -20,6 +20,8 @@ public interface FamilyMemberMapper {
 
     FamilyMemberResponseDTO familyMemberToFamilyMemberResponseDTO(FamilyMember familyMember);
 
+    FamilyMember FamilyMemberDataDTOToFamilyMember(FamilyMemberDataDTO familyMemberDataDTO);
+
 // todo fix
 
 //    static List<Long> getPartners(FamilyMember familyMember, List<FamilyMember> familyMembers) {

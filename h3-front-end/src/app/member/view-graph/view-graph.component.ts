@@ -102,6 +102,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     const strokeWidth = 3;
     const imageRadius = circleRadius - strokeWidth;
     const childRatio = 0.8; // from 0 to 1
+    const fontSize = 16;
 
     const simulation = d3.forceSimulation(this.data.nodes)
       .velocityDecay(0.8)
@@ -139,7 +140,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('id', 'arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', circleRadius / 16)
-      .attr('refY', 0.5)
+      .attr('refY', 0)
       .attr('markerWidth', circleRadius / 8)
       .attr('markerHeight', circleRadius / 8)
       .attr('orient', 'auto')
@@ -163,6 +164,31 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .append('g')
       .classed('couple', true);
 
+    const primaryParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
+    const partnerParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
+    const childNodes = nodes.filter(d => !d.partnerParentId);
+
+    primaryParentCoupleNodes.append('text')
+      .attr('text-anchor', 'end')
+      .attr('font-size', `${fontSize}`)
+      .attr('x', -circleRadius / 3)
+      .attr('y', circleRadius + strokeWidth + fontSize)
+      .text(d => d.primaryParentName);
+
+    partnerParentCoupleNodes.append('text')
+      .attr('text-anchor', 'start')
+      .attr('font-size', `${fontSize}`)
+      .attr('x', circleRadius / 3)
+      .attr('y', circleRadius + strokeWidth + fontSize)
+      .text(d => d.partnerParentName);
+
+    childNodes.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', `${fontSize}`)
+      .attr('x', 0)
+      .attr('y', circleRadius * childRatio + fontSize + 1)
+      .text(d => d.primaryParentName);
+
     const parentsLinks = nodes.filter(d => !!d.partnerParentId);
     parentsLinks.append('circle')
       .attr('fill', '#fff')
@@ -170,7 +196,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('stroke-width', 2 * strokeWidth)
       .attr('r', circleRadius * childRatio);
 
-    const childNodes = nodes.filter(d => !d.partnerParentId);
     childNodes.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', d => this.getStrokeColor(d.primaryParentId))
@@ -178,7 +203,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('r', circleRadius * childRatio);
 
     // Create primary parents
-    const primaryParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
     primaryParentCoupleNodes.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', d => this.getStrokeColor(d.primaryParentId))
@@ -187,7 +211,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('transform', `translate(${-circleRadius - (strokeWidth * 0.5)}, 0)`);
 
     // Create Partners
-    const partnerParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
     partnerParentCoupleNodes.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', d => this.getStrokeColor(d.partnerParentId))
