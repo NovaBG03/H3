@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
@@ -46,8 +46,12 @@ export class MemberService {
       }));
   }
 
-  createMember(treeId: number, member: FamilyMemberDataDTO): Observable<FamilyMember> {
-    return this.http.post<FamilyMemberResponseDTO>(`${environment.domain}/trees/${treeId}/members/`, member)
+  createMember(treeId: number, member: FamilyMemberDataDTO, primaryParentId: number, partnerParentId: number): Observable<FamilyMember> {
+    return this.http.post<FamilyMemberResponseDTO>(`${environment.domain}/trees/${treeId}/members/`, member, {
+      params: new HttpParams()
+        .append('primaryParentId', String(primaryParentId))
+        .append('partnerParentId', String(partnerParentId))
+    })
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
       }));

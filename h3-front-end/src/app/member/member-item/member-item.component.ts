@@ -139,7 +139,7 @@ export class MemberItemComponent implements OnInit {
       this.memberService.updateMember(this.treeId, this.member.id, familyMemberDataDTO)
         .subscribe(familyMember => this.finishEditing.emit(true));
     } else {
-      this.memberService.createMember(this.treeId, familyMemberDataDTO)
+      this.memberService.createMember(this.treeId, familyMemberDataDTO, 0, 0)
         .subscribe(familyMember => this.finishEditing.emit(true));
     }
 

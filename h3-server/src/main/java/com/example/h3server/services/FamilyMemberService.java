@@ -75,6 +75,29 @@ public class FamilyMemberService {
         return familyMemberRepository.save(familyMember);
     }
 
+    public FamilyMember addMember(Long treeId,
+                                  FamilyMember familyMember,
+                                  Long primaryParentId,
+                                  Long partnerParentId,
+                                  String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+        // todo validate parent ids (primaryParentId > 0 && partnerParentId >= 0)
+
+        familyMember.setId(null);
+
+        ModelValidator.validate(familyMember);
+        final FamilyMember savedMember = familyMemberRepository.save(familyMember);
+
+        coupleService.addChildToNestedTree(familyTree, primaryParentId, partnerParentId, familyMember.getId());
+
+        return savedMember;
+    }
+
     public FamilyMember addMainMember(Long treeId, FamilyMember familyMember, String username) {
         FamilyTree familyTree = getTreeOrThrowException(treeId);
 
@@ -88,29 +111,6 @@ public class FamilyMemberService {
         final FamilyMember savedMember = familyMemberRepository.save(familyMember);
 
         coupleService.addMainMember(familyTree, savedMember.getId());
-
-        return savedMember;
-    }
-
-    public FamilyMember addMember(Long treeId,
-                                  FamilyMember familyMember,
-                                  Long primaryParentId,
-                                  Long partnerParentId,
-                                  String username) {
-        FamilyTree familyTree = getTreeOrThrowException(treeId);
-
-        // todo validate parent ids (primaryParentId > 0 && partnerParentId >= 0)
-
-        if (!familyTree.getUser().getUsername().equals(username)) {
-            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
-        }
-
-        familyMember.setId(null);
-
-        ModelValidator.validate(familyMember);
-        final FamilyMember savedMember = familyMemberRepository.save(familyMember);
-
-        coupleService.addChildToCouple(primaryParentId, partnerParentId, familyMember.getId());
 
         return savedMember;
     }

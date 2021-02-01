@@ -40,16 +40,30 @@ public class CoupleService {
     }
 
     @Transactional
-    public void addChildToCouple(Long primaryParentId, Long partnerParentId, Long childId) {
+    public void addChildToNestedTree(FamilyTree familyTree, Long primaryParentId, Long partnerParentId, Long childId) {
 
-        final int parentLeftIndex = coupleRepository.getParentLeftIndex(primaryParentId, partnerParentId);
+        if (primaryParentId == 0 && partnerParentId == 0) {
+            final int rightmostId = coupleRepository.getBiggestRightIndex(familyTree.getId());
 
-        coupleRepository.moveAllRightIndexesAfter(parentLeftIndex);
-        coupleRepository.moveAllLeftIndexesAfter(parentLeftIndex);
+            coupleRepository.save(Couple.builder()
+                    .primaryParentId(childId)
+                    .partnerParentId(0L)
+                    .leftIndex(rightmostId + 1)
+                    .rightIndex(rightmostId + 2)
+                    .familyTree(familyTree)
+                    .build());
+        }
+        else {
+            final int parentLeftIndex = coupleRepository
+                    .getParentLeftIndex(familyTree.getId(), primaryParentId, partnerParentId);
 
-        // todo save new couple
-        // insert into nested_family (primary_parent_id, partner_parent_id, lft, rgt)
-        // values (child_id, 0, @parentLeft + 1, @parentLeft + 2);
+            coupleRepository.moveAllRightIndexesAfter(familyTree.getId(), parentLeftIndex);
+            coupleRepository.moveAllLeftIndexesAfter(familyTree.getId(), parentLeftIndex);
+
+            // todo insert new couple
+            // insert into nested_family (primary_parent_id, partner_parent_id, lft, rgt)
+            // values (child_id, 0, @parentLeft + 1, @parentLeft + 2);
+        }
     }
 
     public List<Couple> getAllCouples(FamilyTree familyTree) {

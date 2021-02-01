@@ -21,19 +21,21 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
 
     @Query(value = "select lft from nested_family as nf " +
             "where nf.primary_parent_id = :primary_parent_id " +
-            "and nf.partner_parent_id = :partner_parent_id",
+            "and nf.partner_parent_id = :partner_parent_id " +
+            "and nf.family_tree_id = :tree_id",
             nativeQuery = true)
-    int getParentLeftIndex(@Param("primary_parent_id") Long primaryParentId,
+    int getParentLeftIndex(@Param("tree_id") Long treeId,
+                           @Param("primary_parent_id") Long primaryParentId,
                            @Param("partner_parent_id") Long partnerParentId);
 
 
     @Modifying
-    @Query("update nested_family set rgt = rgt + 2 where rgt > :parentLeft")
-    void moveAllRightIndexesAfter(@Param("parentLeft") Integer index);
+    @Query("update nested_family set rgt = rgt + 2 where rgt > :parentLeft and family_tree_id = :tree_id")
+    void moveAllRightIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
 
     @Modifying
-    @Query("update nested_family set lft = lft + 2 where lft > :parentLeft")
-    void moveAllLeftIndexesAfter(@Param("parentLeft") Integer index);
+    @Query("update nested_family set lft = lft + 2 where lft > :parentLeft and family_tree_id = :tree_id")
+    void moveAllLeftIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
 
     @Query(value = "select nf.primary_parent_id as primaryParentId, " +
             "nf.partner_parent_id as partnerParentId, " +
@@ -54,8 +56,12 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
             " WHERE node.family_tree_id = :tree_id AND node.lft BETWEEN parent.lft AND parent.rgt " +
             " GROUP BY node.primary_parent_id, node.partner_parent_id " +
             " ORDER BY node.lft) as d " +
-            "on d.primary_parent_id = nf.primary_parent_id AND d.partner_parent_id = nf.partner_parent_id;",
+            "on d.primary_parent_id = nf.primary_parent_id AND d.partner_parent_id = nf.partner_parent_id",
             nativeQuery = true)
     List<CoupleInterface> getAllCouples(@Param("tree_id") Long treeId);
+
+    @Query(value = "SELECT max(nf.rgt) FROM NESTED_FAMILY as nf",
+            nativeQuery = true)
+    int getBiggestRightIndex(@Param("tree_id") Long treeId);
 
 }

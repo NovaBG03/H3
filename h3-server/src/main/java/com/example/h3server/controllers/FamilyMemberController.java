@@ -101,14 +101,14 @@ public class FamilyMemberController {
                     "Invalid mother id"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyMemberResponseDTO addMember(@PathVariable Long treeId,
+                                             @RequestParam Long primaryParentId,
+                                             @RequestParam Long partnerParentId,
                                              @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
                                              @ApiIgnore Principal principal) {
-        return null;
-        // todo fix
-
-        // FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
-        // FamilyMember newMember = familyMemberService.addMember(treeId, familyMember, principal.getName());
-        // return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+        FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
+        FamilyMember newMember = familyMemberService
+                .addMember(treeId, familyMember, primaryParentId, partnerParentId, principal.getName());
+        return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
     }
 
     @DeleteMapping("/{memberId}")
