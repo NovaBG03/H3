@@ -104,6 +104,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     const childRatio = 0.8; // from 0 to 1
     const fontSize = 16;
 
+    this.chartWidth = d3.select('#graph').node().getBoundingClientRect().width;
+
     const simulation = d3.forceSimulation(this.data.nodes)
       .velocityDecay(0.8)
       .alphaDecay(0.01)
@@ -118,8 +120,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .force('center', d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2))
       .force('x', d3.forceX())
       .force('y', d3.forceY());
-
-    this.chartWidth = d3.select('#graph').node().getBoundingClientRect().width;
 
     // Create SVG
     const svg = d3.select('#graph')
