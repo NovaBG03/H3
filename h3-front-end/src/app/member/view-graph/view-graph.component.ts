@@ -115,9 +115,9 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .force('collide', d3.forceCollide()
         .radius(circleRadius * 2.5)
         .strength(1))
-      .force('center', d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2));
-    // .force('x', d3.forceX())
-    // .force('y', d3.forceY());
+      .force('center', d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2))
+      .force('x', d3.forceX())
+      .force('y', d3.forceY());
 
     this.chartWidth = d3.select('#graph').node().getBoundingClientRect().width;
 
@@ -126,9 +126,9 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .append('svg')
       .attr('height', this.chartHeight)
       .attr('width', this.chartWidth)
+      .on('contextmenu', e => e.preventDefault())
       .append('g');
     // .attr('transform', `translate(${this.chartWidth / 2}, ${this.chartHeight / 2})`);
-
 
     // Extract Links and create link force
     this.extractLinks();
@@ -163,6 +163,17 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .enter()
       .append('g')
       .classed('couple', true);
+
+    nodes.on('contextmenu', (e, d) => {
+      console.log(d);
+    });
+
+    nodes.call(d3.drag()
+      .on('drag', (event, data) => {
+        data.x = event.x;
+        data.y = event.y;
+        // d3.select(this).raise().attr('transform', d => `translate(${d.x},${d.y})`);
+      }));
 
     const primaryParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
     const partnerParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
@@ -248,17 +259,17 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     primaryParentImage
       .on('mouseover', this.handleImageMouseOver)
       .on('mouseout', this.handleImageMouseOut)
-      .on('click', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
 
     partnerParentImage
       .on('mouseover', this.handleImageMouseOver)
       .on('mouseout', this.handleImageMouseOut)
-      .on('click', (e, d) => this.displayMemberInfo(d.partnerParentId));
+      .on('contextmenu', (e, d) => this.displayMemberInfo(d.partnerParentId));
 
     childImage
       .on('mouseover', this.handleImageMouseOver)
       .on('mouseout', this.handleImageMouseOut)
-      .on('click', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
 
 
     // titles
@@ -273,11 +284,11 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
     // on tick
     simulation.on('tick', () => {
-      // // @ts-ignore
-      // links.attr('x1', d => d.source.x)  // @ts-ignore
-      //   .attr('y1', d => d.source.y)  // @ts-ignore
-      //   .attr('x2', d => d.target.x)  // @ts-ignore
-      //   .attr('y2', d => d.target.y);
+      // @ts-ignore
+      links.attr('x1', d => d.source.x)  // @ts-ignore
+        .attr('y1', d => d.source.y)  // @ts-ignore
+        .attr('x2', d => d.target.x)  // @ts-ignore
+        .attr('y2', d => d.target.y);
 
       links.attr('points', d => `${d.source.x},${d.source.y} ${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2} ${d.target.x},${d.target.y}`);
 
