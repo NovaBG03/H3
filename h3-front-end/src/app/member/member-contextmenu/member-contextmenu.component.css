@@ -1,0 +1,32 @@
+.h3-context-menu {
+  background: white;
+  width: 200px;
+  height: auto;
+  box-shadow: 0 0 20px 0 #cccccc;
+  display: none;
+  position: fixed;
+  z-index: 1000;
+}
+
+.h3-context-menu ul {
+  list-style: none;
+  padding: 5px 0px;
+  margin: 0;
+}
+
+.h3-context-menu ul li:not(.h3-separator) {
+  padding: 10px 5px;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+}
+
+.h3-context-menu ul li:hover:not(.h3-separator) {
+  background: #eee;
+  border-left: 4px solid var(--h3-color-primary);
+}
+
+.h3-separator {
+  height: 1px;
+  background: #dedede;
+  margin: 2px 0px;
+}

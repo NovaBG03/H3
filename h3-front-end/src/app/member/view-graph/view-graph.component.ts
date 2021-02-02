@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Couple, FamilyMember, Gender, Graph} from '../../shared/dtos.model';
 import {Subscription} from 'rxjs';
 import {MemberService} from '../member.service';
@@ -20,6 +20,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   isCreatingMember = false;
   isOwner: boolean;
   familyMembers: FamilyMember[];
+
+  coordinates: { x: number, y: number } = null;
 
   // new
   data: Graph =
@@ -58,6 +60,11 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    this.resetCoordinates();
+  }
+
   onStartCreating(): void {
     this.isCreatingMember = true;
   }
@@ -82,7 +89,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   // }
 
   private loadMembers(): void {
-    console.log(this.treeId);
     this.memberService.getCouples(this.treeId).subscribe(couples => {
       // this.couples = couples;
       this.data.nodes = couples;
@@ -165,10 +171,13 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .classed('couple', true);
 
     nodes.on('contextmenu', (e, d) => {
-      console.log(d);
+      this.coordinates = {x: e.clientX, y: e.clientY};
     });
 
     nodes.call(d3.drag()
+      .on('start', (event, data) => {
+        this.resetCoordinates();
+      })
       .on('drag', (event, data) => {
         data.x = event.x;
         data.y = event.y;
@@ -258,18 +267,18 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     // Events
     primaryParentImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut)
-      .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('mouseout', this.handleImageMouseOut);
+    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
 
     partnerParentImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut)
-      .on('contextmenu', (e, d) => this.displayMemberInfo(d.partnerParentId));
+      .on('mouseout', this.handleImageMouseOut);
+    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.partnerParentId));
 
     childImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut)
-      .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('mouseout', this.handleImageMouseOut);
+    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
 
 
     // titles
@@ -351,5 +360,11 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     }));
 
     children.forEach(c => this.extractLinksForNode(c));
+  }
+
+  private resetCoordinates(): void {
+    if (this.coordinates) {
+      this.coordinates = null;
+    }
   }
 }

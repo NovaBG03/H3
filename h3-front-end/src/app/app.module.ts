@@ -29,6 +29,7 @@ import { SearchComponent } from './search/search.component';
 import { EmptyComponent } from './shared/empty/empty.component';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { ViewGraphComponent } from './member/view-graph/view-graph.component';
+import { MemberContextmenuComponent } from './member/member-contextmenu/member-contextmenu.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { ViewGraphComponent } from './member/view-graph/view-graph.component';
     SearchComponent,
     EmptyComponent,
     LoadingComponent,
-    ViewGraphComponent
+    ViewGraphComponent,
+    MemberContextmenuComponent
   ],
   imports: [
     BrowserModule,

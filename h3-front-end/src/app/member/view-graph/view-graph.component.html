@@ -20,4 +20,7 @@
                  [isOwner]="isOwner"
                  (finishEditing)="onFinishEditing($event)"></app-member-item>
 
+<app-member-contextmenu [coordinates]="this.coordinates">
+</app-member-contextmenu>
+
 <div id="graph"></div>
