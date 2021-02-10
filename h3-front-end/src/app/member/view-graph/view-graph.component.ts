@@ -33,6 +33,9 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   private chartHeight = 600;
   private chartWidth = 800;
 
+  private nodesSelection;
+  private linksSelection;
+
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
               private treeService: TreeService,
@@ -121,7 +124,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .force('charge', d3.forceManyBody()
         .strength(-200))
       .force('collide', d3.forceCollide()
-        .radius(circleRadius * 2.5)
+        .radius(circleRadius * 2.8)
         .strength(1))
       .force('center', d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2))
       .force('x', d3.forceX())
@@ -154,7 +157,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('d', 'M0,-5L10,0L0,5')
       .style('fill', '#999999');
 
-    const links = svg.selectAll('polyline')
+    this.linksSelection = svg.selectAll('polyline')
       .data(this.data.links)
       .enter()
       .append('polyline')
@@ -164,29 +167,36 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('marker-mid', 'url(#arrow)');
 
     // Create Nodes
-    const nodes = svg.selectAll('g.couple')
+    this.nodesSelection = svg.selectAll('g.couple')
       .data(this.data.nodes)
       .enter()
       .append('g')
       .classed('couple', true);
 
-    nodes.on('contextmenu', (e, d) => {
+    this.nodesSelection.on('contextmenu', (e, d) => {
       this.coordinates = {x: e.clientX, y: e.clientY};
     });
 
-    nodes.call(d3.drag()
-      .on('start', (event, data) => {
+    this.nodesSelection.call(d3.drag()
+      .on('start', (e, d) => {
+        simulation.stop();
         this.resetCoordinates();
       })
-      .on('drag', (event, data) => {
-        data.x = event.x;
-        data.y = event.y;
+      .on('drag', (e, d) => {
+        d.x = e.x;
+        d.y = e.y;
         // d3.select(this).raise().attr('transform', d => `translate(${d.x},${d.y})`);
+        this.tick()();
+      })
+      .on('end', (e, d) => {
+        this.tick()();
+        simulation.restart();
+        simulation.alpha(0.1);
       }));
 
-    const primaryParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
-    const partnerParentCoupleNodes = nodes.filter(d => !!d.partnerParentId);
-    const childNodes = nodes.filter(d => !d.partnerParentId);
+    const primaryParentCoupleNodes = this.nodesSelection.filter(d => !!d.partnerParentId);
+    const partnerParentCoupleNodes = this.nodesSelection.filter(d => !!d.partnerParentId);
+    const childNodes = this.nodesSelection.filter(d => !d.partnerParentId);
 
     primaryParentCoupleNodes.append('text')
       .attr('text-anchor', 'end')
@@ -209,7 +219,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('y', circleRadius * childRatio + fontSize + 1)
       .text(d => d.primaryParentName);
 
-    const parentsLinks = nodes.filter(d => !!d.partnerParentId);
+    const parentsLinks = this.nodesSelection.filter(d => !!d.partnerParentId);
     parentsLinks.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', '#000')
@@ -292,17 +302,22 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .text(d => d.partnerParentName);
 
     // on tick
-    simulation.on('tick', () => {
+    simulation.on('tick', this.tick());
+  }
+
+  private tick(): () => void {
+    const self = this;
+    return () => {
       // @ts-ignore
-      links.attr('x1', d => d.source.x)  // @ts-ignore
+      self.linksSelection.attr('x1', d => d.source.x)  // @ts-ignore
         .attr('y1', d => d.source.y)  // @ts-ignore
         .attr('x2', d => d.target.x)  // @ts-ignore
         .attr('y2', d => d.target.y);
 
-      links.attr('points', d => `${d.source.x},${d.source.y} ${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2} ${d.target.x},${d.target.y}`);
+      self.linksSelection.attr('points', d => `${d.source.x},${d.source.y} ${(d.source.x + d.target.x) / 2},${(d.source.y + d.target.y) / 2} ${d.target.x},${d.target.y}`);
 
-      nodes.attr('transform', d => `translate(${d.x}, ${d.y})`);
-    });
+      self.nodesSelection.attr('transform', d => `translate(${d.x}, ${d.y})`);
+    };
   }
 
   private handleImageMouseOver(event, data): void {
