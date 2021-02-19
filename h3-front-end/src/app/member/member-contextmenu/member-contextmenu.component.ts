@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-member-contextmenu',
@@ -8,6 +8,7 @@ import {AfterViewInit, Component, ElementRef, Input, Renderer2, ViewChild} from 
 export class MemberContextmenuComponent implements AfterViewInit {
 
   @ViewChild('h3Contextmenu', {read: ElementRef}) elementRef: ElementRef;
+  @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private renderer: Renderer2) {
   }
@@ -43,4 +44,7 @@ export class MemberContextmenuComponent implements AfterViewInit {
       .setStyle(this.elementRef.nativeElement, 'display', 'block');
   }
 
+  onMemberInfoClicked(): void {
+    this.memberInfo.emit();
+  }
 }

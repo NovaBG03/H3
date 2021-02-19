@@ -22,13 +22,12 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   familyMembers: FamilyMember[];
 
   coordinates: { x: number, y: number } = null;
-
-  // new
   data: Graph =
     {
       nodes: [],
       links: []
     };
+  private lastSelectedId: number = null;
   private userSub: Subscription;
   private chartHeight = 600;
   private chartWidth = 800;
@@ -70,6 +69,12 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
   onStartCreating(): void {
     this.isCreatingMember = true;
+  }
+
+  onEditMember(): void {
+    const id = this.lastSelectedId;
+    const member = this.familyMembers.find(f => f.id === id);
+    this.editingMember = member;
   }
 
   onFinishEditing(isChanged: boolean): void {
@@ -174,6 +179,14 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .classed('couple', true);
 
     this.nodesSelection.on('contextmenu', (e, d) => {
+      const type = e.target.className.baseVal;
+
+      if (type === 'primary' || type === 'child') {
+        this.lastSelectedId = d.primaryParentId;
+      } else if (type === 'partner') {
+        this.lastSelectedId = d.partnerParentId;
+      }
+
       this.coordinates = {x: e.clientX, y: e.clientY};
     });
 
@@ -250,6 +263,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
     // Images
     const primaryParentImage = primaryParentCoupleNodes.append('svg:image')
+      .classed('primary', true)
       .attr('x', -imageRadius - circleRadius - (strokeWidth * 0.5))
       .attr('y', -imageRadius)
       .attr('width', 2 * imageRadius)
@@ -258,6 +272,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .style('cursor', 'pointer');
 
     const partnerParentImage = partnerParentCoupleNodes.append('svg:image')
+      .classed('partner', true)
       .attr('transform', `translate(${-imageRadius})`, 0)
       .attr('x', circleRadius + (strokeWidth * 0.5))
       .attr('y', -imageRadius)
@@ -267,6 +282,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .style('cursor', 'pointer');
 
     const childImage = childNodes.append('svg:image')
+      .classed('child', true)
       .attr('x', -imageRadius * childRatio)
       .attr('y', -imageRadius * childRatio)
       .attr('width', 2 * imageRadius * childRatio)
@@ -328,11 +344,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   private handleImageMouseOut(event, data): void {
     d3.select(this)
       .attr('opacity', 1);
-  }
-
-  private displayMemberInfo(id: number): void {
-    const member = this.familyMembers.find(f => f.id === id);
-    this.editingMember = member;
   }
 
   private getStrokeColor(id: number): string {
