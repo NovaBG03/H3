@@ -10,16 +10,19 @@ export class MemberContextmenuComponent implements AfterViewInit {
   @ViewChild('h3Contextmenu', {read: ElementRef}) elementRef: ElementRef;
   @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
 
+  isPrimary: boolean;
+
   constructor(private renderer: Renderer2) {
   }
 
-  @Input('coordinates') set coordinates(coordinates: { x: number, y: number }) {
+  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean }) {
     if (!this.elementRef) {
       return;
     }
 
-    if (coordinates) {
-      this.showElement(coordinates);
+    if (info) {
+      this.isPrimary = info.isPrimary;
+      this.showElement(info.x, info.y);
     } else {
       this.hideElement();
     }
@@ -28,23 +31,23 @@ export class MemberContextmenuComponent implements AfterViewInit {
   ngAfterViewInit(): void {
   }
 
+  onMemberInfoClicked(): void {
+    this.memberInfo.emit();
+  }
+
   private hideElement(): void {
     this.renderer
       .setStyle(this.elementRef.nativeElement, 'display', 'none');
   }
 
-  private showElement(coordinates: { x: number, y: number }): void {
+  private showElement(x: number, y: number): void {
     this.renderer
-      .setStyle(this.elementRef.nativeElement, 'top', coordinates.y + 'px');
+      .setStyle(this.elementRef.nativeElement, 'top', y + 'px');
 
     this.renderer
-      .setStyle(this.elementRef.nativeElement, 'left', coordinates.x + 'px');
+      .setStyle(this.elementRef.nativeElement, 'left', x + 'px');
 
     this.renderer
       .setStyle(this.elementRef.nativeElement, 'display', 'block');
-  }
-
-  onMemberInfoClicked(): void {
-    this.memberInfo.emit();
   }
 }

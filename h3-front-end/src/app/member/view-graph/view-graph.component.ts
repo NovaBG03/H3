@@ -21,7 +21,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   isOwner: boolean;
   familyMembers: FamilyMember[];
 
-  coordinates: { x: number, y: number } = null;
+  rightClickInfo: { x: number, y: number, isPrimary: boolean } = null;
   data: Graph =
     {
       nodes: [],
@@ -29,11 +29,22 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     };
   private lastSelectedId: number = null;
   private userSub: Subscription;
+
+  private simulation;
+  private svg;
+  private svgContent;
+  private nodesSelection;
+  private linksSelection;
+
   private chartHeight = 600;
   private chartWidth = 800;
 
-  private nodesSelection;
-  private linksSelection;
+  private image = 'https://cdn.balkan.app/shared/f1.png';
+  private circleRadius = 40;
+  private strokeWidth = 3;
+  private imageRadius = this.circleRadius - this.strokeWidth;
+  private childRatio = 0.8; // from 0 to 1
+  private fontSize = 16;
 
   constructor(private memberService: MemberService,
               private route: ActivatedRoute,
@@ -103,24 +114,18 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       if (this.data.nodes.length > 0) {
         this.memberService.getFamilyMembers(this.treeId).subscribe(familyMembers => {
           this.familyMembers = familyMembers;
-          this.createGraph();
-          // this.displayData();
+          if (!this.simulation) {
+            this.createGraph();
+          } else {
+            this.drawGraphElements();
+          }
         });
       }
     });
   }
 
   private createGraph(): void {
-    const image = 'https://cdn.balkan.app/shared/f1.png';
-    const circleRadius = 40;
-    const strokeWidth = 3;
-    const imageRadius = circleRadius - strokeWidth;
-    const childRatio = 0.8; // from 0 to 1
-    const fontSize = 16;
-
-    this.chartWidth = d3.select('#graph').node().getBoundingClientRect().width;
-
-    const simulation = d3.forceSimulation(this.data.nodes)
+    this.simulation = d3.forceSimulation(this.data.nodes)
       .velocityDecay(0.8)
       .alphaDecay(0.01)
       .force('link', d3.forceLink(this.data.links)
@@ -129,82 +134,87 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .force('charge', d3.forceManyBody()
         .strength(-200))
       .force('collide', d3.forceCollide()
-        .radius(circleRadius * 2.8)
+        .radius(this.circleRadius * 2.8)
         .strength(1))
       .force('center', d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2))
       .force('x', d3.forceX())
       .force('y', d3.forceY());
 
     // Create SVG
-    const svg = d3.select('#graph')
+    this.svg = d3.select('#graph')
       .append('svg')
       .attr('height', this.chartHeight)
-      .attr('width', this.chartWidth)
-      .on('contextmenu', e => e.preventDefault())
-      .append('g');
-    // .attr('transform', `translate(${this.chartWidth / 2}, ${this.chartHeight / 2})`);
+      .attr('width', this.chartWidth);
+
+    this.svg.on('contextmenu', e => e.preventDefault());
+
+    this.svgContent = this.svg.append('g');
+
+    this.drawGraphElements();
+
+    // on tick
+    this.simulation.on('tick', this.tick());
+  }
+
+  private drawGraphElements(): void {
+    // Update width (todo add update height)np
+    const dynamicWidth = d3.select('#graph').node().getBoundingClientRect().width;
+    this.svg.attr('width', dynamicWidth);
+    this.simulation.force('center', d3.forceCenter(dynamicWidth / 2, this.chartHeight / 2));
 
     // Extract Links and create link force
     this.extractLinks();
-    simulation.force('link', d3.forceLink(this.data.links));
+    this.simulation.force('link', d3.forceLink(this.data.links));
 
-    // Create Links
-    svg.append('defs')
+    // Append SVG Content
+    this.svgContent.append('defs')
       .append('svg:marker')
       .attr('id', 'arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', circleRadius / 16)
+      .attr('refX', this.circleRadius / 16)
       .attr('refY', 0)
-      .attr('markerWidth', circleRadius / 8)
-      .attr('markerHeight', circleRadius / 8)
+      .attr('markerWidth', this.circleRadius / 8)
+      .attr('markerHeight', this.circleRadius / 8)
       .attr('orient', 'auto')
       .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5')
       .style('fill', '#999999');
 
-    this.linksSelection = svg.selectAll('polyline')
-      .data(this.data.links)
-      .enter()
+    // Create Links
+    const linkUpdateSelection = this.svgContent.selectAll('polyline')
+      .data(this.data.links, this.getLinkId);
+    this.linksSelection = linkUpdateSelection.enter()
       .append('polyline')
       .attr('stroke', '#999999')
       .attr('stroke-opacity', 0.6)
       .attr('stroke-width', 4)
-      .attr('marker-mid', 'url(#arrow)');
+      .attr('marker-mid', 'url(#arrow)')
+      .merge(linkUpdateSelection);
 
     // Create Nodes
-    this.nodesSelection = svg.selectAll('g.couple')
-      .data(this.data.nodes)
+    const nodesUpdateSelection = this.svgContent.selectAll('g.couple')
+      .data(this.data.nodes, this.getNodeId);
+    this.nodesSelection = nodesUpdateSelection
       .enter()
       .append('g')
-      .classed('couple', true);
+      .classed('couple', true)
+      .merge(nodesUpdateSelection);
 
-    this.nodesSelection.on('contextmenu', (e, d) => {
-      const type = e.target.className.baseVal;
-
-      if (type === 'primary' || type === 'child') {
-        this.lastSelectedId = d.primaryParentId;
-      } else if (type === 'partner') {
-        this.lastSelectedId = d.partnerParentId;
-      }
-
-      this.coordinates = {x: e.clientX, y: e.clientY};
-    });
-
+    // Configure Node Dragging
     this.nodesSelection.call(d3.drag()
       .on('start', (e, d) => {
-        simulation.stop();
+        this.simulation.stop();
         this.resetCoordinates();
       })
       .on('drag', (e, d) => {
         d.x = e.x;
         d.y = e.y;
-        // d3.select(this).raise().attr('transform', d => `translate(${d.x},${d.y})`);
         this.tick()();
       })
       .on('end', (e, d) => {
         this.tick()();
-        simulation.restart();
-        simulation.alpha(0.1);
+        this.simulation.restart();
+        this.simulation.alpha(0.1);
       }));
 
     const primaryParentCoupleNodes = this.nodesSelection.filter(d => !!d.partnerParentId);
@@ -213,98 +223,97 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
     primaryParentCoupleNodes.append('text')
       .attr('text-anchor', 'end')
-      .attr('font-size', `${fontSize}`)
-      .attr('x', -circleRadius / 3)
-      .attr('y', circleRadius + strokeWidth + fontSize)
+      .attr('font-size', `${this.fontSize}`)
+      .attr('x', -this.circleRadius / 3)
+      .attr('y', this.circleRadius + this.strokeWidth + this.fontSize)
       .text(d => d.primaryParentName);
 
     partnerParentCoupleNodes.append('text')
       .attr('text-anchor', 'start')
-      .attr('font-size', `${fontSize}`)
-      .attr('x', circleRadius / 3)
-      .attr('y', circleRadius + strokeWidth + fontSize)
+      .attr('font-size', `${this.fontSize}`)
+      .attr('x', this.circleRadius / 3)
+      .attr('y', this.circleRadius + this.strokeWidth + this.fontSize)
       .text(d => d.partnerParentName);
 
     childNodes.append('text')
       .attr('text-anchor', 'middle')
-      .attr('font-size', `${fontSize}`)
+      .attr('font-size', `${this.fontSize}`)
       .attr('x', 0)
-      .attr('y', circleRadius * childRatio + fontSize + 1)
+      .attr('y', this.circleRadius * this.childRatio + this.fontSize + 1)
       .text(d => d.primaryParentName);
 
+    // Draw Parent Node Link
     const parentsLinks = this.nodesSelection.filter(d => !!d.partnerParentId);
     parentsLinks.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', '#000')
-      .attr('stroke-width', 2 * strokeWidth)
-      .attr('r', circleRadius * childRatio);
+      .attr('stroke-width', 2 * this.strokeWidth)
+      .attr('r', this.circleRadius * this.childRatio);
 
-    childNodes.append('circle')
-      .attr('fill', '#fff')
-      .attr('stroke', d => this.getStrokeColor(d.primaryParentId))
-      .attr('stroke-width', strokeWidth)
-      .attr('r', circleRadius * childRatio);
-
-    // Create primary parents
+    // Draw primary parents
     primaryParentCoupleNodes.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', d => this.getStrokeColor(d.primaryParentId))
-      .attr('stroke-width', strokeWidth)
-      .attr('r', circleRadius)
-      .attr('transform', `translate(${-circleRadius - (strokeWidth * 0.5)}, 0)`);
+      .attr('stroke-width', this.strokeWidth)
+      .attr('r', this.circleRadius)
+      .attr('transform', `translate(${-this.circleRadius - (this.strokeWidth * 0.5)}, 0)`);
 
-    // Create Partners
+    // Draw Partners
     partnerParentCoupleNodes.append('circle')
       .attr('fill', '#fff')
       .attr('stroke', d => this.getStrokeColor(d.partnerParentId))
-      .attr('stroke-width', strokeWidth)
-      .attr('r', circleRadius)
-      .attr('transform', `translate(${circleRadius + (strokeWidth * 0.5)}, 0)`);
+      .attr('stroke-width', this.strokeWidth)
+      .attr('r', this.circleRadius)
+      .attr('transform', `translate(${this.circleRadius + (this.strokeWidth * 0.5)}, 0)`);
 
-    // Images
+    // Draw Children
+    childNodes.append('circle')
+      .attr('fill', '#fff')
+      .attr('stroke', d => this.getStrokeColor(d.primaryParentId))
+      .attr('stroke-width', this.strokeWidth)
+      .attr('r', this.circleRadius * this.childRatio);
+
+    // Draw Images
     const primaryParentImage = primaryParentCoupleNodes.append('svg:image')
-      .classed('primary', true)
-      .attr('x', -imageRadius - circleRadius - (strokeWidth * 0.5))
-      .attr('y', -imageRadius)
-      .attr('width', 2 * imageRadius)
-      .attr('height', 2 * imageRadius)
-      .attr('xlink:href', image)
+      .attr('x', -this.imageRadius - this.circleRadius - (this.strokeWidth * 0.5))
+      .attr('y', -this.imageRadius)
+      .attr('width', 2 * this.imageRadius)
+      .attr('height', 2 * this.imageRadius)
+      .attr('xlink:href', this.image)
       .style('cursor', 'pointer');
 
     const partnerParentImage = partnerParentCoupleNodes.append('svg:image')
-      .classed('partner', true)
-      .attr('transform', `translate(${-imageRadius})`, 0)
-      .attr('x', circleRadius + (strokeWidth * 0.5))
-      .attr('y', -imageRadius)
-      .attr('width', 2 * imageRadius)
-      .attr('height', 2 * imageRadius)
-      .attr('xlink:href', image)
+      .attr('transform', `translate(${-this.imageRadius})`, 0)
+      .attr('x', this.circleRadius + (this.strokeWidth * 0.5))
+      .attr('y', -this.imageRadius)
+      .attr('width', 2 * this.imageRadius)
+      .attr('height', 2 * this.imageRadius)
+      .attr('xlink:href', this.image)
       .style('cursor', 'pointer');
 
     const childImage = childNodes.append('svg:image')
-      .classed('child', true)
-      .attr('x', -imageRadius * childRatio)
-      .attr('y', -imageRadius * childRatio)
-      .attr('width', 2 * imageRadius * childRatio)
-      .attr('height', 2 * imageRadius * childRatio)
-      .attr('xlink:href', image)
+      .attr('x', -this.imageRadius * this.childRatio)
+      .attr('y', -this.imageRadius * this.childRatio)
+      .attr('width', 2 * this.imageRadius * this.childRatio)
+      .attr('height', 2 * this.imageRadius * this.childRatio)
+      .attr('xlink:href', this.image)
       .style('cursor', 'pointer');
 
     // Events
     primaryParentImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut);
-    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('mouseout', this.handleImageMouseOut)
+      .on('contextmenu', (e, d) => this.handleImageRightClick(e, d, true));
 
     partnerParentImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut);
-    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.partnerParentId));
+      .on('mouseout', this.handleImageMouseOut)
+      .on('contextmenu', (e, d) => this.handleImageRightClick(e, d, false));
 
     childImage
       .on('mouseover', this.handleImageMouseOver)
-      .on('mouseout', this.handleImageMouseOut);
-    // .on('contextmenu', (e, d) => this.displayMemberInfo(d.primaryParentId));
+      .on('mouseout', this.handleImageMouseOut)
+      .on('contextmenu', (e, d) => this.handleImageRightClick(e, d, true));
 
 
     // titles
@@ -316,9 +325,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
     partnerParentImage.append('title')
       .text(d => d.partnerParentName);
-
-    // on tick
-    simulation.on('tick', this.tick());
   }
 
   private tick(): () => void {
@@ -334,6 +340,24 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
       self.nodesSelection.attr('transform', d => `translate(${d.x}, ${d.y})`);
     };
+  }
+
+  private getLinkId(link): number {
+    return +('' + link.source.primaryParentId + link.source.partnerParentId + link.target.primaryParentId + link.target.partnerParentId);
+  }
+
+  private getNodeId(node): number {
+    return +('' + node.primaryParentId + node.partnerParentId);
+  }
+
+  private handleImageRightClick(event, data, isPrimary): void {
+    if (isPrimary) {
+      this.lastSelectedId = data.primaryParentId;
+    } else {
+      this.lastSelectedId = data.partnerParentId;
+    }
+
+    this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary};
   }
 
   private handleImageMouseOver(event, data): void {
@@ -389,8 +413,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   }
 
   private resetCoordinates(): void {
-    if (this.coordinates) {
-      this.coordinates = null;
+    if (this.rightClickInfo) {
+      this.rightClickInfo = null;
     }
   }
 }
