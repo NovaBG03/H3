@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FamilyMember, FamilyMemberDataDTO, Gender} from '../../shared/dtos.model';
+import {Couple, FamilyMember, FamilyMemberDataDTO, Gender} from '../../shared/dtos.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {MemberService} from '../member.service';
@@ -11,8 +11,9 @@ import {MemberService} from '../member.service';
 })
 export class MemberItemComponent implements OnInit {
   @Input() treeId: number;
-  @Input('familyMember') member: FamilyMember; // if is null -> creating new user
+  @Input() familyMember: FamilyMember; // if is null -> creating new user
   @Input() isOwner: boolean;
+  @Input() parentCouple: Couple;
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
   isNotNew = true;
@@ -24,8 +25,8 @@ export class MemberItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.member) {
-      this.member = new FamilyMember(null,
+    if (!this.familyMember) {
+      this.familyMember = new FamilyMember(null,
         '',
         '',
         null,
@@ -136,10 +137,12 @@ export class MemberItemComponent implements OnInit {
       // });
 
       // todo dont send request for all members
-      this.memberService.updateMember(this.treeId, this.member.id, familyMemberDataDTO)
+      this.memberService
+        .updateMember(this.treeId, this.familyMember.id, familyMemberDataDTO)
         .subscribe(familyMember => this.finishEditing.emit(true));
     } else {
-      this.memberService.createMember(this.treeId, familyMemberDataDTO, 0, 0)
+      this.memberService
+        .createMember(this.treeId, familyMemberDataDTO, this.parentCouple.primaryParentId, this.parentCouple.partnerParentId)
         .subscribe(familyMember => this.finishEditing.emit(true));
     }
 
@@ -147,27 +150,27 @@ export class MemberItemComponent implements OnInit {
 
 
   onDelete(): void {
-    this.memberService.deleteMember(this.treeId, this.member.id)
+    this.memberService.deleteMember(this.treeId, this.familyMember.id)
       .subscribe(message => this.finishEditing.emit(true));
   }
 
   private initForm(): void {
-    const birthday = this.member.birthday;
+    const birthday = this.familyMember.birthday;
     let ngbBirthday = null;
     if (birthday) {
       ngbBirthday = new NgbDate(birthday.getUTCFullYear(), birthday.getUTCMonth() + 1, birthday.getUTCDate());
     }
 
-    const dateOfDeath = this.member.dateOfDeath;
+    const dateOfDeath = this.familyMember.dateOfDeath;
     let ngbDateOfDeath = null;
     if (dateOfDeath) {
       ngbDateOfDeath = new NgbDate(dateOfDeath.getUTCFullYear(), dateOfDeath.getUTCMonth() + 1, dateOfDeath.getUTCDate());
     }
 
     this.memberForm = new FormGroup({
-      firstName: new FormControl(this.member.firstName),
-      lastName: new FormControl(this.member.lastName),
-      gender: new FormControl(this.member.gender),
+      firstName: new FormControl(this.familyMember.firstName),
+      lastName: new FormControl(this.familyMember.lastName),
+      gender: new FormControl(this.familyMember.gender),
       birthday: new FormControl(ngbBirthday),
       dateOfDeath: new FormControl(ngbDateOfDeath),
     });

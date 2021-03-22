@@ -1,7 +1,7 @@
 <div class="backdrop">
   <div class="alert-box">
     <div class="alert-box-header">
-      <h3>Member</h3>
+      <h3>{{ parentCouple ? 'Add Child' : 'Member' }}</h3>
     </div>
     <div class="alert-box-content">
       <form [formGroup]="memberForm" (ngSubmit)="onSave()">
@@ -37,7 +37,7 @@
             <input *ngIf="!isOwner"
                    type="text"
                    class="form-control"
-                   [value]="member.gender"
+                   [value]="familyMember.gender"
                    readonly="readonly">
           </div>
         </div>
@@ -63,7 +63,7 @@
             </div>
             <input type="text"
                    class="form-control"
-                   [value]="member.birthday ? (member.birthday | date) : 'unknown'"
+                   [value]="familyMember.birthday ? (familyMember.birthday | date) : 'unknown'"
                    readonly="readonly">
           </div>
         </div>
@@ -89,7 +89,7 @@
             </div>
             <input type="text"
                    class="form-control"
-                   [value]="member.dateOfDeath ? (member.dateOfDeath | date) : 'unknown'"
+                   [value]="familyMember.dateOfDeath ? (familyMember.dateOfDeath | date) : 'unknown'"
                    readonly="readonly">
           </div>
         </div>

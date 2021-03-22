@@ -16,6 +16,8 @@ import * as d3 from 'd3';
 export class ViewGraphComponent implements OnInit, OnDestroy {
   treeId: number;
   couples: Couple[];
+
+  editingCouple: Couple = null;
   editingMember: FamilyMember = null;
   isCreatingMember = false;
   isOwner: boolean;
@@ -27,7 +29,9 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       nodes: [],
       links: []
     };
-  private lastSelectedId: number = null;
+
+  private lastSelectedMemberId: number = null;
+  private lastSelectedCouple: Couple = null;
   private userSub: Subscription;
 
   private simulation;
@@ -83,12 +87,20 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   }
 
   onEditMember(): void {
-    const id = this.lastSelectedId;
+    const id = this.lastSelectedMemberId;
     const member = this.familyMembers.find(f => f.id === id);
     this.editingMember = member;
   }
 
+  onAddChild(): void {
+    this.editingCouple = this.lastSelectedCouple;
+    this.isCreatingMember = true;
+  }
+
   onFinishEditing(isChanged: boolean): void {
+    this.lastSelectedCouple = null;
+    this.editingCouple = null;
+    this.lastSelectedMemberId = null;
     this.editingMember = null;
     this.isCreatingMember = false;
     if (isChanged) {
@@ -351,10 +363,12 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   }
 
   private handleImageRightClick(event, data, isPrimary): void {
+    this.lastSelectedCouple = data;
+
     if (isPrimary) {
-      this.lastSelectedId = data.primaryParentId;
+      this.lastSelectedMemberId = data.primaryParentId;
     } else {
-      this.lastSelectedId = data.partnerParentId;
+      this.lastSelectedMemberId = data.partnerParentId;
     }
 
     this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary};

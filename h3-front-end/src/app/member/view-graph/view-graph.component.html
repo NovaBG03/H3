@@ -18,9 +18,11 @@
                  [familyMember]="editingMember"
                  [treeId]="treeId"
                  [isOwner]="isOwner"
+                 [parentCouple]="editingCouple"
                  (finishEditing)="onFinishEditing($event)"></app-member-item>
 
-<app-member-contextmenu [rightClickInfo]="this.rightClickInfo" (memberInfo)="onEditMember()">
-</app-member-contextmenu>
+<app-member-contextmenu [rightClickInfo]="this.rightClickInfo"
+                        (memberInfo)="onEditMember()"
+                        (addChild)="onAddChild()"></app-member-contextmenu>
 
 <div id="graph"></div>

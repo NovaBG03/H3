@@ -9,6 +9,7 @@ export class MemberContextmenuComponent implements AfterViewInit {
 
   @ViewChild('h3Contextmenu', {read: ElementRef}) elementRef: ElementRef;
   @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
+  @Output() addChild: EventEmitter<void> = new EventEmitter<void>();
 
   isPrimary: boolean;
 
@@ -33,6 +34,10 @@ export class MemberContextmenuComponent implements AfterViewInit {
 
   onMemberInfoClicked(): void {
     this.memberInfo.emit();
+  }
+
+  onAddChildClicked(): void {
+    this.addChild.emit();
   }
 
   private hideElement(): void {
