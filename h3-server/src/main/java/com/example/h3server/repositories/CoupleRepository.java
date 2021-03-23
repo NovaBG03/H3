@@ -14,11 +14,6 @@ import java.util.List;
 @Repository
 public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
 
-    // @Query(value = "")
-    // void addChildren(@Param("primary_parent_id") int primaryParentId,
-    //                @Param("partner_parent_id") int partnerParentId,
-    //                @Param("child_id") int childId);
-
     @Query(value = "select lft from nested_family as nf " +
             "where nf.primary_parent_id = :primary_parent_id " +
             "and nf.partner_parent_id = :partner_parent_id " +
@@ -64,4 +59,23 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
             nativeQuery = true)
     int getBiggestRightIndex(@Param("tree_id") Long treeId);
 
+
+    @Query(value = "select * from nested_family as nf where nf.primary_parent_id = :primary_parent_id",
+            nativeQuery = true)
+    List<Couple> findByPrimaryParentId(@Param("primary_parent_id") Long primaryParentId);
+
+    @Modifying
+    @Query("update nested_family set partner_parent_id = :new_partner_id " +
+            "where primary_parent_id = :primary_parent_id " +
+            "and partner_parent_id = :initial_partner_id " +
+            "and family_tree_id = :tree_id")
+    void changePartnerParentId(@Param("tree_id") Long id,
+                               @Param("primary_parent_id") Long primaryParentId,
+                               @Param("initial_partner_id") Long initialPartnerId,
+                               @Param("new_partner_id") Long newPartnerId);
+
+    @Query(value = "select * from nested_family as nf where nf.lft = " +
+            "(select max(nf.lft) from nested_family as nf where nf.lft < :child_lft and nf.rgt > :child_rgt)",
+            nativeQuery = true)
+    Couple findParentCouple(@Param("child_lft") Integer leftIndex, @Param("child_rgt") Integer rightIndex);
 }

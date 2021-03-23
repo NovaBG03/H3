@@ -38,6 +38,7 @@ FamilyMemberController:
   addMember: Add new Member to existing Family Tree
   updateMember: Updates already existing Member in Family Tree
   deleteMember: Deletes already existing Member from Family Tree
+  addPartner: Add new Parent to existing Couple
 
 PublicController:
   ping: Checks whether the server is working

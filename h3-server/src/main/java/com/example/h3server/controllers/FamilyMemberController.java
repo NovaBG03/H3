@@ -111,6 +111,30 @@ public class FamilyMemberController {
         return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
     }
 
+    @PostMapping("/partner")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyMemberController.addPartner}",
+            response = FamilyMemberResponseDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong / " +
+                    "First name must be from 3 to 225 symbols / " +
+                    "Last name must be from 3 to 225 symbols"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The family tree doesn't exist / " +
+                    "Invalid father id / " +
+                    "Invalid mother id"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public FamilyMemberResponseDTO addPartner(@PathVariable Long treeId,
+                                             @RequestParam Long primaryParentId,
+                                             @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
+                                             @ApiIgnore Principal principal) {
+        FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
+        FamilyMember newMember = familyMemberService
+                .addPartner(treeId, familyMember, primaryParentId, principal.getName());
+        return FamilyMemberMapper.INSTANCE.familyMemberToFamilyMemberResponseDTO(newMember);
+    }
+
     @DeleteMapping("/{memberId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FamilyMemberController.deleteMember}",

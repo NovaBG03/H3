@@ -12,6 +12,7 @@ import com.example.h3server.utils.ModelValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -93,7 +94,26 @@ public class FamilyMemberService {
         ModelValidator.validate(familyMember);
         final FamilyMember savedMember = familyMemberRepository.save(familyMember);
 
-        coupleService.addChildToNestedTree(familyTree, primaryParentId, partnerParentId, familyMember.getId());
+        coupleService.addChild(familyTree, primaryParentId, partnerParentId, familyMember.getId());
+
+        return savedMember;
+    }
+
+    @Transactional
+    public FamilyMember addPartner(Long treeId, FamilyMember familyMember, Long primaryParentId, String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+
+        familyMember.setId(null);
+
+        ModelValidator.validate(familyMember);
+        final FamilyMember savedMember = familyMemberRepository.save(familyMember);
+
+        coupleService.addPartner(familyTree, primaryParentId, savedMember.getId());
 
         return savedMember;
     }
