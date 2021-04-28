@@ -7,7 +7,8 @@ import {
   CoupleListDTO,
   CoupleResponseDTO,
   FamilyMember,
-  FamilyMemberDataDTO, FamilyMemberListDTO,
+  FamilyMemberDataDTO,
+  FamilyMemberListDTO,
   FamilyMemberResponseDTO,
   Gender,
   MessageDTO
@@ -51,6 +52,16 @@ export class MemberService {
       params: new HttpParams()
         .append('primaryParentId', String(primaryParentId))
         .append('partnerParentId', String(partnerParentId))
+    })
+      .pipe(map(familyMemberResponseDTO => {
+        return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);
+      }));
+  }
+
+  addPartner(treeId: number, newPartner: FamilyMemberDataDTO, primaryParentId: number): Observable<FamilyMember> {
+    return this.http.post<FamilyMemberResponseDTO>(`${environment.domain}/trees/${treeId}/members/partner`, newPartner, {
+      params: new HttpParams()
+        .append('primaryParentId', String(primaryParentId))
     })
       .pipe(map(familyMemberResponseDTO => {
         return this.mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO);

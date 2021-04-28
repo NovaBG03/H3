@@ -20,10 +20,11 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   editingCouple: Couple = null;
   editingMember: FamilyMember = null;
   isCreatingMember = false;
+  isCreatingPartner = false;
   isOwner: boolean;
   familyMembers: FamilyMember[];
 
-  rightClickInfo: { x: number, y: number, isPrimary: boolean } = null;
+  rightClickInfo: { x: number, y: number, isPrimary: boolean, isMain: boolean } = null;
   data: Graph =
     {
       nodes: [],
@@ -97,12 +98,18 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.isCreatingMember = true;
   }
 
+  onAddPartner(): void {
+    this.editingCouple = this.lastSelectedCouple;
+    this.isCreatingPartner = true;
+  }
+
   onFinishEditing(isChanged: boolean): void {
     this.lastSelectedCouple = null;
     this.editingCouple = null;
     this.lastSelectedMemberId = null;
     this.editingMember = null;
     this.isCreatingMember = false;
+    this.isCreatingPartner = false;
     if (isChanged) {
       this.loadMembers();
     }
@@ -371,7 +378,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       this.lastSelectedMemberId = data.partnerParentId;
     }
 
-    this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary};
+    this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary, isMain: 1 === data.leftIndex};
   }
 
   private handleImageMouseOver(event, data): void {

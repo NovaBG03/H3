@@ -14,15 +14,17 @@
   <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>
 </div>
 
-<app-member-item *ngIf="editingMember || isCreatingMember"
+<app-member-item *ngIf="editingMember || isCreatingMember || isCreatingPartner"
                  [familyMember]="editingMember"
                  [treeId]="treeId"
                  [isOwner]="isOwner"
                  [parentCouple]="editingCouple"
+                 [isNewPartner]="isCreatingPartner"
                  (finishEditing)="onFinishEditing($event)"></app-member-item>
 
 <app-member-contextmenu [rightClickInfo]="this.rightClickInfo"
                         (memberInfo)="onEditMember()"
-                        (addChild)="onAddChild()"></app-member-contextmenu>
+                        (addChild)="onAddChild()"
+                        (addPartner)="onAddPartner()"></app-member-contextmenu>
 
 <div id="graph"></div>

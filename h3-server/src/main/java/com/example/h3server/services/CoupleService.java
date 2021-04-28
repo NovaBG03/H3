@@ -5,6 +5,7 @@ import com.example.h3server.models.Couple;
 import com.example.h3server.models.CoupleId;
 import com.example.h3server.models.FamilyTree;
 import com.example.h3server.repositories.CoupleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CoupleService {
 
     private final CoupleRepository coupleRepository;
@@ -122,6 +124,8 @@ public class CoupleService {
 
             if (parentCouple == null) {
                 // should add new main member
+                log.warn("Should add new Main member!");
+                return;
             }
 
             this.addChildWithPartner(familyTree,

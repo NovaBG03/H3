@@ -2,7 +2,7 @@
   <ul>
     <li (click)="onMemberInfoClicked()">Member Info</li>
     <li (click)="onAddChildClicked()">Add Child</li>
-    <li *ngIf="isPrimary">Add Partner</li>
+    <li *ngIf="isPrimary && !isMain" (click)="onAddPartner()">Add Partner</li>
     <li class="h3-separator"></li>
     <li>Delete</li>
   </ul>

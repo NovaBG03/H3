@@ -107,9 +107,7 @@ public class FamilyMemberService {
             throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
         }
 
-
         familyMember.setId(null);
-
         ModelValidator.validate(familyMember);
         final FamilyMember savedMember = familyMemberRepository.save(familyMember);
 

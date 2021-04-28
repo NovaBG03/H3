@@ -14,6 +14,7 @@ export class MemberItemComponent implements OnInit {
   @Input() familyMember: FamilyMember; // if is null -> creating new user
   @Input() isOwner: boolean;
   @Input() parentCouple: Couple;
+  @Input() isNewPartner = false;
   memberForm: FormGroup;
   genders: string[] = Object.values(Gender);
   isNotNew = true;
@@ -66,77 +67,11 @@ export class MemberItemComponent implements OnInit {
       value.gender.toUpperCase()
     );
 
-    if (this.isNotNew) {
-
-      // // some big brain stuff
-      // const childrenToUpdate: FamilyMember[] = [];
-      // const partnersToUpdate: FamilyMember[] = this.member.partners.map(id => this.familyMembers.getMember(id));
-      // for (let i = 0; i < value.partners.length; i++) {
-      //   const partner = this.familyMembers.getMember(value.partners[i].id);
-      //
-      //   const partnerIndex = partnersToUpdate.indexOf(partner);
-      //   if (partnerIndex > -1) {
-      //     partnersToUpdate.splice(partnerIndex, 1);
-      //   }
-      //
-      //   const multipleChildrenToRemove = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
-      //   for (const child of value.children[i]) {
-      //     const childMember = this.familyMembers.getMember(child.id);
-      //
-      //     const childIndex = multipleChildrenToRemove.indexOf(childMember);
-      //     if (childIndex > -1) {
-      //       multipleChildrenToRemove.splice(childIndex, 1);
-      //     }
-      //
-      //     if (this.member.isDirectHeir || this.member.id === this.familyMembers.mainMember.id) {
-      //       if (childMember.primaryParentId !== this.member.id || childMember.secondaryParentId !== partner.id) {
-      //         childMember.primaryParentId = this.member.id;
-      //         childMember.secondaryParentId = partner.id;
-      //         childrenToUpdate.push(childMember);
-      //       }
-      //     } else {
-      //       if (childMember.primaryParentId !== partner.id || childMember.secondaryParentId !== this.member.id) {
-      //         childMember.primaryParentId = partner.id;
-      //         childMember.secondaryParentId = this.member.id;
-      //         childrenToUpdate.push(childMember);
-      //       }
-      //     }
-      //   }
-      //
-      //   for (const multipleChild of multipleChildrenToRemove) {
-      //     if (!childrenToUpdate.includes(multipleChild)) {
-      //       multipleChild.primaryParentId = null;
-      //       multipleChild.secondaryParentId = null;
-      //       childrenToUpdate.push(multipleChild);
-      //     }
-      //   }
-      // }
-      //
-      // for (const partner of partnersToUpdate) {
-      //   const multipleChildren = this.familyMembers.getMultipleChildren(this.member.id, partner.id);
-      //   for (const multipleChild of multipleChildren) {
-      //     if (!childrenToUpdate.includes(multipleChild)) {
-      //       multipleChild.primaryParentId = null;
-      //       multipleChild.secondaryParentId = null;
-      //       childrenToUpdate.push(multipleChild);
-      //     }
-      //   }
-      // }
-      //
-      // // TODO update members in one request
-      // childrenToUpdate.map(child => {
-      //   this.memberService.updateMember(this.treeId, child.id, new FamilyMemberDataDTO(
-      //     child.firstName,
-      //     child.lastName,
-      //     child.birthday !== null ? child.birthday.toJSON() : null,
-      //     child.dateOfDeath !== null ? child.dateOfDeath.toJSON() : null,
-      //     child.gender.toUpperCase(),
-      //     child.primaryParentId,
-      //     child.secondaryParentId
-      //   )).subscribe();
-      // });
-
-      // todo dont send request for all members
+    if (this.isNewPartner) {
+      this.memberService
+        .addPartner(this.treeId, familyMemberDataDTO, this.parentCouple.primaryParentId)
+        .subscribe(familyMember => this.finishEditing.emit(true));
+    } else if (this.isNotNew) {
       this.memberService
         .updateMember(this.treeId, this.familyMember.id, familyMemberDataDTO)
         .subscribe(familyMember => this.finishEditing.emit(true));

@@ -10,19 +10,22 @@ export class MemberContextmenuComponent implements AfterViewInit {
   @ViewChild('h3Contextmenu', {read: ElementRef}) elementRef: ElementRef;
   @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
   @Output() addChild: EventEmitter<void> = new EventEmitter<void>();
+  @Output() addPartner: EventEmitter<void> = new EventEmitter<void>();
 
   isPrimary: boolean;
+  isMain: boolean;
 
   constructor(private renderer: Renderer2) {
   }
 
-  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean }) {
+  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean, isMain: boolean }) {
     if (!this.elementRef) {
       return;
     }
 
     if (info) {
       this.isPrimary = info.isPrimary;
+      this.isMain = info.isMain;
       this.showElement(info.x, info.y);
     } else {
       this.hideElement();
@@ -38,6 +41,10 @@ export class MemberContextmenuComponent implements AfterViewInit {
 
   onAddChildClicked(): void {
     this.addChild.emit();
+  }
+
+  onAddPartner(): void {
+    this.addPartner.emit();
   }
 
   private hideElement(): void {
