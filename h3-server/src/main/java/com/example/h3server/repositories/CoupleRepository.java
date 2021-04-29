@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,14 +24,21 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
                            @Param("primary_parent_id") Long primaryParentId,
                            @Param("partner_parent_id") Long partnerParentId);
 
-
     @Modifying
     @Query("update nested_family set rgt = rgt + 2 where rgt > :parentLeft and family_tree_id = :tree_id")
-    void moveAllRightIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
+    void moveForwardAllRightIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
 
     @Modifying
     @Query("update nested_family set lft = lft + 2 where lft > :parentLeft and family_tree_id = :tree_id")
-    void moveAllLeftIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
+    void moveForwardAllLeftIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
+
+    @Modifying
+    @Query("update nested_family set rgt = rgt - 2 where rgt > :parentLeft and family_tree_id = :tree_id")
+    void moveBackAllRightIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
+
+    @Modifying
+    @Query("update nested_family set lft = lft - 2 where lft > :parentLeft and family_tree_id = :tree_id")
+    void moveBackAllLeftIndexesAfter(@Param("tree_id") Long treeId, @Param("parentLeft") Integer index);
 
     @Query(value = "select nf.primary_parent_id as primaryParentId, " +
             "nf.partner_parent_id as partnerParentId, " +
@@ -55,14 +63,15 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
             nativeQuery = true)
     List<CoupleInterface> getAllCouples(@Param("tree_id") Long treeId);
 
-    @Query(value = "SELECT max(nf.rgt) FROM NESTED_FAMILY as nf",
+    @Query(value = "SELECT max(nf.rgt) FROM NESTED_FAMILY as nf where nf.family_tree_id = :tree_id",
             nativeQuery = true)
     int getBiggestRightIndex(@Param("tree_id") Long treeId);
 
-
-    @Query(value = "select * from nested_family as nf where nf.primary_parent_id = :primary_parent_id",
+    @Query(value = "select * from nested_family as nf " +
+            "where nf.primary_parent_id = :primary_parent_id and nf.family_tree_id = :tree_id",
             nativeQuery = true)
-    List<Couple> findByPrimaryParentId(@Param("primary_parent_id") Long primaryParentId);
+    List<Couple> findByPrimaryParentId(@Param("tree_id") Long treeId,
+                                       @Param("primary_parent_id") Long primaryParentId);
 
     @Modifying
     @Query("update nested_family set partner_parent_id = :new_partner_id " +
@@ -75,7 +84,11 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
                                @Param("new_partner_id") Long newPartnerId);
 
     @Query(value = "select * from nested_family as nf where nf.lft = " +
-            "(select max(nf.lft) from nested_family as nf where nf.lft < :child_lft and nf.rgt > :child_rgt)",
+            "(select max(nf.lft) from nested_family as nf where nf.lft < :child_lft and nf.rgt > :child_rgt) " +
+            "where nf.family_tree_id = :tree_id",
             nativeQuery = true)
-    Couple findParentCouple(@Param("child_lft") Integer leftIndex, @Param("child_rgt") Integer rightIndex);
+    Couple findParentCouple(@Param("tree_id") Long id,
+                            @Param("child_lft") Integer leftIndex,
+                            @Param("child_rgt") Integer rightIndex);
+
 }

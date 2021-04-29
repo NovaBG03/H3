@@ -76,6 +76,19 @@ export class MemberItemComponent implements OnInit {
         .updateMember(this.treeId, this.familyMember.id, familyMemberDataDTO)
         .subscribe(familyMember => this.finishEditing.emit(true));
     } else {
+      if (!this.parentCouple || (!this.parentCouple.primaryParentId && !this.parentCouple.partnerParentId)) {
+        this.parentCouple = {
+          primaryParentId: 0,
+          partnerParentId: 0,
+          depthIndex: null,
+          leftIndex: null,
+          rightIndex: null,
+          partnerParentName: null,
+          primaryParentName: null,
+          treeId: null
+        };
+      }
+
       this.memberService
         .createMember(this.treeId, familyMemberDataDTO, this.parentCouple.primaryParentId, this.parentCouple.partnerParentId)
         .subscribe(familyMember => this.finishEditing.emit(true));

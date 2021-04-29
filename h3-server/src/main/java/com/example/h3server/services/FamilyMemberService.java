@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -87,7 +88,13 @@ public class FamilyMemberService {
             throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
         }
 
-        // todo validate parent ids (primaryParentId > 0 && partnerParentId >= 0)
+        if (primaryParentId.equals(0) && partnerParentId.equals(0)) {
+            if (familyTree.getCouples().size() == 0) {
+                return this.addMainMember(treeId, familyMember, username);
+            } else {
+                throw new CustomException("Invalid parent id", HttpStatus.BAD_REQUEST);
+            }
+        }
 
         familyMember.setId(null);
 
@@ -133,56 +140,21 @@ public class FamilyMemberService {
         return savedMember;
     }
 
+    @Transactional
     public void deleteMember(Long treeId, Long memberId, String username) {
-        // todo fix
 
-//        FamilyTree familyTree = getTreeOrThrowException(treeId);
-//
-//        if (!familyTree.getUser().getUsername().equals(username)) {
-//            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
-//        }
-//
-//        FamilyMember memberFromDb = familyTree.getFamilyMember(memberId);
-//        if (memberFromDb == null) {
-//            throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
-//        }
-//
-//        familyTree.getFamilyMembers()
-//                .stream()
-//                .filter(member -> member.getPrimaryParent() != null
-//                        && member.getPrimaryParent().getId().equals(memberId))
-//                .forEach(member -> member.setPrimaryParent(null));
-//
-//        familyTree.getFamilyMembers()
-//                .stream()
-//                .filter(member -> member.getSecondaryParent() != null
-//                        && member.getSecondaryParent().getId().equals(memberId))
-//                .forEach(member -> member.setSecondaryParent(null));
-//
-//        familyTreeRepository.save(familyTree);
-//        familyMemberRepository.delete(memberFromDb);
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+        Collection<Long> memberIdsToDelete = coupleService.deleteMember(familyTree, memberId);
+
+        for (Long id: memberIdsToDelete) {
+            familyMemberRepository.deleteById(id);
+        }
     }
-
-//    private FamilyMember findParent(FamilyMember parent, FamilyTree familyTree, Boolean isFather) {
-//        if (parent == null) {
-//            return null;
-//        }
-//
-//        Long parentId = parent.getId();
-//        if (parentId == null) {
-//            return null;
-//        }
-//
-//        String errorMessage = "Invalid " + (isFather ? "father" : "mother") + " id";
-//
-//        FamilyMember foundParent = familyTree.getFamilyMember(parentId);
-//
-//        if (foundParent == null) {
-//            throw new CustomException(errorMessage, HttpStatus.NOT_FOUND);
-//        }
-//
-//        return foundParent;
-//    }
 
     private FamilyTree getTreeOrThrowException(Long treeId) {
         return familyTreeRepository.findById(treeId)

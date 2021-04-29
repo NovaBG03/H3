@@ -59,4 +59,8 @@ public class Couple {
         this.rightIndex = rightIndex;
         this.depthIndex = depthIndex;
     }
+
+    public boolean hasChildren() {
+        return this.getRightIndex() - this.getLeftIndex() != 1;
+    }
 }
