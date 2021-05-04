@@ -119,7 +119,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.isCreatingMember = false;
     this.isCreatingPartner = false;
     if (isChanged) {
-      this.loadMembers();
+      // this.loadMembers();
+      window.location.reload();
     }
   }
 
@@ -127,16 +128,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
   }
 
-  // private remove(): void {
-  //   this.chart.on('click', (sender, node) => {
-  //     const currentNode = node.node;
-  //     this.editingMember = this.familyMembers.getMember(currentNode.id);
-  //   });
-  // }
-
   private loadMembers(): void {
     this.memberService.getCouples(this.treeId).subscribe(couples => {
-      // this.couples = couples;
       this.data.nodes = couples;
       if (this.data.nodes.length > 0) {
         this.memberService.getFamilyMembers(this.treeId).subscribe(familyMembers => {
