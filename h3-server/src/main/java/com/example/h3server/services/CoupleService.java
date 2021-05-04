@@ -156,9 +156,8 @@ public class CoupleService {
                 .stream()
                 .filter(couple -> couple.getPartnerParentId().equals(memberId))
                 .collect(Collectors.toList());
-        // this.coupleRepository.deleteAll(partnerCouples);
         for (Couple couple : partnerCouples) {
-            this.deletePartnerParent(familyTree, couple);
+            membersToDelete.addAll(this.deletePartnerParent(familyTree, couple, couples));
         }
 
         return membersToDelete.stream().filter(id -> id != 0).collect(Collectors.toList());
@@ -191,12 +190,39 @@ public class CoupleService {
         return membersToDelete;
     }
 
-    private void deletePartnerParent(FamilyTree familyTree, Couple couple) {
-//        couple.setPartnerParentId(0L);
-//
-//        if (couple.getRightIndex() - couple.getLeftIndex() != 1) {
-//            // couple has children
-//            this.coupleRepository.save(couple);
-//        }
+    private Set<Long> deletePartnerParent(FamilyTree familyTree, Couple couple, List<Couple> allCouples) {
+        Set<Long> membersToDelete = new HashSet<>();
+
+        if (couple.hasChildren()) {
+            List<Couple> childCouples = allCouples.stream()
+                    .filter(c -> c.getLeftIndex() > couple.getLeftIndex()
+                            && c.getRightIndex() < couple.getRightIndex()
+                            && c.getDepthIndex().equals(couple.getDepthIndex() + 1))
+                    .collect(Collectors.toList());
+
+            for (Couple childCouple : childCouples) {
+                membersToDelete.addAll(this.deletePrimaryParent(familyTree, childCouple, allCouples));
+            }
+        }
+
+        membersToDelete.add(couple.getPartnerParentId());
+
+        Long primaryParentId = couple.getPrimaryParentId();
+        Integer leftIndex = couple.getLeftIndex();
+
+        this.coupleRepository.delete(couple);
+
+        if (coupleRepository.findByPrimaryParentId(familyTree.getId(), primaryParentId).isEmpty()) {
+            couple.setPartnerParentId(0L);
+            couple.setRightIndex(couple.getLeftIndex() + 1);
+            this.coupleRepository.save(couple);
+        } else {
+            coupleRepository.moveBackAllRightIndexesAfter(familyTree.getId(), leftIndex);
+            coupleRepository.moveBackAllLeftIndexesAfter(familyTree.getId(), leftIndex);
+        }
+
+        membersToDelete.remove(primaryParentId);
+
+        return membersToDelete;
     }
 }

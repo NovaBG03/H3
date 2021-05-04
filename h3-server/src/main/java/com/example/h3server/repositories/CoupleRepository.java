@@ -85,7 +85,7 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
 
     @Query(value = "select * from nested_family as nf where nf.lft = " +
             "(select max(nf.lft) from nested_family as nf where nf.lft < :child_lft and nf.rgt > :child_rgt) " +
-            "where nf.family_tree_id = :tree_id",
+            "and nf.family_tree_id = :tree_id",
             nativeQuery = true)
     Couple findParentCouple(@Param("tree_id") Long id,
                             @Param("child_lft") Integer leftIndex,

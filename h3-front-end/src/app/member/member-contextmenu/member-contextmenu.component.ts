@@ -11,6 +11,7 @@ export class MemberContextmenuComponent implements AfterViewInit {
   @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
   @Output() addChild: EventEmitter<void> = new EventEmitter<void>();
   @Output() addPartner: EventEmitter<void> = new EventEmitter<void>();
+  @Output() delete: EventEmitter<void> = new EventEmitter<void>();
 
   isPrimary: boolean;
   isMain: boolean;
@@ -45,6 +46,10 @@ export class MemberContextmenuComponent implements AfterViewInit {
 
   onAddPartner(): void {
     this.addPartner.emit();
+  }
+
+  onDelete(): void {
+    this.delete.emit();
   }
 
   private hideElement(): void {

@@ -4,6 +4,6 @@
     <li (click)="onAddChildClicked()">Add Child</li>
     <li *ngIf="isPrimary && !isMain" (click)="onAddPartner()">Add Partner</li>
     <li class="h3-separator"></li>
-    <li>Delete</li>
+    <li (click)="onDelete()">Delete</li>
   </ul>
 </div>

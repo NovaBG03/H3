@@ -103,6 +103,14 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.isCreatingPartner = true;
   }
 
+  onDelete(): void {
+    this.memberService.deleteMember(this.treeId, this.lastSelectedMemberId)
+      .subscribe(
+        message => this.onFinishEditing(true),
+        error => this.onFinishEditing(false)
+      );
+  }
+
   onFinishEditing(isChanged: boolean): void {
     this.lastSelectedCouple = null;
     this.editingCouple = null;
