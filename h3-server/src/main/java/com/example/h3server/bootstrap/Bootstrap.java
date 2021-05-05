@@ -65,6 +65,15 @@ public class Bootstrap implements CommandLineRunner {
 
         this.factRepository.save(houseFact);
 
+        Fact interestingFact = Fact.builder()
+                .name("Interesting Info")
+                .description("Just another interesting fact about Jhon aka Ivan.")
+                .familyTree(tree)
+                .familyMember(member)
+                .build();
+
+        this.factRepository.save(interestingFact);
+
         log.info("Loaded Facts: " + this.factRepository.count());
     }
 
