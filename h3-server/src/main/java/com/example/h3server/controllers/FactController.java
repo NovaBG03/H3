@@ -6,7 +6,6 @@ import com.example.h3server.dtos.fact.FactListDTO;
 import com.example.h3server.dtos.fact.FactResponseDTO;
 import com.example.h3server.mappers.FactMapper;
 import com.example.h3server.services.FactService;
-import com.sun.prism.impl.FactoryResetException;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +45,7 @@ public class FactController {
     @PostMapping("/facts")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FactController.createFact}",
-            response = FactoryResetException.class,
+            response = FactResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
@@ -69,7 +68,7 @@ public class FactController {
     @PutMapping("/facts/{factId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @ApiOperation(value = "${FactController.updateFact}",
-            response = FactoryResetException.class,
+            response = FactResponseDTO.class,
             authorizations = {@Authorization(value = "apiKey")})
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
