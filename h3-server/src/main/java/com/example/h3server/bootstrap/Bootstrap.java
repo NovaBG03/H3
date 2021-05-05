@@ -22,19 +22,22 @@ public class Bootstrap implements CommandLineRunner {
     private final FamilyMemberRepository familyMemberRepository;
     private final TreeTagRepository treeTagRepository;
     private final CoupleRepository coupleRepository;
+    private final FactRepository factRepository;
 
     public Bootstrap(PasswordEncoder passwordEncoder,
                      UserRepository userRepository,
                      FamilyTreeRepository familyTreeRepository,
                      FamilyMemberRepository familyMemberRepository,
                      TreeTagRepository treeTagRepository,
-                     CoupleRepository coupleRepository) {
+                     CoupleRepository coupleRepository,
+                     FactRepository factRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.familyTreeRepository = familyTreeRepository;
         this.familyMemberRepository = familyMemberRepository;
         this.treeTagRepository = treeTagRepository;
         this.coupleRepository = coupleRepository;
+        this.factRepository = factRepository;
     }
 
     @Override
@@ -43,9 +46,26 @@ public class Bootstrap implements CommandLineRunner {
             this.loadUsers();
             this.loadFamilyTrees();
             this.loadFamilyMembers2();
+            this.loadFacts();
             // this.loadFamilyMembers();
             // this.loadTerterFamily();
         }
+    }
+
+    private void loadFacts() {
+        FamilyTree tree = this.familyTreeRepository.findById(1L).get();
+        FamilyMember member = this.familyMemberRepository.findByIdAndFamilyTreeId(1L, 1L);
+
+        Fact houseFact = Fact.builder()
+                .name("Bought House")
+                .description("We all know it. It's been part of the family for so long.")
+                .familyTree(tree)
+                .familyMember(member)
+                .build();
+
+        this.factRepository.save(houseFact);
+
+        log.info("Loaded Facts: " + this.factRepository.count());
     }
 
     private void loadUsers() {

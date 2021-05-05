@@ -44,6 +44,9 @@ public class FamilyTree {
             cascade = CascadeType.REMOVE)
     private Set<Couple> couples = new HashSet<>();
 
+    @OneToMany(mappedBy = "familyTree", cascade = CascadeType.REMOVE)
+    private Set<Fact> facts = new HashSet<>();
+
     @ManyToMany()
     @JoinTable(
             name = "trees_tags",
@@ -58,7 +61,8 @@ public class FamilyTree {
                       Boolean isPrivate,
                       User user,
                       Set<Couple> couples,
-                      Set<TreeTag> tags) {
+                      Set<TreeTag> tags,
+                      Set<Fact> facts) {
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
@@ -69,6 +73,9 @@ public class FamilyTree {
         }
         if (tags != null) {
             this.tags = tags;
+        }
+        if (facts != null) {
+            this.facts = facts;
         }
     }
 

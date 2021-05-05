@@ -6,6 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,13 +38,17 @@ public class FamilyMember {
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.UNKNOWN;
 
+    @OneToMany(mappedBy = "familyMember", cascade = CascadeType.REMOVE)
+    private Set<Fact> facts = new HashSet<>();
+
     @Builder
     public FamilyMember(Long id,
                         String firstName,
                         String lastName,
                         LocalDate birthday,
                         LocalDate dateOfDeath,
-                        Gender gender) {
+                        Gender gender,
+                        Set<Fact> facts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -50,6 +56,9 @@ public class FamilyMember {
         this.dateOfDeath = dateOfDeath;
         if (gender != null) {
             this.gender = gender;
+        }
+        if (facts != null) {
+            this.facts = facts;
         }
     }
 }
