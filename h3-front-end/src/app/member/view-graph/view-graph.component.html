@@ -1,31 +1,33 @@
-<div *ngIf="isOwner && data.nodes.length === 0"
-     class="center"
-     style="cursor: pointer;"
-     (click)="onStartCreating()">
-  <p class="font-weight-bold">Click to Add your Main Member</p>
+<div class="h3-container">
+  <div *ngIf="isOwner && data.nodes.length === 0"
+       class="h3-center"
+       style="cursor: pointer;"
+       (click)="onStartCreating()">
+    <p class="font-weight-bold">Click to Add your Main Member</p>
+  </div>
+
+  <div *ngIf="!isOwner && data.nodes.length === 0"
+       class="h3-center">
+    <span class="font-weight-bold">This Family Tree is Empty!</span>
+  </div>
+
+<!--  <div *ngIf="isOwner && data.nodes.length != 0">-->
+<!--    <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>-->
+<!--  </div>-->
+
+  <app-member-item *ngIf="editingMember || isCreatingMember || isCreatingPartner"
+                   [familyMember]="editingMember"
+                   [treeId]="treeId"
+                   [isOwner]="isOwner"
+                   [parentCouple]="editingCouple"
+                   [isNewPartner]="isCreatingPartner"
+                   (finishEditing)="onFinishEditing($event)"></app-member-item>
+
+  <app-member-contextmenu [rightClickInfo]="this.rightClickInfo"
+                          (memberInfo)="onEditMember()"
+                          (addChild)="onAddChild()"
+                          (addPartner)="onAddPartner()"
+                          (delete)="onDelete()"></app-member-contextmenu>
+
+  <div id="graph"></div>
 </div>
-
-<div *ngIf="!isOwner && data.nodes.length === 0"
-     class="center">
-  <span class="font-weight-bold">This Family Tree is Empty!</span>
-</div>
-
-<div *ngIf="isOwner && data.nodes.length != 0">
-  <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>
-</div>
-
-<app-member-item *ngIf="editingMember || isCreatingMember || isCreatingPartner"
-                 [familyMember]="editingMember"
-                 [treeId]="treeId"
-                 [isOwner]="isOwner"
-                 [parentCouple]="editingCouple"
-                 [isNewPartner]="isCreatingPartner"
-                 (finishEditing)="onFinishEditing($event)"></app-member-item>
-
-<app-member-contextmenu [rightClickInfo]="this.rightClickInfo"
-                        (memberInfo)="onEditMember()"
-                        (addChild)="onAddChild()"
-                        (addPartner)="onAddPartner()"
-                        (delete)="onDelete()"></app-member-contextmenu>
-
-<div id="graph"></div>

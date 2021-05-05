@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {TreeService} from '../tree.service';
 import {AuthService} from '../../authentication/auth.service';
 
@@ -12,11 +12,28 @@ import {AuthService} from '../../authentication/auth.service';
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
   isOwner: boolean;
+  private pages = ['graph', 'facts', 'settings'];
   private userSub: Subscription;
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private treeService: TreeService,
-              private authService: AuthService) { }
+              private authService: AuthService) {
+  }
+
+  get currentPage(): string {
+    const urlElements = this.router.url.split('/');
+    return urlElements[urlElements.length - 1];
+  }
+
+  get nextPage(): string {
+    let nextPageIndex = this.pages.indexOf(this.currentPage) + 1;
+    if (nextPageIndex >= this.pages.length) {
+      nextPageIndex = 0;
+    }
+
+    return this.pages[nextPageIndex];
+  }
 
   ngOnInit(): void {
     this.userSub = this.route.url.pipe(
@@ -38,4 +55,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
     this.userSub.unsubscribe();
   }
 
+  displayPage(page: string): void {
+    this.router.navigate([page], {relativeTo: this.route});
+  }
 }

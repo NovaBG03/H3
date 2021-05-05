@@ -1,6 +1,11 @@
-.center{
+.h3-center{
   height: 70vh;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.h3-container {
+  background: whitesmoke;
+  border-radius: 10px;
 }

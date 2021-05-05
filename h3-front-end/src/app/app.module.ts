@@ -14,8 +14,6 @@ import {TreeComponent} from './tree/tree.component';
 import {AuthInterceptorService} from './authentication/auth-interceptor.service';
 import {TreeNewComponent} from './tree/tree-new/tree-new.component';
 import {TreeViewComponent} from './tree/tree-view/tree-view.component';
-import {ViewTreeComponent} from './member/view-tree/view-tree.component';
-import {ViewTableComponent} from './member/view-table/view-table.component';
 import {TreeSettingsComponent} from './tree/tree-settings/tree-settings.component';
 import {MemberItemComponent} from './member/member-item/member-item.component';
 import {MemberSearchComponent} from './member/member-item/member-search/member-search.component';
@@ -24,12 +22,13 @@ import {WelcomeComponent} from './home/welcome/welcome.component';
 import {UserProfileComponent} from './home/user-profile/user-profile.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {Ng2ImgMaxModule} from 'ng2-img-max';
-import { ImageUploaderComponent } from './shared/image-uploader/image-uploader.component';
-import { SearchComponent } from './search/search.component';
-import { EmptyComponent } from './shared/empty/empty.component';
-import { LoadingComponent } from './shared/loading/loading.component';
-import { ViewGraphComponent } from './member/view-graph/view-graph.component';
-import { MemberContextmenuComponent } from './member/member-contextmenu/member-contextmenu.component';
+import {ImageUploaderComponent} from './shared/image-uploader/image-uploader.component';
+import {SearchComponent} from './search/search.component';
+import {EmptyComponent} from './shared/empty/empty.component';
+import {LoadingComponent} from './shared/loading/loading.component';
+import {ViewGraphComponent} from './member/view-graph/view-graph.component';
+import {MemberContextmenuComponent} from './member/member-contextmenu/member-contextmenu.component';
+import {FactsComponent} from './member/facts/facts.component';
 
 @NgModule({
   declarations: [
@@ -40,8 +39,6 @@ import { MemberContextmenuComponent } from './member/member-contextmenu/member-c
     TreeComponent,
     TreeNewComponent,
     TreeViewComponent,
-    ViewTreeComponent,
-    ViewTableComponent,
     TreeSettingsComponent,
     MemberItemComponent,
     MemberSearchComponent,
@@ -53,7 +50,8 @@ import { MemberContextmenuComponent } from './member/member-contextmenu/member-c
     EmptyComponent,
     LoadingComponent,
     ViewGraphComponent,
-    MemberContextmenuComponent
+    MemberContextmenuComponent,
+    FactsComponent
   ],
   imports: [
     BrowserModule,

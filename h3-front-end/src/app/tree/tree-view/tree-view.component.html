@@ -1,18 +1,86 @@
-<ul class="nav nav-tabs nav-fill">
-  <li class="nav-item">
-    <a class="nav-link" routerLinkActive="active" [routerLink]="['graph']">Graph View</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" routerLinkActive="active" [routerLink]="['members']">Tree View</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" routerLinkActive="active" [routerLink]="['table']">Table View</a>
-  </li>
-  <li class="nav-item" *ngIf="isOwner">
-    <a class="nav-link" routerLinkActive="active" [routerLink]="['settings']">Settings</a>
-  </li>
-</ul>
+<!--<ul class="nav nav-tabs nav-fill">-->
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link" routerLinkActive="active" [routerLink]="['graph']">Graph</a>-->
+<!--  </li>-->
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link" routerLinkActive="active" [routerLink]="['facts']">Facts</a>-->
+<!--  </li>-->
+<!--  <li class="nav-item" *ngIf="isOwner">-->
+<!--    <a class="nav-link" routerLinkActive="active" [routerLink]="['settings']">Settings</a>-->
+<!--  </li>-->
+<!--</ul>-->
 
+<h1>{{currentPage}}</h1>
 <div class="container">
   <router-outlet></router-outlet>
+
+  <div class="h3-next-btn" (click)="displayPage(currentPage === 'graph' ? 'facts' : 'graph')">
+    <div class="h3-border">
+      <div class="h3-btn-title">
+        {{ currentPage === 'graph' ? 'Facts' : 'Graph' }}
+      </div>
+      <svg *ngIf="currentPage === 'facts' || currentPage === 'settings'" class="h3-btn-svg" x="0px" y="0px" viewBox="0 0 100 100">
+        <path
+          d="M85.338,14.663L85.338,14.663c-6.419-6.419-15.066-9.546-24.264-9.546c-0.001,0-0.002,0-0.003,0  c-11.88,0.001-24.678,5.219-34.76,15.301l0,0C9.145,37.583,6.089,62.605,18.867,77.598L5.732,90.732l3.535,3.535l13.134-13.134  c6.187,5.273,14.074,7.857,22.421,7.857c11.88,0,24.678-5.219,34.76-15.301l0,0C97.471,55.8,100.048,29.373,85.338,14.663z   M74.279,68.386c-8.328,8.328-19.065,13.105-29.457,13.105c-6.66,0-12.52-1.954-17.104-5.674L33.535,70H57.5v-5H38.535l7.5-7.5H72.5  v-5H51.035l7.5-7.5H77.5v-5H63.535l13.232-13.232l-3.535-3.535L60,36.465V22.5h-5v18.965l-7.5,7.5V27.5h-5v26.465l-7.5,7.5V42.5h-5  v23.965l-5.808,5.808c-9.793-12.084-6.757-32.372,7.422-46.552c8.327-8.327,19.064-13.104,29.457-13.105v-0.004l0.003,0.004  c7.596,0,14.152,2.542,18.96,7.35C91.797,31.729,89.215,53.45,74.279,68.386z"/>
+      </svg>
+      <svg *ngIf="currentPage === 'graph'" class="h3-btn-svg" x="0px" y="0px" viewBox="0 0 100 100">
+        <switch>
+          <foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1"
+                         height="1"/>
+          <g>
+            <g>
+              <path
+                d="M89.2,13.1h-7.8v3.6c0,6.4-5.2,11.6-11.6,11.6s-11.5-5.2-11.5-11.6v-3.6H41.7v3.6c0,6.4-5.2,11.6-11.5,11.6     c-6.4,0-11.6-5.2-11.6-11.6v-3.6h-7.8c-4.6,0-8.3,3.7-8.3,8.3v15.5h95V21.4C97.5,16.9,93.8,13.1,89.2,13.1z"/>
+              <path
+                d="M30.2,22.4c3.2,0,5.7-2.6,5.7-5.7V9.5c0-3.2-2.6-5.7-5.7-5.7c-3.2,0-5.7,2.6-5.7,5.7v7.2C24.4,19.9,27,22.4,30.2,22.4z"/>
+              <path
+                d="M69.8,22.4c3.2,0,5.7-2.6,5.7-5.7V9.5c0-3.2-2.6-5.7-5.7-5.7c-3.2,0-5.7,2.6-5.7,5.7v7.2C64.1,19.9,66.6,22.4,69.8,22.4z     "/>
+              <path
+                d="M2.5,87.9c0,4.6,3.7,8.3,8.3,8.3h78.3c4.6,0,8.3-3.7,8.3-8.3V42.7h-95V87.9z M38.4,65l6.2-0.9c0.5-0.1,0.8-0.3,1-0.8     l2.7-5.5c0.7-1.3,2.6-1.3,3.3,0l2.8,5.7c0.2,0.4,0.6,0.7,1,0.8l6.1,0.9c1.5,0.2,2.1,2,1,3.1l-4.5,4.4c-0.3,0.3-0.5,0.8-0.4,1.2     l1,6.1c0.3,1.5-1.3,2.6-2.6,1.9l-5.6-2.9c-0.4-0.2-0.9-0.2-1.3,0l-5.4,2.9c-1.3,0.7-2.9-0.4-2.6-1.9l1.1-6.2     c0.1-0.4-0.1-0.9-0.4-1.2l-4.4-4.3C36.3,67.1,36.9,65.3,38.4,65z"/>
+            </g>
+          </g>
+        </switch>
+      </svg>
+    </div>
+  </div>
+
+  <div class="h3-next-btn h3-next-btn-2" (click)="displayPage(currentPage !== 'settings' ? 'settings' : 'facts')">
+    <div class="h3-border">
+      <div class="h3-btn-title">
+        {{ currentPage !== 'settings' ? 'Settings' : 'Facts'}}
+      </div>
+      <svg *ngIf="currentPage === 'settings'" class="h3-btn-svg" x="0px" y="0px" viewBox="0 0 100 100">
+        <switch>
+          <foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1"
+                         height="1"/>
+          <g>
+            <g>
+              <path
+                d="M89.2,13.1h-7.8v3.6c0,6.4-5.2,11.6-11.6,11.6s-11.5-5.2-11.5-11.6v-3.6H41.7v3.6c0,6.4-5.2,11.6-11.5,11.6     c-6.4,0-11.6-5.2-11.6-11.6v-3.6h-7.8c-4.6,0-8.3,3.7-8.3,8.3v15.5h95V21.4C97.5,16.9,93.8,13.1,89.2,13.1z"/>
+              <path
+                d="M30.2,22.4c3.2,0,5.7-2.6,5.7-5.7V9.5c0-3.2-2.6-5.7-5.7-5.7c-3.2,0-5.7,2.6-5.7,5.7v7.2C24.4,19.9,27,22.4,30.2,22.4z"/>
+              <path
+                d="M69.8,22.4c3.2,0,5.7-2.6,5.7-5.7V9.5c0-3.2-2.6-5.7-5.7-5.7c-3.2,0-5.7,2.6-5.7,5.7v7.2C64.1,19.9,66.6,22.4,69.8,22.4z     "/>
+              <path
+                d="M2.5,87.9c0,4.6,3.7,8.3,8.3,8.3h78.3c4.6,0,8.3-3.7,8.3-8.3V42.7h-95V87.9z M38.4,65l6.2-0.9c0.5-0.1,0.8-0.3,1-0.8     l2.7-5.5c0.7-1.3,2.6-1.3,3.3,0l2.8,5.7c0.2,0.4,0.6,0.7,1,0.8l6.1,0.9c1.5,0.2,2.1,2,1,3.1l-4.5,4.4c-0.3,0.3-0.5,0.8-0.4,1.2     l1,6.1c0.3,1.5-1.3,2.6-2.6,1.9l-5.6-2.9c-0.4-0.2-0.9-0.2-1.3,0l-5.4,2.9c-1.3,0.7-2.9-0.4-2.6-1.9l1.1-6.2     c0.1-0.4-0.1-0.9-0.4-1.2l-4.4-4.3C36.3,67.1,36.9,65.3,38.4,65z"/>
+            </g>
+          </g>
+        </switch>
+      </svg>
+      <svg *ngIf="currentPage !== 'settings'" class="h3-btn-svg" x="0px" y="0px" viewBox="0 0 100 100">
+        <switch>
+          <foreignObject requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" x="0" y="0" width="1"
+                         height="1"/>
+          <g>
+            <g>
+              <circle cx="50" cy="50" r="12.1"/>
+              <path
+                d="M82.9,2.5H17.1C9,2.5,2.5,9,2.5,17.1v65.9c0,8,6.5,14.6,14.6,14.6h65.9c8,0,14.6-6.5,14.6-14.6V17.1     C97.5,9,91,2.5,82.9,2.5z M78.4,54.7c0,0.8-0.6,1.4-1.4,1.4h-4.9c-0.5,1.8-1.2,3.6-2.1,5.2l3.5,3.5c0.5,0.5,0.5,1.4,0,2l-6.7,6.7     c-0.5,0.5-1.4,0.5-2,0L61.3,70c-1.6,0.9-3.4,1.6-5.2,2.2v4.9c0,0.8-0.6,1.4-1.4,1.4h-9.5c-0.8,0-1.4-0.6-1.4-1.4v-4.9     c-1.8-0.5-3.6-1.2-5.2-2.1l-3.5,3.5c-0.5,0.5-1.4,0.5-2,0l-6.7-6.7c-0.5-0.5-0.5-1.4,0-2l3.5-3.5c-0.9-1.6-1.6-3.4-2.2-5.2h-4.9     c-0.8,0-1.4-0.6-1.4-1.4v-9.5c0-0.8,0.6-1.4,1.4-1.4h4.9c0.5-1.8,1.2-3.6,2.1-5.2l-3.5-3.5c-0.5-0.5-0.5-1.4,0-2l6.7-6.7     c0.5-0.5,1.4-0.5,2,0l3.5,3.5c1.6-0.9,3.4-1.6,5.2-2.2v-4.9c0-0.8,0.6-1.4,1.4-1.4h9.5c0.8,0,1.4,0.6,1.4,1.4v4.9     c1.8,0.5,3.6,1.2,5.2,2.1l3.5-3.5c0.5-0.5,1.4-0.5,2,0l6.7,6.7c0.5,0.5,0.5,1.4,0,2L70,38.7c0.9,1.6,1.6,3.4,2.2,5.2h4.9     c0.8,0,1.4,0.6,1.4,1.4V54.7z"/>
+            </g>
+          </g>
+        </switch>
+      </svg>
+    </div>
+  </div>
+
 </div>
