@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="h3-next-btn h3-next-btn-2" (click)="displayPage(currentPage !== 'settings' ? 'settings' : 'facts')">
+  <div *ngIf="isOwner" class="h3-next-btn h3-next-btn-2" (click)="displayPage(currentPage !== 'settings' ? 'settings' : 'facts')">
     <div class="h3-border">
       <div class="h3-btn-title">
         {{ currentPage !== 'settings' ? 'Settings' : 'Facts'}}
