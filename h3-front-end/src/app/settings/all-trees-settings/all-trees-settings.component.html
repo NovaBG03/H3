@@ -1,0 +1,12 @@
+<div class="h3-content">
+  <h1>Tree Settings</h1>
+  <div class="h3-select-container">
+    <select id="trees" (change)="onChange($event)">
+      <option selected value="">-- Select Family Tree --</option>
+      <option *ngFor="let tree of familyTrees" [value]="tree.id" [selected]="tree.id === selectedId">{{ tree.name }}</option>
+    </select>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+

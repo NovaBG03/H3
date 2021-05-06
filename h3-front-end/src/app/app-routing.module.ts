@@ -16,6 +16,7 @@ import {SettingsComponent} from './settings/settings.component';
 import {UserProfileSettingsComponent} from './settings/user-profile-settings/user-profile-settings.component';
 import {UserPreferencesSettingsComponent} from './settings/user-preferences-settings/user-preferences-settings.component';
 import {InfoComponent} from './settings/info/info.component';
+import {AllTreesSettingsComponent} from './settings/all-trees-settings/all-trees-settings.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -46,7 +47,9 @@ const routes: Routes = [
   {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], children: [
       {path: 'user', component: UserProfileSettingsComponent},
       {path: 'preferences', component: UserPreferencesSettingsComponent},
-      {path: 'trees', component: TreeSettingsComponent},
+      {path: 'trees', component: AllTreesSettingsComponent, children: [
+          {path: ':id', component: TreeSettingsComponent}
+        ]},
       {path: 'info', component: InfoComponent}
     ]},
   {path: ':username', component: UserProfileComponent, canActivate: [AuthGuard]}

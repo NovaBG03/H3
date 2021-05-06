@@ -33,6 +33,7 @@ import {SettingsComponent} from './settings/settings.component';
 import {UserProfileSettingsComponent} from './settings/user-profile-settings/user-profile-settings.component';
 import {UserPreferencesSettingsComponent} from './settings/user-preferences-settings/user-preferences-settings.component';
 import {InfoComponent} from './settings/info/info.component';
+import { AllTreesSettingsComponent } from './settings/all-trees-settings/all-trees-settings.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {InfoComponent} from './settings/info/info.component';
     SettingsComponent,
     UserProfileSettingsComponent,
     UserPreferencesSettingsComponent,
-    InfoComponent
+    InfoComponent,
+    AllTreesSettingsComponent
   ],
   imports: [
     BrowserModule,

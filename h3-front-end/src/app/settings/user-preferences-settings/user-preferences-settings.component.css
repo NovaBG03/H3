@@ -9,3 +9,13 @@ h1 {
   margin: 20px 0 25px 0;
   text-align: center;
 }
+
+.h3-title {
+  font-size: 15px;
+  display: block;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  margin-top: 10px;
+}

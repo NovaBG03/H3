@@ -4,6 +4,7 @@ import {FamilyTree} from '../../shared/dtos.model';
 import {TreeService} from '../tree.service';
 import {ActivatedRoute} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-tree-settings',
@@ -11,8 +12,8 @@ import {map, switchMap} from 'rxjs/operators';
   styleUrls: ['./tree-settings.component.css']
 })
 export class TreeSettingsComponent implements OnInit {
-  settingsForm: FormGroup;
   tree: FamilyTree;
+  settingsForm: FormGroup;
 
   constructor(private treeService: TreeService, private route: ActivatedRoute) {
   }
@@ -23,8 +24,12 @@ export class TreeSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.route.parent.url.pipe(
-      map(parentUrlSegment => +parentUrlSegment[0].path),
+
+    this.route.url.pipe(
+      map(urlSegment => +urlSegment[0].path),
+      switchMap(treeId => treeId ? of(treeId) : this.route.parent.url.pipe(
+        map(parentUrlSegment => +parentUrlSegment[0].path)
+      )),
       switchMap(treeId => this.treeService.getTree(treeId))
     ).subscribe(familyTree => {
       this.tree = familyTree;
@@ -41,7 +46,7 @@ export class TreeSettingsComponent implements OnInit {
     this.tree.name = value.name;
     this.tree.isPrivate = value.isPrivate;
     this.tree.tags = this.tagsFormArray.controls.map(control => control.value).filter(tag => tag);
-    console.log(this.tree);
+
     this.treeService.updateTree(this.tree)
       .subscribe(familyTree => {
         this.tree = familyTree;

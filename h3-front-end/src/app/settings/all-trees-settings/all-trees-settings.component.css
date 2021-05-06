@@ -1,0 +1,76 @@
+.h3-content {
+  padding: 10px 0 30px 0;
+  transition: all .5s ease-in;
+  width: 100%;
+}
+
+h1 {
+  color: #7ed386;
+  margin: 20px 0 25px 0;
+  text-align: center;
+}
+
+.h3-title {
+  font-size: 15px;
+  display: block;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  margin-top: 10px;
+}
+
+.h3-select-container {
+  --select-primary: #2c3e50;
+  --select-secondary:  var(--h3-color-secondary);
+  --select-text: #fff;
+  position: relative;
+  display: flex;
+  width: auto;
+  height: 3em;
+  line-height: 3;
+  overflow: hidden;
+  border-radius: .25em;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: var(--select-primary);
+  background-image: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color: var(--select-text);
+  cursor: pointer;
+}
+/* Arrow */
+.h3-select-container::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #34495e;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+/* Transition */
+.h3-select-container:hover::after {
+  color: var(--select-secondary);
+}
+
