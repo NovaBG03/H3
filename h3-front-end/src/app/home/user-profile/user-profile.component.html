@@ -3,7 +3,7 @@
     <div class="h3-profile">
       <div class="h3-user-info" *ngIf="isOwnProfile()">
         <div class="h3-hint">
-          Click to Change Profile Picture
+          Click to Open Settings
         </div>
         <div class="h3-hint" style="font-size: 1.2rem">
           ⬇️
@@ -13,7 +13,7 @@
         <img class="h3-profile-pic"
              [src]="showingImageUrl"
              [ngStyle]="{cursor: isOwnProfile() ? 'pointer' : 'unset'}"
-              (click)="changeProfilePicture()">
+              (click)="openSettings()">
         <svg class="h3-circle" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="40"/>
         </svg>
@@ -29,8 +29,6 @@
     </div>
   </div>
 </div>
-
-<app-image-uploader *ngIf="isChoosingPicture" (imageUploaded)="updateProfilePic($event)"></app-image-uploader>
 
 <svg width="0" height="0" class="visually-hidden">
   <defs>
@@ -59,17 +57,3 @@
     </linearGradient>
   </defs>
 </svg>
-
-
-<!--
-<div class="container pt-5" *ngIf="user">
-  <div class="row">
-    <div class="col-md-4">
-      <h2>Username: {{ user.username }}</h2>
-      <h5>Email: {{ user.email }}</h5>
-    </div>
-    <div class="col-md-8">
-    </div>
-  </div>
-</div>
--->

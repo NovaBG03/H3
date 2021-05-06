@@ -1,0 +1,103 @@
+.h3-background {
+  background: linear-gradient(to left, var(--h3-color-secondary), var(--h3-color-primary));
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+  padding-bottom: 80px;
+}
+
+.h3-container {
+  border-radius: 10px;
+  background: #fff;
+  width: 500px;
+  height: auto;
+  min-height: 400px;
+  margin: 5% auto 0 auto;
+  position: relative;
+  box-shadow: 2px 5px 20px rgba(119, 119, 119, 0.5);
+  padding-left: 75px;
+}
+
+.h3-left-box {
+  border-radius: 10px;
+  float: left;
+  top: -10px;
+  left: 5%;
+  position: absolute;
+  width: 80px;
+  height: auto;
+  background: var(--h3-color-primary);
+  box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
+  border: 0.1em solid #fff;
+}
+
+.h3-tab {
+  --size: 40px;
+  list-style: none;
+  width: var(--size);
+  height: var(--size);
+  padding: 5px;
+  margin: 0 auto 45px auto;
+  display: block;
+
+  transition: all 0.3s ease-in-out;
+}
+
+.h3-tab:first-of-type {
+  margin-top: 20px;
+}
+
+.h3-tab:hover {
+  color: #10ac84;
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.h3-tab svg {
+  width: var(--size);
+  transform: translateX(-8%);
+  fill: whitesmoke;
+}
+
+.h3-tab.h3-active svg {
+  fill: #10ac84;
+}
+
+.h3-right-box {
+  width: 80%;
+  margin: auto;
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+  .h3-left-box {
+    width: 50px;
+  }
+
+  .h3-tab {
+    --size: 32px;
+    transform: translateX(-1px);
+  }
+
+  .h3-tab:hover {
+    transform: none;
+  }
+
+  .h3-container {
+    min-height: 360px;
+    padding-left: 45px;
+    width: 90%;
+  }
+
+  .h3-background {
+    height: calc(100vh - 5rem);
+    padding-bottom: 20px;
+  }
+}
+
+/*Extra Large screens */
+@media only screen and (min-width: 1200px) {
+  .h3-container {
+    width: 1000px;
+  }
+}

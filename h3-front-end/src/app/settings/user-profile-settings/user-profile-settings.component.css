@@ -1,0 +1,137 @@
+.h3-content {
+  padding: 10px 0 30px 0;
+  transition: all .5s ease-in;
+  width: 100%;
+}
+
+h1 {
+  color: #7ed386;
+  margin: 20px 0 25px 0;
+  text-align: center;
+}
+
+.h3-title {
+  font-size: 15px;
+  display: block;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  margin-top: 10px;
+}
+
+.h3-input {
+  border: 0;
+  border-bottom: 1px solid #3fb6a8;
+  width: 100%;
+  font-size: 0.7em;
+  padding: 7px 0;
+  color: #070707;
+  outline: none;
+}
+
+.h3-btn {
+  text-transform: uppercase;
+  font-size: 15px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: #7ed386;
+  padding: 7px 15px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.h3-btn:disabled {
+  cursor: default;
+  background: #bfcdc0;
+}
+
+
+.h3-profile-avatar {
+  border-radius: 100%;
+  margin: 0.8rem 0 0.5rem;
+  display: grid;
+  grid-template-columns: auto;
+  align-items: center;
+  position: relative;
+}
+
+.h3-profile-pic {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  filter: grayscale(0%);
+  display: block;
+  overflow: hidden;
+  margin: 20px auto;
+}
+
+.h3-edit-profile:hover .h3-circle {
+  stroke: url(#gradient-animation);
+}
+
+.h3-circle {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  width: 400px;
+  height: 240px;
+  fill: none;
+  stroke: url(#gradient);
+  stroke-width: 6;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.h3-col-right {
+  float: none;
+  width: 100%;
+  padding: 10px;
+}
+
+.h3-col-left {
+  float: none;
+  width: 100%;
+  padding: 10px;
+}
+
+.h3-edit-profile {
+  border-radius: 100%;
+  position: relative;
+  cursor: pointer;
+}
+
+.h3-edit-btn {
+  display: block;
+  position: absolute;
+  bottom: 20px;
+  left: 100px;
+  background-color: #fff;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid #e1e4e8;
+  font-size: 14px;
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+
+}
+
+/*Extra Large screens */
+@media only screen and (min-width: 1200px) {
+  .h3-col-right {
+    float: right;
+    width: 50%;
+    padding: 10px;
+  }
+
+  .h3-col-left {
+    float: left;
+    width: 50%;
+    padding: 10px;
+  }
+}
+

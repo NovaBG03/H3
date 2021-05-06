@@ -19,11 +19,10 @@
 
 .h3-border {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border: double 4px transparent;
   border-radius: 10px;
-  background-image: linear-gradient(white, white), radial-gradient(circle at top left, var(--h3-color-secondary), var(--h3-color-primary));
   background-origin: border-box;
   background-clip: content-box, border-box;
   align-items: center;
@@ -37,6 +36,7 @@
   text-align: center;
   font-size: 20px;
   transform: translateX(-15px);
+  overflow: hidden;
 
   transition-delay: 0.8s;
   transition: display linear 0.2s;
@@ -44,10 +44,10 @@
 
 .h3-btn-svg {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 30px;
-  height: 30px;
+  top: 0px;
+  right: 0px;
+  width: 40px;
+  height: 40px;
   padding: 2px;
   background: linear-gradient(to left, var(--h3-color-secondary), var(--h3-color-primary));
   border-radius: 8px;
@@ -58,8 +58,17 @@
 }
 
 @media (hover: hover) {
+  .h3-border:hover .h3-btn-svg,
+  .h3-border:focus .h3-btn-svg {
+    top: 6px;
+    right: 6px;
+    width: 30px;
+    height: 30px;
+  }
+
   .h3-border:hover,
   .h3-border:focus {
+    background-image: linear-gradient(white, white), radial-gradient(circle at top left, var(--h3-color-secondary), var(--h3-color-primary));
     width: 160px;
     font-weight: bold;
   }

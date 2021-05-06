@@ -29,6 +29,10 @@ import {LoadingComponent} from './shared/loading/loading.component';
 import {ViewGraphComponent} from './member/view-graph/view-graph.component';
 import {MemberContextmenuComponent} from './member/member-contextmenu/member-contextmenu.component';
 import {FactsComponent} from './member/facts/facts.component';
+import {SettingsComponent} from './settings/settings.component';
+import {UserProfileSettingsComponent} from './settings/user-profile-settings/user-profile-settings.component';
+import {UserPreferencesSettingsComponent} from './settings/user-preferences-settings/user-preferences-settings.component';
+import {InfoComponent} from './settings/info/info.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,11 @@ import {FactsComponent} from './member/facts/facts.component';
     LoadingComponent,
     ViewGraphComponent,
     MemberContextmenuComponent,
-    FactsComponent
+    FactsComponent,
+    SettingsComponent,
+    UserProfileSettingsComponent,
+    UserPreferencesSettingsComponent,
+    InfoComponent
   ],
   imports: [
     BrowserModule,

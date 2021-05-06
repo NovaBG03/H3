@@ -3,7 +3,7 @@ import {User, UserToken} from '../../shared/dtos.model';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../authentication/auth.service';
 import {UserService} from '../../shared/user.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 
 @Component({
@@ -15,7 +15,6 @@ export class UserProfileComponent implements OnInit, OnDestroy, AfterViewInit {
   user: User;
   loggedUser: UserToken;
   showingImageUrl: any;
-  isChoosingPicture = false;
 
   private initialBackgroundColor: string;
   private userSub: Subscription;
@@ -23,6 +22,7 @@ export class UserProfileComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private authService: AuthService,
               private userService: UserService,
+              private router: Router,
               private route: ActivatedRoute,
               private elementRef: ElementRef) {
   }
@@ -52,23 +52,9 @@ export class UserProfileComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.loggedUser.username === this.user.username;
   }
 
-  updateProfilePic(blob: Blob): void {
-    if (blob) {
-      this.userService.uploadProfilePicture(blob)
-        .subscribe(message => {
-          console.log(message);
-          this.userService.getProfilePictureUrl(this.user.username)
-            .subscribe(img => {
-              this.showingImageUrl = img;
-            });
-        });
-    }
-    this.isChoosingPicture = false;
-  }
-
-  changeProfilePicture(): void {
+  openSettings(): void {
     if (this.isOwnProfile()) {
-      this.isChoosingPicture = true;
+      this.router.navigate(['settings', 'user']);
     }
   }
 
