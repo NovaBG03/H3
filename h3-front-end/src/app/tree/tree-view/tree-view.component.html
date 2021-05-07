@@ -10,8 +10,8 @@
 <!--  </li>-->
 <!--</ul>-->
 
-<h1>{{currentPage}}</h1>
-<div class="container">
+<div class="h3-container">
+  <h1 class="h3-header">{{currentPage}}</h1>
   <router-outlet></router-outlet>
 
   <div class="h3-next-btn" (click)="displayPage(currentPage === 'graph' ? 'facts' : 'graph')">
@@ -19,7 +19,8 @@
       <div class="h3-btn-title">
         {{ currentPage === 'graph' ? 'Facts' : 'Graph' }}
       </div>
-      <svg *ngIf="currentPage === 'facts' || currentPage === 'settings'" class="h3-btn-svg" x="0px" y="0px" viewBox="0 0 100 100">
+      <svg *ngIf="currentPage === 'facts' || currentPage === 'settings'" class="h3-btn-svg" x="0px" y="0px"
+           viewBox="0 0 100 100">
         <path
           d="M85.338,14.663L85.338,14.663c-6.419-6.419-15.066-9.546-24.264-9.546c-0.001,0-0.002,0-0.003,0  c-11.88,0.001-24.678,5.219-34.76,15.301l0,0C9.145,37.583,6.089,62.605,18.867,77.598L5.732,90.732l3.535,3.535l13.134-13.134  c6.187,5.273,14.074,7.857,22.421,7.857c11.88,0,24.678-5.219,34.76-15.301l0,0C97.471,55.8,100.048,29.373,85.338,14.663z   M74.279,68.386c-8.328,8.328-19.065,13.105-29.457,13.105c-6.66,0-12.52-1.954-17.104-5.674L33.535,70H57.5v-5H38.535l7.5-7.5H72.5  v-5H51.035l7.5-7.5H77.5v-5H63.535l13.232-13.232l-3.535-3.535L60,36.465V22.5h-5v18.965l-7.5,7.5V27.5h-5v26.465l-7.5,7.5V42.5h-5  v23.965l-5.808,5.808c-9.793-12.084-6.757-32.372,7.422-46.552c8.327-8.327,19.064-13.104,29.457-13.105v-0.004l0.003,0.004  c7.596,0,14.152,2.542,18.96,7.35C91.797,31.729,89.215,53.45,74.279,68.386z"/>
       </svg>
@@ -44,7 +45,8 @@
     </div>
   </div>
 
-  <div *ngIf="isOwner" class="h3-next-btn h3-next-btn-2" (click)="displayPage(currentPage !== 'settings' ? 'settings' : 'facts')">
+  <div *ngIf="isOwner" class="h3-next-btn h3-next-btn-2"
+       (click)="displayPage(currentPage !== 'settings' ? 'settings' : 'facts')">
     <div class="h3-border">
       <div class="h3-btn-title">
         {{ currentPage !== 'settings' ? 'Settings' : 'Facts'}}
@@ -82,5 +84,4 @@
       </svg>
     </div>
   </div>
-
 </div>

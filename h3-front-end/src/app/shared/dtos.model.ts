@@ -233,3 +233,26 @@ export interface Graph {
   nodes: Couple[];
   links: CoupleLink[];
 }
+
+export class FactDTO {
+  constructor(public id: number,
+              public name: string,
+              public description: string,
+              public date: string,
+              public familyMemberId: string) {
+  }
+}
+
+export class Fact {
+  constructor(public id: number,
+              public name: string,
+              public description: string,
+              public date: Date,
+              public familyMemberId: number) {
+  }
+}
+
+export class FactDTOsWrapper {
+  constructor(public facts: FactDTO[]) {
+  }
+}

@@ -1,1 +1,5 @@
-<p>facts works!</p>
+<div *ngIf="familyMembers">
+  <app-fact-card *ngFor="let fact of facts"
+                 [fact]="fact"
+                 [familyMember]="getMember(fact.familyMemberId)"></app-fact-card>
+</div>

@@ -1,6 +1,13 @@
-.container {
+.h3-header {
+  color: #7ed386;
+  margin: 0px 0 15px 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.h3-container {
   position: relative;
-  padding-top: 35px;
+  padding: 20px 5%;
 }
 
 .h3-next-btn {
@@ -11,6 +18,9 @@
   text-anchor: middle;
   cursor: pointer;
   background-clip: padding-box;
+  background: white;
+  border-radius: 10px;
+  z-index: 10;
 }
 
 .h3-next-btn-2 {

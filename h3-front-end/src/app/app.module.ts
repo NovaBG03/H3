@@ -34,6 +34,7 @@ import {UserProfileSettingsComponent} from './settings/user-profile-settings/use
 import {UserPreferencesSettingsComponent} from './settings/user-preferences-settings/user-preferences-settings.component';
 import {InfoComponent} from './settings/info/info.component';
 import { AllTreesSettingsComponent } from './settings/all-trees-settings/all-trees-settings.component';
+import { FactCardComponent } from './member/facts/fact-card/fact-card.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { AllTreesSettingsComponent } from './settings/all-trees-settings/all-tre
     UserProfileSettingsComponent,
     UserPreferencesSettingsComponent,
     InfoComponent,
-    AllTreesSettingsComponent
+    AllTreesSettingsComponent,
+    FactCardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,164 @@
+.h3-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+}
+
+.h3-fact {
+  width: 450px;
+  height: 250px;
+  background: linear-gradient(#f8f8f8, #fff);
+  box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 1.5rem;
+}
+
+.h3-fact h1 {
+  text-align: center;
+}
+
+.h3-fact .h3-additional {
+  position: absolute;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(to left, var(--h3-color-primary), var(--h3-color-secondary));
+  transition: width 0.4s;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.h3-fact:hover .h3-additional {
+  width: 100%;
+  border-radius: 0 5px 5px 0;
+}
+
+.h3-fact .h3-additional .h3-user-card {
+  width: 150px;
+  height: 100%;
+  position: relative;
+  float: left;
+}
+
+.h3-fact .h3-additional .h3-user-card::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10%;
+  right: -2px;
+  height: 80%;
+  border-left: 2px solid rgba(0,0,0,0.025);
+}
+
+.h3-fact .h3-additional .h3-user-card .h3-name,
+.h3-fact .h3-additional .h3-user-card .h3-date {
+  top: 15%;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+  background: rgba(0,0,0,0.15);
+  padding: 0.125rem 0.75rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.h3-fact .h3-additional .h3-user-card .h3-date {
+  top: 85%;
+}
+
+.h3-fact .h3-additional .h3-user-card img {
+  border-radius: 100%;
+  border: 2px solid #fff;
+}
+
+.h3-fact .h3-additional .h3-more-info {
+  width: 300px;
+  float: left;
+  position: absolute;
+  left: 150px;
+  height: 100%;
+}
+
+.h3-fact .h3-additional .h3-more-info h1 {
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.h3-fact.green .h3-additional .h3-more-info h1 {
+  color: #224C36;
+}
+
+.h3-fact .h3-additional .coords {
+  margin: 0 1rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.h3-fact.green .h3-additional .coords {
+  color: #325C46;
+}
+
+.h3-fact .h3-additional .coords span + span {
+  float: right;
+}
+
+.h3-fact .h3-additional .stats {
+  font-size: 2rem;
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  top: auto;
+  color: #fff;
+}
+
+.h3-fact.green .h3-additional .stats {
+  color: #325C46;
+}
+
+.h3-fact .h3-additional .stats > div {
+  flex: 1;
+  text-align: center;
+}
+
+.h3-fact .h3-additional .stats i {
+  display: block;
+}
+
+.h3-fact .h3-additional .stats div.title {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.h3-fact .h3-additional .stats div.value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+.h3-fact .h3-additional .stats div.value.infinity {
+  font-size: 2.5rem;
+}
+
+.h3-fact .h3-general {
+  width: 300px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.h3-fact .h3-general .more {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.9em;
+}

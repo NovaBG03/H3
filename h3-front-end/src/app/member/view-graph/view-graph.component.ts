@@ -421,8 +421,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     const firstNode = this.data.nodes
       .find(d => d.depthIndex === startingDepth);
     this.extractLinksForNode(firstNode);
-
-    console.log(this.data.links);
   }
 
   private extractLinksForNode(node): void {
