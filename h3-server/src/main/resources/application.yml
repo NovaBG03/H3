@@ -5,7 +5,7 @@ spring:
     max-idle: 20
     min-idle: 15
   profiles:
-    active: dev
+    active: prod
 
 server:
   port: 8080
