@@ -41,13 +41,11 @@ export class AuthenticationComponent implements OnInit {
   }
 
   authenticate(): void {
-    console.log(this.authForm.value);
     if (this.authForm.invalid && !this.isLogin) {
       return;
     }
 
     const value = this.authForm.value;
-    console.log(value);
 
     let authObservable: Observable<UserToken>;
     if (this.isLogin) {
@@ -58,12 +56,10 @@ export class AuthenticationComponent implements OnInit {
     }
 
     authObservable.subscribe(res => {
-        console.log(res);
         this.router.navigate([res.username]);
       },
       errorMessage => {
         this.error = errorMessage;
-        console.log(this.error);
       });
   }
 

@@ -88,7 +88,7 @@ public class FamilyMemberService {
             throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
         }
 
-        if (primaryParentId.equals(0) && partnerParentId.equals(0)) {
+        if (primaryParentId.equals(0L) && partnerParentId.equals(0L)) {
             if (familyTree.getCouples().size() == 0) {
                 return this.addMainMember(treeId, familyMember, username);
             } else {

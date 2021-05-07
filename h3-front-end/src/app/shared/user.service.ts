@@ -3,7 +3,7 @@ import {AuthService} from '../authentication/auth.service';
 import {HttpClient} from '@angular/common/http';
 import {ImageDTO, MessageDTO, User, UserResponseDTO} from './dtos.model';
 import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
 @Injectable({providedIn: 'root'})
@@ -39,5 +39,17 @@ export class UserService {
   isServerUp(): Observable<boolean> {
     return this.http.get<MessageDTO>(environment.domain + '/public/ping')
       .pipe(map(messageDto => true), catchError(err => of(false)));
+  }
+
+  getCurrentUserProfilePicture(): Observable<string> {
+    return this.authService.user.pipe(
+      switchMap(username => this.http.get<ImageDTO>(environment.domain + '/users/profilePicture/' + username)
+        .pipe(map(imageDTO => {
+          if (!imageDTO.imageBytes) {
+            return 'assets/img/default-profile-pic.png';
+          }
+          return 'data:image/jpeg;base64,' + imageDTO.imageBytes;
+        }))
+      ));
   }
 }

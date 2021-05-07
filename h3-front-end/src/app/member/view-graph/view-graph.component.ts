@@ -24,7 +24,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   isOwner: boolean;
   familyMembers: FamilyMember[];
 
-  rightClickInfo: { x: number, y: number, isPrimary: boolean, isMain: boolean } = null;
+  rightClickInfo: { x: number, y: number, isPrimary: boolean, isMain: boolean, isSolo: boolean, isOwner: boolean } = null;
   data: Graph =
     {
       nodes: [],
@@ -377,14 +377,16 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
   private handleImageRightClick(event, data, isPrimary): void {
     this.lastSelectedCouple = data;
+    let isSolo = false;
 
     if (isPrimary) {
       this.lastSelectedMemberId = data.primaryParentId;
+      isSolo = !data.partnerParentId;
     } else {
       this.lastSelectedMemberId = data.partnerParentId;
     }
 
-    this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary, isMain: 1 === data.leftIndex};
+    this.rightClickInfo = {x: event.clientX, y: event.clientY, isPrimary, isMain: 1 === data.leftIndex, isSolo, isOwner: this.isOwner};
   }
 
   private handleImageMouseOver(event, data): void {
@@ -419,6 +421,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     const firstNode = this.data.nodes
       .find(d => d.depthIndex === startingDepth);
     this.extractLinksForNode(firstNode);
+
+    console.log(this.data.links);
   }
 
   private extractLinksForNode(node): void {

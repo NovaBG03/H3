@@ -56,7 +56,7 @@ public interface CoupleRepository extends JpaRepository<Couple, CoupleId> {
             " COUNT(CONCAT(node.primary_parent_id, node.partner_parent_id)) - 1 AS depth " +
             " FROM nested_family AS node, " +
             " nested_family AS parent " +
-            " WHERE node.family_tree_id = :tree_id AND node.lft BETWEEN parent.lft AND parent.rgt " +
+            " WHERE node.family_tree_id = :tree_id AND parent.family_tree_id = :tree_id AND node.lft BETWEEN parent.lft AND parent.rgt " +
             " GROUP BY node.primary_parent_id, node.partner_parent_id " +
             " ORDER BY node.lft) as d " +
             "on d.primary_parent_id = nf.primary_parent_id AND d.partner_parent_id = nf.partner_parent_id",

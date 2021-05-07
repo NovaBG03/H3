@@ -5,7 +5,7 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Rende
   templateUrl: './member-contextmenu.component.html',
   styleUrls: ['./member-contextmenu.component.css']
 })
-export class MemberContextmenuComponent implements AfterViewInit {
+export class MemberContextmenuComponent {
 
   @ViewChild('h3Contextmenu', {read: ElementRef}) elementRef: ElementRef;
   @Output() memberInfo: EventEmitter<void> = new EventEmitter<void>();
@@ -15,11 +15,13 @@ export class MemberContextmenuComponent implements AfterViewInit {
 
   isPrimary: boolean;
   isMain: boolean;
+  isSolo: boolean;
+  isOwner: boolean;
 
   constructor(private renderer: Renderer2) {
   }
 
-  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean, isMain: boolean }) {
+  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean, isMain: boolean, isSolo: boolean, isOwner:boolean }) {
     if (!this.elementRef) {
       return;
     }
@@ -27,13 +29,12 @@ export class MemberContextmenuComponent implements AfterViewInit {
     if (info) {
       this.isPrimary = info.isPrimary;
       this.isMain = info.isMain;
+      this.isSolo = info.isSolo;
+      this.isOwner = info.isOwner;
       this.showElement(info.x, info.y);
     } else {
       this.hideElement();
     }
-  }
-
-  ngAfterViewInit(): void {
   }
 
   onMemberInfoClicked(): void {

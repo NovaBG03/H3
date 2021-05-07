@@ -19,6 +19,7 @@ export class TreeListComponent implements OnInit, OnDestroy, AfterViewInit {
   isMyTrees = false;
   profilePictures: any = {};
 
+  private currentUser;
   private initialBackgroundColor: string;
   private treesSub: Subscription;
   private newTreeSub: Subscription;
@@ -53,6 +54,10 @@ export class TreeListComponent implements OnInit, OnDestroy, AfterViewInit {
           );
         }
       }),
+      tap(trees => this.authService.user.pipe(
+        tap(user => this.currentUser = user),
+        switchMap(user => this.userService.getProfilePictureUrl(user.username))
+      ).subscribe(profilePicture => this.profilePictures[this.currentUser.username] = profilePicture)),
       tap(trees => [...new Set(trees.map(tree => tree.owner))]
         .forEach(owner => this.userService.getProfilePictureUrl(owner)
           .subscribe(img => this.profilePictures[owner] = img))
