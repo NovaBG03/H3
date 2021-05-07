@@ -1,0 +1,10 @@
+.container {
+  overflow: hidden;
+}
+
+.h3-center {
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

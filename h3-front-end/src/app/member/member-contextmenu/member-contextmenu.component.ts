@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-member-contextmenu',
@@ -12,6 +12,7 @@ export class MemberContextmenuComponent {
   @Output() addChild: EventEmitter<void> = new EventEmitter<void>();
   @Output() addPartner: EventEmitter<void> = new EventEmitter<void>();
   @Output() delete: EventEmitter<void> = new EventEmitter<void>();
+  @Output() changePicture: EventEmitter<void> = new EventEmitter<void>();
 
   isPrimary: boolean;
   isMain: boolean;
@@ -21,7 +22,9 @@ export class MemberContextmenuComponent {
   constructor(private renderer: Renderer2) {
   }
 
-  @Input('rightClickInfo') set rightClickInfo(info: { x: number, y: number, isPrimary: boolean, isMain: boolean, isSolo: boolean, isOwner:boolean }) {
+  @Input('rightClickInfo') set rightClickInfo(
+    info: { x: number, y: number, isPrimary: boolean, isMain: boolean, isSolo: boolean, isOwner: boolean }) {
+
     if (!this.elementRef) {
       return;
     }
@@ -51,6 +54,10 @@ export class MemberContextmenuComponent {
 
   onDelete(): void {
     this.delete.emit();
+  }
+
+  onChangePicture(): void {
+    this.changePicture.emit();
   }
 
   private hideElement(): void {

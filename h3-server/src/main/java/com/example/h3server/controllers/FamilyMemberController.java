@@ -1,5 +1,6 @@
 package com.example.h3server.controllers;
 
+import com.example.h3server.dtos.ImageDTO;
 import com.example.h3server.dtos.MessageDTO;
 import com.example.h3server.dtos.couple.CoupleListDTO;
 import com.example.h3server.dtos.member.FamilyMemberDataDTO;
@@ -10,8 +11,10 @@ import com.example.h3server.mappers.FamilyMemberMapper;
 import com.example.h3server.models.FamilyMember;
 import com.example.h3server.services.FamilyMemberService;
 import io.swagger.annotations.*;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
@@ -125,9 +128,9 @@ public class FamilyMemberController {
                     "Invalid mother id"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public FamilyMemberResponseDTO addPartner(@PathVariable Long treeId,
-                                             @RequestParam Long primaryParentId,
-                                             @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
-                                             @ApiIgnore Principal principal) {
+                                              @RequestParam Long primaryParentId,
+                                              @RequestBody FamilyMemberDataDTO familyMemberDataDTO,
+                                              @ApiIgnore Principal principal) {
         FamilyMember familyMember = FamilyMemberMapper.INSTANCE.FamilyMemberDataDTOToFamilyMember(familyMemberDataDTO);
         FamilyMember newMember = familyMemberService
                 .addPartner(treeId, familyMember, primaryParentId, principal.getName());
@@ -150,5 +153,38 @@ public class FamilyMemberController {
                                    @ApiIgnore Principal principal) {
         familyMemberService.deleteMember(treeId, memberId, principal.getName());
         return new MessageDTO("Family Member deleted successfully");
+    }
+
+    @PostMapping("/{memberId}/picture")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyMemberController.uploadPicture}",
+            response = MessageDTO.class,
+            authorizations = {@Authorization(value = "apiKey")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public MessageDTO uploadPicture(@RequestParam MultipartFile image,
+                                    @PathVariable Long treeId,
+                                    @PathVariable Long memberId,
+                                    @ApiIgnore Principal principal) {
+        this.familyMemberService.updatePicture(image, treeId, memberId, principal.getName());
+        return new MessageDTO("Profile picture uploaded successfully");
+    }
+
+    @GetMapping("/{memberId}/picture")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${FamilyMemberController.getPicture}",
+            response = ImageDTO.class,
+            authorizations = { @Authorization(value="apiKey") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 404, message = "The user doesn't exist"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public ImageDTO getPicture(@PathVariable Long treeId,
+                               @PathVariable Long memberId,
+                               @ApiIgnore Principal principal) {
+        return new ImageDTO(this.familyMemberService.getPicture(treeId, memberId, principal.getName()));
     }
 }

@@ -5,7 +5,7 @@ import {MemberService} from '../member.service';
 import {ActivatedRoute} from '@angular/router';
 import {TreeService} from '../../tree/tree.service';
 import {AuthService} from '../../authentication/auth.service';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {combineAll, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import * as d3 from 'd3';
 
 @Component({
@@ -21,6 +21,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   editingMember: FamilyMember = null;
   isCreatingMember = false;
   isCreatingPartner = false;
+  isChoosingPicture = false;
   isOwner: boolean;
   familyMembers: FamilyMember[];
 
@@ -44,7 +45,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
   private chartHeight = 600;
   private chartWidth = 800;
 
-  private image = 'https://cdn.balkan.app/shared/f1.png';
+  private images = {};
+
   private circleRadius = 40;
   private strokeWidth = 3;
   private imageRadius = this.circleRadius - this.strokeWidth;
@@ -111,6 +113,22 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       );
   }
 
+  onChangePicture(): void {
+    this.isChoosingPicture = true;
+  }
+
+  updateProfilePic(blob: Blob): void {
+    if (blob) {
+      this.memberService.uploadPicture(this.treeId, this.lastSelectedMemberId, blob)
+        .subscribe(
+          message => this.onFinishEditing(true),
+          error => this.onFinishEditing(false)
+        );
+    } else {
+      this.onFinishEditing(false);
+    }
+  }
+
   onFinishEditing(isChanged: boolean): void {
     this.lastSelectedCouple = null;
     this.editingCouple = null;
@@ -118,6 +136,7 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.editingMember = null;
     this.isCreatingMember = false;
     this.isCreatingPartner = false;
+    this.isChoosingPicture = false;
     if (isChanged) {
       // this.loadMembers();
       window.location.reload();
@@ -132,8 +151,15 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.memberService.getCouples(this.treeId).subscribe(couples => {
       this.data.nodes = couples;
       if (this.data.nodes.length > 0) {
-        this.memberService.getFamilyMembers(this.treeId).subscribe(familyMembers => {
-          this.familyMembers = familyMembers;
+        this.memberService.getFamilyMembers(this.treeId)
+          .pipe(
+            tap(members => this.familyMembers = members),
+            mergeMap(members => members.map(member =>
+              this.memberService.getPictureUrl(this.treeId, member.id)
+                .pipe(tap(image => this.images[member.id] = image))
+            )),
+            combineAll()
+          ).subscribe(images => {
           if (!this.simulation) {
             this.createGraph();
           } else {
@@ -192,8 +218,9 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.simulation.force('link', d3.forceLink(this.data.links));
 
     // Append SVG Content
-    this.svgContent.append('defs')
-      .append('svg:marker')
+    const defs = this.svgContent.append('defs');
+
+    defs.append('svg:marker')
       .attr('id', 'arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', this.circleRadius / 16)
@@ -304,7 +331,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('y', -this.imageRadius)
       .attr('width', 2 * this.imageRadius)
       .attr('height', 2 * this.imageRadius)
-      .attr('xlink:href', this.image)
+      .attr('xlink:href', d => this.getImage(d.primaryParentId))
+      .attr('clip-path', ' circle(49%)')
       .style('cursor', 'pointer');
 
     const partnerParentImage = partnerParentCoupleNodes.append('svg:image')
@@ -313,7 +341,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('y', -this.imageRadius)
       .attr('width', 2 * this.imageRadius)
       .attr('height', 2 * this.imageRadius)
-      .attr('xlink:href', this.image)
+      .attr('xlink:href', d => this.getImage(d.partnerParentId))
+      .attr('clip-path', ' circle(49%)')
       .style('cursor', 'pointer');
 
     const childImage = childNodes.append('svg:image')
@@ -321,7 +350,8 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
       .attr('y', -this.imageRadius * this.childRatio)
       .attr('width', 2 * this.imageRadius * this.childRatio)
       .attr('height', 2 * this.imageRadius * this.childRatio)
-      .attr('xlink:href', this.image)
+      .attr('xlink:href', d => this.getImage(d.primaryParentId))
+      .attr('clip-path', ' circle(49%)')
       .style('cursor', 'pointer');
 
     // Events
@@ -350,6 +380,10 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
 
     partnerParentImage.append('title')
       .text(d => d.partnerParentName);
+  }
+
+  private getImage(id: number): string {
+    return this.images[id];
   }
 
   private tick(): () => void {

@@ -11,9 +11,9 @@
     <span class="font-weight-bold">This Family Tree is Empty!</span>
   </div>
 
-<!--  <div *ngIf="isOwner && data.nodes.length != 0">-->
-<!--    <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>-->
-<!--  </div>-->
+  <!--  <div *ngIf="isOwner && data.nodes.length != 0">-->
+  <!--    <button class="btn btn-block btn-light mt-3" (click)="onStartCreating()">Add new Family Member</button>-->
+  <!--  </div>-->
 
   <app-member-item *ngIf="editingMember || isCreatingMember || isCreatingPartner"
                    [familyMember]="editingMember"
@@ -27,7 +27,10 @@
                           (memberInfo)="onEditMember()"
                           (addChild)="onAddChild()"
                           (addPartner)="onAddPartner()"
-                          (delete)="onDelete()"></app-member-contextmenu>
+                          (delete)="onDelete()"
+                          (changePicture)="onChangePicture()"></app-member-contextmenu>
 
   <div id="graph"></div>
 </div>
+
+<app-image-uploader *ngIf="isChoosingPicture" (imageUploaded)="updateProfilePic($event)"></app-image-uploader>

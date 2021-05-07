@@ -2,6 +2,8 @@
   <ul>
     <li (click)="onMemberInfoClicked()">{{ isOwner ? 'Edit member' : 'Member Info'}}</li>
     <span *ngIf="isOwner">
+      <li (click)="onChangePicture()">Change Picture</li>
+      <li class="h3-separator"></li>
       <li (click)="onAddChildClicked()">Add Child</li>
       <li *ngIf="isPrimary && (!isMain || isSolo)" (click)="onAddPartner()">Add Partner</li>
       <li class="h3-separator"></li>

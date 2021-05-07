@@ -13,7 +13,7 @@
   border-radius: 6px;
   overflow: hidden;
   position: relative;
-  margin: 1.5rem;
+  margin: 1.5rem auto;
 }
 
 .h3-fact h1 {
@@ -30,10 +30,11 @@
   z-index: 1;
 }
 
-.h3-fact:hover .h3-additional {
-  width: 100%;
-  border-radius: 0 5px 5px 0;
-}
+/* TODO uncomment and add update form */
+/*.h3-fact:hover .h3-additional {*/
+/*  width: 100% !important;*/
+/*  border-radius: 0 5px 5px 0;*/
+/*}*/
 
 .h3-fact .h3-additional .h3-user-card {
   width: 150px;
@@ -72,6 +73,7 @@
 .h3-fact .h3-additional .h3-user-card img {
   border-radius: 100%;
   border: 2px solid #fff;
+  max-width: 110px;
 }
 
 .h3-fact .h3-additional .h3-more-info {
@@ -161,4 +163,38 @@
   bottom: 1rem;
   right: 1rem;
   font-size: 0.9em;
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+  .h3-fact {
+    width: 280px;
+  }
+
+  .h3-user-card {
+    display: none;
+  }
+
+  .h3-additional {
+    width: 5px !important;
+  }
+
+  .h3-fact .h3-general {
+    padding: 1rem 1rem 1rem 3rem;
+  }
+}
+
+/*Extra Large screens */
+@media only screen and (min-width: 1200px) {
+  .h3-fact {
+    width: 70%;
+  }
+
+  .h3-fact .h3-general {
+    width: calc(100% - 150px);
+  }
+
+  p {
+    text-align: center;
+  }
 }

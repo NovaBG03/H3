@@ -9,6 +9,7 @@ import {Fact, FamilyMember} from '../../../shared/dtos.model';
 export class FactCardComponent implements OnInit {
   @Input() fact: Fact;
   @Input() familyMember: FamilyMember;
+  @Input() pictureUrl: string;
 
   constructor() {
   }

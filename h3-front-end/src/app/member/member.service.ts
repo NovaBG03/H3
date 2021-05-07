@@ -10,7 +10,7 @@ import {
   FamilyMemberDataDTO,
   FamilyMemberListDTO,
   FamilyMemberResponseDTO,
-  Gender,
+  Gender, ImageDTO,
   MessageDTO
 } from '../shared/dtos.model';
 import {environment} from '../../environments/environment';
@@ -71,6 +71,24 @@ export class MemberService {
   deleteMember(treeId: number, memberId: number): Observable<string> {
     return this.http.delete<MessageDTO>(`${environment.domain}/trees/${treeId}/members/${memberId}`)
       .pipe(map(messageDto => messageDto.message));
+  }
+
+  uploadPicture(treeId: number, memberId: number, blob: Blob): Observable<string> {
+    const fd = new FormData();
+    fd.append('image', blob);
+
+    return this.http.post<MessageDTO>(`${environment.domain}/trees/${treeId}/members/${memberId}/picture`, fd)
+      .pipe(map(messageDto => messageDto.message));
+  }
+
+  getPictureUrl(treeId: number, memberId: number): Observable<string> {
+    return this.http.get<ImageDTO>(`${environment.domain}/trees/${treeId}/members/${memberId}/picture`)
+      .pipe(map(imageDTO => {
+        if (!imageDTO.imageBytes) {
+          return 'assets/img/default-member-pic.jpg';
+        }
+        return 'data:image/jpeg;base64,' + imageDTO.imageBytes;
+      }));
   }
 
   private mapFamilyMemberResponseDTOToFamilyMember(familyMemberResponseDTO: FamilyMemberResponseDTO): FamilyMember {

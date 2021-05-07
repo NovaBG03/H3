@@ -9,13 +9,17 @@ import com.example.h3server.repositories.FamilyMemberRepository;
 import com.example.h3server.repositories.FamilyTreeRepository;
 import com.example.h3server.repositories.UserRepository;
 import com.example.h3server.utils.ModelValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Service
 public class FamilyMemberService {
 
@@ -151,9 +155,65 @@ public class FamilyMemberService {
 
         Collection<Long> memberIdsToDelete = coupleService.deleteMember(familyTree, memberId);
 
-        for (Long id: memberIdsToDelete) {
+        for (Long id : memberIdsToDelete) {
             familyMemberRepository.deleteById(id);
         }
+    }
+
+    public void updatePicture(MultipartFile image, Long treeId, Long memberId, String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+
+        if (!familyTree.getUser().getUsername().equals(username)) {
+            throw new CustomException("Access denied", HttpStatus.FORBIDDEN);
+        }
+
+        FamilyMember member = familyMemberRepository.findByIdAndFamilyTreeId(memberId, treeId);
+        if (member == null) {
+            throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            byte[] bytes = image.getBytes();
+            int bytesLength = bytes.length;
+
+            Byte[] imageBytes = new Byte[bytesLength];
+            for (int i = 0; i < bytes.length; i++) {
+                imageBytes[i] = bytes[i];
+            }
+
+            member.setPicture(imageBytes);
+        } catch (IOException e) {
+            //todo catch exception
+            log.error(e.getMessage());
+        }
+
+        familyMemberRepository.save(member);
+    }
+
+    public byte[] getPicture(Long treeId, Long memberId, String username) {
+        FamilyTree familyTree = getTreeOrThrowException(treeId);
+        final User user = userRepository.findByUsername(username);
+
+        this.checkIfUserHaveAccess(familyTree, user);
+
+        FamilyMember member = familyMemberRepository.findByIdAndFamilyTreeId(memberId, treeId);
+        if (member == null) {
+            throw new CustomException("The family member doesn't exist", HttpStatus.NOT_FOUND);
+        }
+
+        Byte[] bytes = member.getPicture();
+        if (bytes == null) {
+            return null;
+        }
+
+        int bytesLength = bytes.length;
+
+        byte[] imageBytes = new byte[bytesLength];
+        for (int i = 0; i < bytesLength; i++ ) {
+            imageBytes[i] = bytes[i];
+        }
+
+        return imageBytes;
     }
 
     private FamilyTree getTreeOrThrowException(Long treeId) {

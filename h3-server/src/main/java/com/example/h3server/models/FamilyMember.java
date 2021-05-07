@@ -38,6 +38,9 @@ public class FamilyMember {
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.UNKNOWN;
 
+    @Lob
+    private Byte[] picture;
+
     @OneToMany(mappedBy = "familyMember", cascade = CascadeType.REMOVE)
     private Set<Fact> facts = new HashSet<>();
 
@@ -48,12 +51,14 @@ public class FamilyMember {
                         LocalDate birthday,
                         LocalDate dateOfDeath,
                         Gender gender,
+                        Byte[] picture,
                         Set<Fact> facts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
         this.dateOfDeath = dateOfDeath;
+        this.picture = picture;
         if (gender != null) {
             this.gender = gender;
         }

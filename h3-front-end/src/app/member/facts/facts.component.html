@@ -1,5 +1,13 @@
-<div *ngIf="familyMembers">
-  <app-fact-card *ngFor="let fact of facts"
-                 [fact]="fact"
-                 [familyMember]="getMember(fact.familyMemberId)"></app-fact-card>
+<div class="container mt-3">
+  <div *ngIf="isLoaded">
+    <app-fact-card *ngFor="let fact of facts"
+                   [fact]="fact"
+                   [familyMember]="getMember(fact.familyMemberId)"
+                   [pictureUrl]="getImage(fact.familyMemberId)"></app-fact-card>
+  </div>
+  <div *ngIf="!facts || !facts.length">
+    <div class="h3-center">
+      <h1>No Facts Added</h1>
+    </div>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Fact, FamilyMember} from '../../shared/dtos.model';
 import {FactService} from './fact.service';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {combineAll, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {MemberService} from '../member.service';
@@ -14,6 +14,9 @@ import {MemberService} from '../member.service';
 export class FactsComponent implements OnInit {
   facts: Fact[];
   familyMembers: FamilyMember[];
+  images = {};
+
+  isLoaded = false;
 
   constructor(private factService: FactService,
               private memberService: MemberService,
@@ -27,7 +30,14 @@ export class FactsComponent implements OnInit {
         map(parentUrlSegment => +parentUrlSegment[0].path)
       )),
       tap(treeId => this.memberService.getFamilyMembers(treeId)
-        .subscribe(members => this.familyMembers = members)),
+        .pipe(
+          tap(members => this.familyMembers = members),
+          mergeMap(members => members.map(member =>
+            this.memberService.getPictureUrl(treeId, member.id)
+              .pipe(tap(image => this.images[member.id] = image))
+          )),
+          combineAll()
+        ).subscribe(() => this.isLoaded = true)),
       switchMap(treeId => this.factService.getAllFacts(treeId))
     ).subscribe(facts => {
       this.facts = facts.sort((a, b) =>
@@ -37,5 +47,9 @@ export class FactsComponent implements OnInit {
 
   getMember(familyMemberId: number): FamilyMember {
     return this.familyMembers.find(familyMember => familyMember.id === familyMemberId)
+  }
+
+  getImage(familyMemberId: number): string {
+    return this.images[familyMemberId];
   }
 }
