@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,5 +24,8 @@ public class FactResponseDTO {
     private String description;
 
     @ApiModelProperty(position = 3)
+    private LocalDate date;
+
+    @ApiModelProperty(position = 4)
     private Long familyMemberId;
 }

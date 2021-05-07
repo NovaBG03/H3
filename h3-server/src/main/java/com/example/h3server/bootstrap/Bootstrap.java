@@ -59,6 +59,7 @@ public class Bootstrap implements CommandLineRunner {
         Fact houseFact = Fact.builder()
                 .name("Bought House")
                 .description("We all know it. It's been part of the family for so long.")
+                .date(LocalDate.of(2000, 5, 20))
                 .familyTree(tree)
                 .familyMember(member)
                 .build();
@@ -68,6 +69,7 @@ public class Bootstrap implements CommandLineRunner {
         Fact interestingFact = Fact.builder()
                 .name("Interesting Info")
                 .description("Just another interesting fact about Jhon aka Ivan.")
+                .date(LocalDate.of(1992, 11, 2))
                 .familyTree(tree)
                 .familyMember(member)
                 .build();

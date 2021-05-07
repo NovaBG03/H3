@@ -35,6 +35,7 @@ public class FactService {
     }
 
     public Set<Fact> getFacts(Long treeId, Long familyMemberId, String principalUsername) {
+        // TODO make get fact by memberId endpoint
         FamilyTree familyTree = this.familyTreeService.getFamilyTree(treeId, principalUsername);
 
         return familyTree.getFacts()

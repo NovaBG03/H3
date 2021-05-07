@@ -1,9 +1,11 @@
 <div class="container mt-3">
   <form [formGroup]="settingsForm" (ngSubmit)="onUpdate()">
-    <div class="form-group">
-      <label for="name">Tree Name</label>
-      <input type="text" class="form-control" id="name" placeholder="Enter name" formControlName="name">
-    </div>
+    <label for="name" class="h3-title">Tree Name</label>
+    <input type="text"
+           class="h3-input"
+           id="name"
+           placeholder="Enter name"
+           formControlName="name">
 
     <div class="custom-control custom-switch mb-2">
       <input type="checkbox" class="custom-control-input" id="isPrivate" formControlName="isPrivate">
@@ -13,28 +15,26 @@
     </div>
 
     <hr/>
-    <h5>Tags</h5>
+    <h5 class="h3-title">Tags</h5>
     <div *ngFor="let tagControl of this.tagsFormArray.controls; let i = index">
-      <div class="input-group mb-3">
+      <div class="h3-row">
         <input type="text"
-               class="form-control"
+               class="h3-input h3-input-short"
                placeholder="Enter tag"
                [value]="tagControl.value"
                [formControl]="tagControl">
-        <div class="input-group-append">
-          <button class="btn btn-danger" (click)="removeTagControl(i)">X</button>
-        </div>
+        <button class="h3-btn h3-btn-small h3-btn-red" (click)="removeTagControl(i)">X</button>
       </div>
 
     </div>
 
-    <div class="mt-2 row">
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block mb-2" (click)="addTagControl()">Add Tag</button>
-      </div>
-      <div class="col-sm-2 offset-sm-8">
-        <button type="submit" class="btn btn-success btn-block">Update</button>
-      </div>
+    <div class="h3-row">
+      <button type="button" class="h3-btn h3-btn-small h3-btn-right" (click)="addTagControl()">Add Tag</button>
+    </div>
+
+    <div class="h3-row">
+      <button (click)="deleteTree()" class="h3-btn h3-btn-red h3-btn-left">Delete</button>
+      <button type="submit" class="h3-btn h3-btn-right">Update</button>
     </div>
   </form>
 </div>

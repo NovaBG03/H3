@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -29,6 +30,10 @@ public class Fact {
     @Size(min = 3, max = 255, message = "Fact Description must be from 3 to 255 symbols")
     private String description;
 
+    @NotNull(message = "Something went wrong")
+    @Column(nullable = false)
+    private LocalDate date;
+
     @ManyToOne
     private FamilyTree familyTree;
 
@@ -40,12 +45,14 @@ public class Fact {
                 String name,
                 Byte[] image,
                 String description,
+                LocalDate date,
                 FamilyTree familyTree,
                 FamilyMember familyMember) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.description = description;
+        this.date = date;
         this.familyTree = familyTree;
         this.familyMember = familyMember;
     }

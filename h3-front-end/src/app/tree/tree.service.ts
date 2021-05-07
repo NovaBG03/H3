@@ -1,4 +1,4 @@
-import {FamilyTree, FamilyTreeDataDTO, FamilyTreeListDTO, FamilyTreeResponseDTO} from '../shared/dtos.model';
+import {FamilyTree, FamilyTreeDataDTO, FamilyTreeListDTO, FamilyTreeResponseDTO, MessageDTO} from '../shared/dtos.model';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
@@ -63,6 +63,10 @@ export class TreeService {
         tree.tags))
       .pipe(map(familyTreeResponseDTO =>
         this.mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO)));
+  }
+
+  deleteTree(id: number): Observable<MessageDTO> {
+    return this.http.delete<MessageDTO>(`${environment.domain}/trees/${id}`);
   }
 
   private mapFamilyTreeResponseDTOToFamilyTree(familyTreeResponseDTO: FamilyTreeResponseDTO): FamilyTree {

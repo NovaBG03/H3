@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {FamilyTree} from '../../shared/dtos.model';
 import {TreeService} from '../tree.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {map, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
@@ -15,7 +15,9 @@ export class TreeSettingsComponent implements OnInit {
   tree: FamilyTree;
   settingsForm: FormGroup;
 
-  constructor(private treeService: TreeService, private route: ActivatedRoute) {
+  constructor(private treeService: TreeService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   get tagsFormArray(): FormArray {
@@ -74,5 +76,10 @@ export class TreeSettingsComponent implements OnInit {
       isPrivate: new FormControl(),
       tags: new FormArray([])
     });
+  }
+
+  deleteTree(): void {
+    this.treeService.deleteTree(this.tree.id)
+      .subscribe(messageDto => this.router.navigate(['trees', 'my']));
   }
 }
