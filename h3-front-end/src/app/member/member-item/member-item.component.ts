@@ -25,6 +25,20 @@ export class MemberItemComponent implements OnInit {
   constructor(private memberService: MemberService) {
   }
 
+  get title(): string {
+    if (this.isNewPartner) {
+      return 'Add Partner';
+    } else if (this.isNotNew) {
+      return 'Member Info';
+    } else {
+      if (!this.parentCouple || (!this.parentCouple.primaryParentId && !this.parentCouple.partnerParentId)) {
+        return 'Create Member';
+      }
+
+      return 'Add Child';
+    }
+  }
+
   ngOnInit(): void {
     if (!this.familyMember) {
       this.familyMember = new FamilyMember(null,
