@@ -182,6 +182,11 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     this.svg.attr('width', dynamicWidth);
     this.simulation.force('center', d3.forceCenter(dynamicWidth / 2, this.chartHeight / 2));
 
+    // Zooming behaviour
+    this.svg.call(d3.zoom()
+      .scaleExtent([0.1, 5])
+      .on('zoom', this.zoomed()));
+
     // Extract Links and create link force
     this.extractLinks();
     this.simulation.force('link', d3.forceLink(this.data.links));
@@ -414,8 +419,6 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     const firstNode = this.data.nodes
       .find(d => d.depthIndex === startingDepth);
     this.extractLinksForNode(firstNode);
-
-    console.log(this.data.links);
   }
 
   private extractLinksForNode(node): void {
@@ -438,5 +441,12 @@ export class ViewGraphComponent implements OnInit, OnDestroy {
     if (this.rightClickInfo) {
       this.rightClickInfo = null;
     }
+  }
+
+  private zoomed(): (event: any) => void {
+    const self = this;
+    return ({transform}) => {
+      self.svgContent.attr('transform', transform);
+    };
   }
 }
