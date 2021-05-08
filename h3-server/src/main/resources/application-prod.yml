@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://35.228.206.2/h3db
+    url: jdbc:mysql://34.107.11.109/h3db
     username: root
-    password: 7OfDz5ecJfLeDxp9
+    password: tbMijCi3Lht6coc6
   jpa:
     show-sql: false
     hibernate:

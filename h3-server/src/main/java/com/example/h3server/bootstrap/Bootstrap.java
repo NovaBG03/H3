@@ -5,6 +5,7 @@ import com.example.h3server.repositories.*;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.time.Month;
 
 @Slf4j
 @Component
+@Profile("dev")
 public class Bootstrap implements CommandLineRunner {
 
     private final PasswordEncoder passwordEncoder;
