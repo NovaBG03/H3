@@ -3,7 +3,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 
-import {NgbCollapseModule, NgbDatepickerModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCollapseModule, NgbDatepickerModule, NgbTypeaheadModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -74,7 +74,8 @@ import { FactCardComponent } from './member/facts/fact-card/fact-card.component'
     NgbDatepickerModule,
     NgbTypeaheadModule,
     ImageCropperModule,
-    Ng2ImgMaxModule
+    Ng2ImgMaxModule,
+    NgbModule
   ],
   providers: [
     {

@@ -49,6 +49,8 @@
             </div>
             <input class="form-control" placeholder="yyyy-mm-dd"
                    ngbDatepicker #birthdayPicker="ngbDatepicker"
+                   [minDate]="{year: 1, month: 1, day: 1}"
+                   [maxDate]="{year: 2100, month: 1, day: 1}"
                    formControlName="birthday">
             <div class="input-group-append">
               <button class="btn btn-outline-secondary" (click)="birthdayPicker.toggle()" type="button">📅</button>
@@ -59,7 +61,7 @@
         <div class="form-group" *ngIf="!isOwner">
           <div class="input-group">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="genderSelect">Birthday</label>
+              <label class="input-group-text">Birthday</label>
             </div>
             <input type="text"
                    class="form-control"
@@ -71,10 +73,12 @@
         <div class="form-group" *ngIf="isOwner">
           <div class="input-group">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="genderSelect">Date of Death</label>
+              <label class="input-group-text">Date of Death</label>
             </div>
             <input class="form-control" placeholder="yyyy-mm-dd"
                    ngbDatepicker #dateOfDeathPicker="ngbDatepicker"
+                   [minDate]="{year: 1, month: 1, day: 1}"
+                   [maxDate]="{year: 2100, month: 1, day: 1}"
                    formControlName="dateOfDeath">
             <div class="input-group-append">
               <button class="btn btn-outline-secondary" (click)="dateOfDeathPicker.toggle()" type="button">📅</button>
